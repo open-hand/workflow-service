@@ -1,5 +1,5 @@
 server:
-  port: 18080
+  port: 8065
 spring:
   application:
     name: workflow-service
@@ -13,10 +13,6 @@ spring:
       uri: localhost:8010
       enabled: false
 management:
-  port: 18081
-  security:
-    enabled: false
-security:
-  basic:
-    enabled: false
+  server:
+    port: 8066
 
