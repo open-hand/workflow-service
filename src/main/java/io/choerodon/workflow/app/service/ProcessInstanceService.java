@@ -7,7 +7,20 @@ import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
  */
 public interface ProcessInstanceService {
 
+
+    /**
+     * Devops部署pipeline
+     * @param  devopsPipelineDTO  CD流水线信息
+     * @return String
+     */
     String beginDevopsPipeline(DevopsPipelineDTO devopsPipelineDTO);
 
+
+    /**
+     * 审核DevopsCD任务
+     *
+     * @param  processInstanceId  流程实例id
+     * @return
+     */
     void approveUserTask(String processInstanceId);
 }

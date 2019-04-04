@@ -31,8 +31,9 @@ public class ProcessInstanceController {
 
     /**
      * Devops部署pipeline
-     *
-     * @return ApplicationRepDTO
+     * @param  projectId  项目id
+     * @param  devopsPipelineDTO  CD流水线信息
+     * @return String
      */
     @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
     @ApiOperation(value = "Devops部署pipeline")
@@ -51,7 +52,9 @@ public class ProcessInstanceController {
     /**
      * 审核DevopsCD任务
      *
-     * @return ApplicationRepDTO
+     * @param  projectId  项目id
+     * @param  processInstanceId  流程实例id
+     * @return
      */
     @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
     @ApiOperation(value = "Devops部署pipeline")
