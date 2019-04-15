@@ -93,7 +93,9 @@ public class DynamicWorkflowUtil {
         UserTask userTask = new UserTask();
         userTask.setName(name);
         userTask.setId(id);
-        userTask.setAssignee(assignee);
+        if (assignee != null) {
+            userTask.setAssignee(assignee);
+        }
         return userTask;
     }
 

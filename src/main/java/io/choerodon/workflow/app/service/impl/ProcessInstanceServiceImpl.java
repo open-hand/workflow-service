@@ -1,11 +1,14 @@
 package io.choerodon.workflow.app.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
 import io.choerodon.workflow.domain.handler.DevopsPipelineBpmnHandler;
+import io.choerodon.workflow.domain.repository.DevopsServiceRepository;
 import io.choerodon.workflow.infra.util.ActivitiUserLoginUtil;
 import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
 import org.activiti.api.process.model.ProcessInstance;
@@ -32,6 +35,9 @@ import org.springframework.stereotype.Service;
 public class ProcessInstanceServiceImpl implements ProcessInstanceService {
 
     @Autowired
+    DevopsServiceRepository devopsServiceRepository;
+
+    @Autowired
     ActivitiUserLoginUtil activitiUserLoginUtil;
     @Autowired
     RepositoryService repositoryService;
@@ -44,7 +50,8 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
     @Override
     public String beginDevopsPipeline(DevopsPipelineDTO devopsPipelineDTO) {
 
-        BpmnModel model = DevopsPipelineBpmnHandler.initDevopsCDPipelineBpmn(devopsPipelineDTO);
+        Map<String, Object> params = new HashMap<>();
+        BpmnModel model = DevopsPipelineBpmnHandler.initDevopsCDPipelineBpmn(devopsPipelineDTO, params);
 
         if (!DynamicWorkflowUtil.checkValidate(model)) {
             throw new CommonException("invlid workflow module");
@@ -54,20 +61,24 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         org.activiti.engine.repository.ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .deploymentId(deployment.getId()).singleResult();
         String name = "部署CD流程";
-        logger.info(name + ":流程开始");
+        logger.info(String.format("部署CD流程:%s  开始", devopsPipelineDTO.getPipelineRecordId()));
         ProcessInstance processInstance = processRuntime.start(ProcessPayloadBuilder
                 .start()
                 .withProcessDefinitionKey(processDefinition.getKey())
                 .withName(name)
+                .withVariables(params)
                 .build());
         return processInstance.getId();
     }
 
     @Override
-    public void approveUserTask(String processInstanceId) {
+    public Boolean approveUserTask(String processInstanceId) {
         GetTasksPayload getTasksPayload = new GetTasksPayload();
         getTasksPayload.setProcessInstanceId(processInstanceId);
         Page<Task> tasks = taskRuntime.tasks(Pageable.of(0, 10), getTasksPayload);
         taskRuntime.complete(TaskPayloadBuilder.complete().withTaskId(tasks.getContent().get(0).getId()).build());
+        return true;
     }
+
+
 }

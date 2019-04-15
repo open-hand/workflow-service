@@ -22,5 +22,5 @@ public interface ProcessInstanceService {
      * @param  processInstanceId  流程实例id
      * @return
      */
-    void approveUserTask(String processInstanceId);
+    Boolean approveUserTask(String processInstanceId);
 }

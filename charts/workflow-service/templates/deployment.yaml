@@ -9,14 +9,14 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-{{ include "service.labels.standard" . | indent 6 }}
+{{ include "service.match.labels" . | indent 6 }}
   template:
     metadata:
-      labels:
-{{ include "service.labels.standard" . | indent 8 }}
-{{ include "service.microservice.labels" . | indent 8 }}
       annotations:
 {{ include "service.monitoring.pod.annotations" . | indent 8 }}
+      labels:
+{{ include "service.microservice.labels" . | indent 8 }}
+{{ include "service.labels.standard" . | indent 8 }}
     spec:
       containers:
         - name: {{ .Release.Name }}
@@ -33,13 +33,32 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: {{ .Values.deployment.managementPort }}
+          #     scheme: HTTP
           readinessProbe:
             exec:
-              command: ["/bin/sh","-c","curl -s localhost:{{ .Values.deployment.managementPort }}/health --fail && nc -z localhost {{ .Values.service.port }}"]
+              command: ["/bin/sh","-c","curl -s localhost:{{ .Values.deployment.managementPort }}/actuator/health --fail && nc -z localhost {{ .Values.service.port }}"]
             failureThreshold: 3
             initialDelaySeconds: 60
             periodSeconds: 10
             successThreshold: 1
-            timeoutSeconds: 10
+            timeoutSeconds: 60
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+          volumeMounts:
+          - mountPath: /Charts
+            name: data
+{{- if not (empty .Values.persistence.subPath) }}
+            subPath: {{ .Values.persistence.subPath }}
+{{- end }}
+      volumes:
+      - name: data
+        {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default ( .Release.Name ) }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}

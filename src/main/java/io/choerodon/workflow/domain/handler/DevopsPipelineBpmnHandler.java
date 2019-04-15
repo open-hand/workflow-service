@@ -4,6 +4,7 @@ package io.choerodon.workflow.domain.handler;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
+import java.util.Map;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
@@ -32,10 +33,13 @@ public class DevopsPipelineBpmnHandler {
     public static final String PARALLEL_GATE_WAY = "ParallelGateWay";
     public static final String SUB_START_PROCESS = "subStartProcess";
     public static final String END_START_PROCESS = "endStartProcess";
+
+
     private Logger logger = LoggerFactory.getLogger(DevopsPipelineBpmnHandler.class);
 
 
-    public static BpmnModel initDevopsCDPipelineBpmn(DevopsPipelineDTO devopsPipelineDTO) {
+    public static BpmnModel initDevopsCDPipelineBpmn(DevopsPipelineDTO devopsPipelineDTO, Map<String, Object> params) {
+
 
         // 实例化BpmnModel对象
         BpmnModel model = new BpmnModel();
@@ -79,18 +83,19 @@ public class DevopsPipelineBpmnHandler {
                     //设置会签
                     UserTask userTask = null;
                     if (devopsPipelineTaskDTO.getMultiAssign()) {
-                        userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + j, "${user}");
-                        getMultiInstanceLoopCharacteristics();
-                        userTask.setLoopCharacteristics(getMultiInstanceLoopCharacteristics());
+                        userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + devopsPipelineStageDTO.getStageRecordId() + devopsPipelineTaskDTO.getTaskId(), "${user}");
+                        userTask.setLoopCharacteristics(getMultiInstanceLoopCharacteristics(devopsPipelineTaskDTO.getSign(), userTask.getName()));
                     } else {
-                        userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + j, devopsPipelineTaskDTO.getUsernames().get(0));
+                        userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + "." + devopsPipelineStageDTO.getStageRecordId() + "." + devopsPipelineTaskDTO.getTaskId(), devopsPipelineTaskDTO.getUsernames().get(0));
                     }
                     //有用户审批任务只能是串行，此时把节点和上个任务节点连线
                     SequenceFlow sequenceFlow = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), userTask.getId());
                     subProcess.addFlowElement(sequenceFlow);
                     subProcess.addFlowElement(userTask);
+                    params.put(userTask.getName(), devopsPipelineTaskDTO.getUsernames());
+                    devopsPipelineTaskDTO.setTaskName(userTask.getName());
                 } else {
-                    ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + SERVICE_TASK + j, SERVICE_TASK + j);
+                    ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + SERVICE_TASK + SERVICE_TASK + "." + devopsPipelineDTO.getPipelineRecordId() + "." + devopsPipelineStageDTO.getStageRecordId() + "." + devopsPipelineTaskDTO.getTaskId(), SERVICE_TASK + "." + devopsPipelineDTO.getPipelineRecordId() + "." + devopsPipelineStageDTO.getStageRecordId() + "." + devopsPipelineTaskDTO.getTaskId());
                     serviceTask.setImplementation("${devopsDeployDelegate}");
                     serviceTask.setImplementationType(DELEGATE_EXPRESSION);
                     //如果是并行，只需要把所有的serviceTask和并行控制路由连线，如果不是并行，只需要和上个节点连线即可
@@ -105,6 +110,7 @@ public class DevopsPipelineBpmnHandler {
                         subProcess.addFlowElement(sequenceFlow);
                         subProcess.addFlowElement(serviceTask);
                     }
+                    devopsPipelineTaskDTO.setTaskName(serviceTask.getName());
                 }
             }
             if (parallelGateway != null) {
@@ -120,23 +126,29 @@ public class DevopsPipelineBpmnHandler {
                 if (devopsPipelineStageDTO.getNextStageTriggerType().equals(MANUAL)) {
                     UserTask userTask = null;
                     if (devopsPipelineStageDTO.getMultiAssign()) {
-                        userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "ToNext", subProcess.getId() + "ToNext", "${user}");
-                        getMultiInstanceLoopCharacteristics();
-                        userTask.setLoopCharacteristics(getMultiInstanceLoopCharacteristics());
+                        userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "ToNext", subProcess.getId() + "ToNext" + devopsPipelineStageDTO.getStageRecordId(), "${user}");
+                        ActivitiListener activitiListener = new ActivitiListener();
+                        activitiListener.setEvent("create");
+                        activitiListener.setImplementation("${mangerTaskCreateDelegate}");
+                        activitiListener.setImplementationType(DELEGATE_EXPRESSION);
+                        userTask.setLoopCharacteristics(getMultiInstanceLoopCharacteristics(false, userTask.getName()));
                     } else {
-                        userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "ToNext", subProcess.getId() + "ToNext", devopsPipelineStageDTO.getUsernames().get(0));
+                        userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "ToNext", subProcess.getId() + "ToNext" + "." + devopsPipelineStageDTO.getStageRecordId(), devopsPipelineStageDTO.getUsernames().get(0));
                     }
                     SequenceFlow stageToUserTask = dynamicWorkflowUtil.createSequenceFlow(subProcess.getId(), userTask.getId());
                     SequenceFlow userTaskToNextStage = dynamicWorkflowUtil.createSequenceFlow(userTask.getId(), ADHOC_SUB_PROCESS + (i + 1));
                     process.addFlowElement(userTask);
                     process.addFlowElement(stageToUserTask);
                     process.addFlowElement(userTaskToNextStage);
+                    params.put(userTask.getName(), devopsPipelineStageDTO.getUsernames());
+                    devopsPipelineStageDTO.setStageTaskName(userTask.getName());
                 } else {
                     SequenceFlow stageToNextStage = dynamicWorkflowUtil.createSequenceFlow(subProcess.getId(), ADHOC_SUB_PROCESS + (i + 1));
                     process.addFlowElement(stageToNextStage);
                 }
             }
             process.addFlowElement(subProcess);
+            devopsPipelineStageDTO.setStageName(subProcess.getName());
         }
         process.addFlowElement(startProcessToFirstStage);
         process.addFlowElement(lastStageToEndProcess);
@@ -147,11 +159,14 @@ public class DevopsPipelineBpmnHandler {
         return model;
     }
 
-    private static MultiInstanceLoopCharacteristics getMultiInstanceLoopCharacteristics() {
+    private static MultiInstanceLoopCharacteristics getMultiInstanceLoopCharacteristics(Boolean isSign, String userList) {
         MultiInstanceLoopCharacteristics multiInstanceLoopCharacteristics = new MultiInstanceLoopCharacteristics();
         multiInstanceLoopCharacteristics.setElementVariable("user");
         multiInstanceLoopCharacteristics.setCompletionCondition("${nrOfCompletedInstances==1}");
-        multiInstanceLoopCharacteristics.setInputDataItem("${userList}");
+        if (isSign) {
+            multiInstanceLoopCharacteristics.setCompletionCondition("${nrOfCompletedInstances/nrOfInstances == 1}");
+        }
+        multiInstanceLoopCharacteristics.setInputDataItem("${" + userList + "}");
         return multiInstanceLoopCharacteristics;
     }
 

@@ -8,12 +8,23 @@ import java.util.List;
 public class DevopsPipelineStageDTO {
 
 
+    private String stageName;
+    private String stageTaskName;
+    private Long stageRecordId;
     private List<DevopsPipelineTaskDTO> tasks;
     private Boolean parallel;
     private List<String> usernames;
     private String nextStageTriggerType;
     private Boolean isMultiAssign;
 
+
+    public Long getStageRecordId() {
+        return stageRecordId;
+    }
+
+    public void setStageRecordId(Long stageRecordId) {
+        this.stageRecordId = stageRecordId;
+    }
 
     public List<DevopsPipelineTaskDTO> getTasks() {
         return tasks;
@@ -54,4 +65,21 @@ public class DevopsPipelineStageDTO {
     public void setMultiAssign(Boolean multiAssign) {
         isMultiAssign = multiAssign;
     }
+
+    public String getStageName() {
+        return stageName;
+    }
+
+    public void setStageName(String stageName) {
+        this.stageName = stageName;
+    }
+
+    public String getStageTaskName() {
+        return stageTaskName;
+    }
+
+    public void setStageTaskName(String stageTaskName) {
+        this.stageTaskName = stageTaskName;
+    }
+
 }

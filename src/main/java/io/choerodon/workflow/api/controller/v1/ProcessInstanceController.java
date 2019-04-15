@@ -54,18 +54,19 @@ public class ProcessInstanceController {
      *
      * @param  projectId  项目id
      * @param  processInstanceId  流程实例id
-     * @return
+     * @return Boolean
      */
     @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
     @ApiOperation(value = "Devops部署pipeline")
     @PutMapping
-    public ResponseEntity approveUserTask(
+    public ResponseEntity<Boolean> approveUserTask(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "应用信息", required = true)
             @RequestParam String processInstanceId) {
-        processInstanceService.approveUserTask(processInstanceId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return Optional.ofNullable(processInstanceService.approveUserTask(processInstanceId))
+                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
+                .orElseThrow(() -> new CommonException("error.task.approve"));
     }
 
 

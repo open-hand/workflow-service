@@ -59,7 +59,7 @@ public class UserRegistryAspect {
         if (!((InMemoryUserDetailsManager) userDetailsService).userExists(details.getUsername())) {
             ((InMemoryUserDetailsManager) userDetailsService).createUser(new User(user[0], passwordEncoder.encode(user[1]),
                     authoritiesStrings.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList())));
-            activitiUserLoginUtil.logInAs(details.getUsername());
         }
+        activitiUserLoginUtil.logInAs(details.getUsername());
     }
 }
