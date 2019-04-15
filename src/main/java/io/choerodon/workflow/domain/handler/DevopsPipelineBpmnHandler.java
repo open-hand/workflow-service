@@ -1,6 +1,5 @@
 package io.choerodon.workflow.domain.handler;
 
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
@@ -14,8 +13,6 @@ import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
 import org.activiti.bpmn.BpmnAutoLayout;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by Sheep on 2019/4/2.
@@ -33,10 +30,6 @@ public class DevopsPipelineBpmnHandler {
     public static final String PARALLEL_GATE_WAY = "ParallelGateWay";
     public static final String SUB_START_PROCESS = "subStartProcess";
     public static final String END_START_PROCESS = "endStartProcess";
-
-
-    private Logger logger = LoggerFactory.getLogger(DevopsPipelineBpmnHandler.class);
-
 
     public static BpmnModel initDevopsCDPipelineBpmn(DevopsPipelineDTO devopsPipelineDTO, Map<String, Object> params) {
 
@@ -207,5 +200,4 @@ public class DevopsPipelineBpmnHandler {
         }
         return null;
     }
-
 }
