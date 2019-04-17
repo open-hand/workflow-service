@@ -12,8 +12,8 @@ public class DevopsPipelineTaskDTO {
     private String taskName;
     private List<String> usernames;
     private String taskType;
-    private Boolean isMultiAssign;
-    private Boolean isSign;
+    private boolean isMultiAssign;
+    private boolean isSign;
 
 
     public Long getTaskId() {
@@ -52,15 +52,15 @@ public class DevopsPipelineTaskDTO {
         return isMultiAssign;
     }
 
-    public void setMultiAssign(Boolean multiAssign) {
-        isMultiAssign = multiAssign;
+    public void setMultiAssign(Boolean isMultiAssign) {
+        this.isMultiAssign = isMultiAssign;
     }
 
     public Boolean getSign() {
         return isSign;
     }
 
-    public void setSign(Boolean sign) {
-        isSign = sign;
+    public void setSign(Boolean isSign) {
+        this.isSign = isSign;
     }
 }

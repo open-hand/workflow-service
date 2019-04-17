@@ -22,8 +22,8 @@ public class DevopsPipelineBpmnHandler {
     public static final String START_PROCESS = "startProcess";
     public static final String END_PROCESS = "endProcess";
     public static final String ADHOC_SUB_PROCESS = "subProcess";
-    public static final String USER_TASK = "userTask";
-    public static final String SERVICE_TASK = "serviceTask";
+    public static final String USER_TASK = "manual";
+    public static final String SERVICE_TASK = "auto";
     public static final String DELEGATE_EXPRESSION = "delegateExpression";
     public static final String MANUAL = "manual";
     public static final String PROCESS = "Process";
