@@ -24,7 +24,8 @@ public interface DevopsServiceClient {
     ResponseEntity setAutoDeployTaskStatus(
             @RequestParam Long pipelineRecordId,
             @RequestParam Long stageRecordId,
-            @RequestParam Long taskId);
+            @RequestParam Long taskId,
+            @RequestParam Boolean status);
 
     @GetMapping(value = "/workflow/auto_deploy/status")
     ResponseEntity<Boolean> getAutoDeployTaskStatus(

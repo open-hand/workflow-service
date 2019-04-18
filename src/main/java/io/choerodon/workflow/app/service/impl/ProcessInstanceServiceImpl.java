@@ -13,6 +13,7 @@ import io.choerodon.workflow.infra.util.ActivitiUserLoginUtil;
 import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
+import org.activiti.api.process.model.payloads.DeleteProcessPayload;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.api.runtime.shared.query.Page;
 import org.activiti.api.runtime.shared.query.Pageable;
@@ -80,5 +81,11 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         return true;
     }
 
+
+    public void stopInstance(String processInstanceId) {
+        DeleteProcessPayload deleteProcessPayload = new DeleteProcessPayload();
+        deleteProcessPayload.setProcessInstanceId(processInstanceId);
+        processRuntime.delete(deleteProcessPayload);
+    }
 
 }

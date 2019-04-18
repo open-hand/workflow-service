@@ -23,4 +23,13 @@ public interface ProcessInstanceService {
      * @return
      */
     Boolean approveUserTask(String processInstanceId);
+
+
+    /**
+     * 停止实例
+     *
+     * @param  processInstanceId  流程实例id
+     * @return
+     */
+    void stopInstance(String processInstanceId);
 }

@@ -62,12 +62,31 @@ public class ProcessInstanceController {
     public ResponseEntity<Boolean> approveUserTask(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
-            @ApiParam(value = "应用信息", required = true)
+            @ApiParam(value = "实例Id", required = true)
             @RequestParam String processInstanceId) {
         return Optional.ofNullable(processInstanceService.approveUserTask(processInstanceId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.task.approve"));
     }
 
+
+    /**
+     * 停止实例
+     *
+     * @param  projectId  项目id
+     * @param  processInstanceId  流程实例id
+     * @return
+     */
+    @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
+    @ApiOperation(value = "停止实例")
+    @GetMapping
+    public ResponseEntity stopInstance(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "project_id") Long projectId,
+            @ApiParam(value = "实例Id", required = true)
+            @RequestParam String processInstanceId) {
+        processInstanceService.stopInstance(processInstanceId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 
 }

@@ -14,7 +14,7 @@ public class DevopsServiceClientFallBack implements DevopsServiceClient {
     }
 
     @Override
-    public ResponseEntity setAutoDeployTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskId) {
+    public ResponseEntity setAutoDeployTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskId, Boolean status) {
         return new ResponseEntity("error.set.auto.deploy.task.status", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

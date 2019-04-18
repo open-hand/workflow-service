@@ -46,6 +46,8 @@ public class DevopsDeployDelegate implements JavaDelegate {
                 if (deployResult) {
                     exit[0] = true;
                     countDownLatch.countDown();
+                }else {
+                    devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId,false);
                 }
             }
         };
@@ -56,8 +58,7 @@ public class DevopsDeployDelegate implements JavaDelegate {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId);
+        devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId,true);
         logger.info(String.format("ServiceTask:%s  结束", delegateExecution.getCurrentActivityId()));
     }
 }

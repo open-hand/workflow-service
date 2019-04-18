@@ -33,10 +33,10 @@ public class DevopsServiceRepositoryImpl implements DevopsServiceRepository {
     }
 
     @Override
-    public void setAutoDeployTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskId) {
+    public void setAutoDeployTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskId, Boolean status) {
 
         try {
-            devopsServiceClient.setAutoDeployTaskStatus(pipelineRecordId, stageRecordId, taskId);
+            devopsServiceClient.setAutoDeployTaskStatus(pipelineRecordId, stageRecordId, taskId, status);
         } catch (FeignException e) {
             throw new CommonException(e);
         }
