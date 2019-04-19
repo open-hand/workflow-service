@@ -17,19 +17,19 @@ public interface DevopsServiceClient {
 
     @GetMapping(value = "/workflow/auto_deploy")
     ResponseEntity autoDeploy(
-            @RequestParam Long stageRecordId,
-            @RequestParam Long taskId);
+            @RequestParam(value="stage_record_id") Long stageRecordId,
+            @RequestParam(value="task_id") Long taskId);
 
     @PutMapping(value = "/workflow/auto_deploy/status")
     ResponseEntity setAutoDeployTaskStatus(
-            @RequestParam Long pipelineRecordId,
-            @RequestParam Long stageRecordId,
-            @RequestParam Long taskId,
-            @RequestParam Boolean status);
+            @RequestParam(value="pipe_lineRecord_id") Long pipelineRecordId,
+            @RequestParam(value="stage_reccord_id") Long stageRecordId,
+            @RequestParam(value="task_id") Long taskId,
+            @RequestParam(value="status") Boolean status);
 
     @GetMapping(value = "/workflow/auto_deploy/status")
     ResponseEntity<Boolean> getAutoDeployTaskStatus(
-            @RequestParam Long stageRecordId,
-            @RequestParam Long taskId);
+            @RequestParam(value="stage_record_id") Long stageRecordId,
+            @RequestParam(value="task_id") Long taskId);
 
 }
