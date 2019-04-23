@@ -11,5 +11,5 @@ public interface DevopsServiceRepository {
 
     void setAutoDeployTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskId, Boolean status);
 
-    Boolean getAutoDeployTaskStatus(Long stageRecordId, Long taskId);
+    String getAutoDeployTaskStatus(Long stageRecordId, Long taskId);
 }

@@ -20,6 +20,10 @@ public class DevopsDeployDelegate implements JavaDelegate {
     DevopsServiceRepository devopsServiceRepository;
     private Logger logger = LoggerFactory.getLogger(DevopsDeployDelegate.class);
 
+    private final String SUCCRESS = "success";
+    private final String RUNNING = "running";
+    private final String FAILED = "failed";
+
     @Override
     public void execute(DelegateExecution delegateExecution) {
 
@@ -32,22 +36,21 @@ public class DevopsDeployDelegate implements JavaDelegate {
 
         devopsServiceRepository.autoDeploy(stageId, taskId);
 
-        boolean[] exit = {false};
-
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         Runnable runnable = () -> {
-            while (!exit[0]) {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                Boolean deployResult = devopsServiceRepository.getAutoDeployTaskStatus(stageId, taskId);
-                if (deployResult) {
-                    exit[0] = true;
+                String deployResult = devopsServiceRepository.getAutoDeployTaskStatus(stageId, taskId);
+                if (SUCCRESS.equals(deployResult)) {
                     countDownLatch.countDown();
-                }else {
-                    devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId,false);
+                }
+                if (FAILED.equals(deployResult)) {
+                    devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId, false);
+                    Thread.currentThread().interrupt();
                 }
             }
         };
@@ -58,7 +61,7 @@ public class DevopsDeployDelegate implements JavaDelegate {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId,true);
+        devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId, true);
         logger.info(String.format("ServiceTask:%s  结束", delegateExecution.getCurrentActivityId()));
     }
 }

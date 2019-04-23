@@ -43,11 +43,11 @@ public class DevopsServiceRepositoryImpl implements DevopsServiceRepository {
     }
 
     @Override
-    public Boolean getAutoDeployTaskStatus(Long stageRecordId, Long taskId) {
+    public String getAutoDeployTaskStatus(Long stageRecordId, Long taskId) {
 
         try {
-            ResponseEntity<Boolean> responseEntity = devopsServiceClient.getAutoDeployTaskStatus(stageRecordId, taskId);
-            Optional<Boolean> result = Optional.ofNullable(responseEntity.getBody());
+            ResponseEntity<String> responseEntity = devopsServiceClient.getAutoDeployTaskStatus(stageRecordId, taskId);
+            Optional<String> result = Optional.ofNullable(responseEntity.getBody());
             if (result.isPresent()) {
                 return result.get();
             } else {
