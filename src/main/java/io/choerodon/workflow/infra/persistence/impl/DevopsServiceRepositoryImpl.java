@@ -22,10 +22,10 @@ public class DevopsServiceRepositoryImpl implements DevopsServiceRepository {
     DevopsServiceClient devopsServiceClient;
 
     @Override
-    public void autoDeploy(Long stageRecordId, Long taskId) {
+    public void autoDeploy(Long stageRecordId, Long taskId, String processInstanceId) {
 
         try {
-            devopsServiceClient.autoDeploy(stageRecordId, taskId);
+            devopsServiceClient.autoDeploy(stageRecordId, taskId, processInstanceId);
         } catch (FeignException e) {
             throw new CommonException(e);
         }

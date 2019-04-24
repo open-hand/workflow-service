@@ -33,8 +33,9 @@ public class DevopsDeployDelegate implements JavaDelegate {
         Long pipelineId = Long.parseLong(ids[1]);
         Long stageId = Long.parseLong(ids[2]);
         Long taskId = Long.parseLong(ids[3]);
+        delegateExecution.getProcessInstanceId();
 
-        devopsServiceRepository.autoDeploy(stageId, taskId);
+        devopsServiceRepository.autoDeploy(stageId, taskId, delegateExecution.getProcessInstanceId());
 
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         Runnable runnable = () -> {
