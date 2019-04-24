@@ -83,11 +83,12 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
 
 
     public void stopInstance(String processInstanceId) {
-        ProcessInstance processInstance = processRuntime.processInstance(processInstanceId);
-        if (processInstance != null) {
+        try {
             DeleteProcessPayload deleteProcessPayload = new DeleteProcessPayload();
             deleteProcessPayload.setProcessInstanceId(processInstanceId);
             processRuntime.delete(deleteProcessPayload);
+        }catch (Exception e) {
+            logger.info(e.getMessage());
         }
     }
 
