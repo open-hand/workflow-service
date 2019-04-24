@@ -63,7 +63,7 @@ public class ProcessInstanceController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "实例Id", required = true)
-            @RequestParam String processInstanceId) {
+            @RequestParam(value = "process_instance_id") String processInstanceId) {
         return Optional.ofNullable(processInstanceService.approveUserTask(processInstanceId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.task.approve"));
@@ -84,7 +84,7 @@ public class ProcessInstanceController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "实例Id", required = true)
-            @RequestParam String processInstanceId) {
+            @RequestParam(value = "process_instance_id")String processInstanceId) {
         processInstanceService.stopInstance(processInstanceId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
