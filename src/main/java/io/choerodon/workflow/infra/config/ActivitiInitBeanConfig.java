@@ -48,6 +48,6 @@ public class ActivitiInitBeanConfig {
     @Bean
     public TaskRuntimeEventListener<TaskCompletedEvent> taskCompletedListener() {
         return taskCompleted ->
-                logger.info(taskCompleted.getEntity().getName() + ":完成");
+                logger.info(taskCompleted.getEntity().getAssignee() + " 审批:" + taskCompleted.getEntity().getName() + ":完成");
     }
 }
