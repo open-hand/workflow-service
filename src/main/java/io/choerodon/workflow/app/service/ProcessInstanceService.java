@@ -13,23 +13,23 @@ public interface ProcessInstanceService {
      * @param  devopsPipelineDTO  CD流水线信息
      * @return String
      */
-    String beginDevopsPipeline(DevopsPipelineDTO devopsPipelineDTO);
+    void beginDevopsPipeline(DevopsPipelineDTO devopsPipelineDTO);
 
 
     /**
      * 审核DevopsCD任务
      *
-     * @param  processInstanceId  流程实例id
+     * @param  pipelineRecordId  CD pipelineId
      * @return
      */
-    Boolean approveUserTask(String processInstanceId);
+    Boolean approveUserTask(Long pipelineRecordId);
 
 
     /**
      * 停止实例
      *
-     * @param  processInstanceId  流程实例id
+     * @param  pipelineRecordId  CD pipelineId
      * @return
      */
-    void stopInstance(String processInstanceId);
+    void stopInstance(Long pipelineRecordId);
 }

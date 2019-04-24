@@ -38,14 +38,13 @@ public class ProcessInstanceController {
     @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
     @ApiOperation(value = "Devops部署pipeline")
     @PostMapping
-    public ResponseEntity<String> create(
+    public ResponseEntity create(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "应用信息", required = true)
             @RequestBody DevopsPipelineDTO devopsPipelineDTO) {
-        return Optional.ofNullable(processInstanceService.beginDevopsPipeline(devopsPipelineDTO))
-                .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
-                .orElseThrow(() -> new CommonException("error.devops.pipeline.process.start"));
+        processInstanceService.beginDevopsPipeline(devopsPipelineDTO);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 
@@ -53,7 +52,7 @@ public class ProcessInstanceController {
      * 审核DevopsCD任务
      *
      * @param  projectId  项目id
-     * @param  processInstanceId  流程实例id
+     * @param  pipelineRecordId  流程实例id
      * @return Boolean
      */
     @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
@@ -63,29 +62,29 @@ public class ProcessInstanceController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "实例Id", required = true)
-            @RequestParam(value = "process_instance_id") String processInstanceId) {
-        return Optional.ofNullable(processInstanceService.approveUserTask(processInstanceId))
+            @RequestParam(value = "pipeline_record_id") Long pipelineRecordId) {
+        return Optional.ofNullable(processInstanceService.approveUserTask(pipelineRecordId))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.task.approve"));
     }
 
 
     /**
-     * 停止实例
+     * 根据业务key删除实例
      *
      * @param  projectId  项目id
-     * @param  processInstanceId  流程实例id
+     * @param  pipelineRecordId  流程实例id
      * @return
      */
     @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
-    @ApiOperation(value = "停止实例")
+    @ApiOperation(value = "根据业务key删除实例")
     @GetMapping
     public ResponseEntity stopInstance(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "实例Id", required = true)
-            @RequestParam(value = "process_instance_id")String processInstanceId) {
-        processInstanceService.stopInstance(processInstanceId);
+            @RequestParam(value = "pipeline_record_id") Long pipelineRecordId) {
+        processInstanceService.stopInstance(pipelineRecordId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

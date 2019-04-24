@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
  */
 public class DevopsServiceClientFallBack implements DevopsServiceClient {
     @Override
-    public ResponseEntity autoDeploy(Long stageRecordId, Long taskId, String processInstanceId) {
+    public ResponseEntity autoDeploy(Long stageRecordId, Long taskId) {
         return new ResponseEntity("error.auto.deploy", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
