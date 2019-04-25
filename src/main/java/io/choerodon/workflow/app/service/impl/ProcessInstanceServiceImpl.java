@@ -65,24 +65,20 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
                 .deploymentId(deployment.getId()).singleResult();
         String name = "部署CD流程";
         logger.info(String.format("部署CD流程:%s  开始", devopsPipelineDTO.getPipelineRecordId()));
-        start(processDefinition.getKey(), name, devopsPipelineDTO.getPipelineRecordId().toString(), params);
+        processRuntime.start(ProcessPayloadBuilder
+                    .start()
+                    .withProcessDefinitionKey(processDefinition.getKey())
+                    .withName(name)
+                    .withBusinessKey(devopsPipelineDTO.getBusinessKey())
+                    .withVariables(params)
+                    .build());
     }
 
-    @Async
-    public void start(String key, String name, String businessKey, Map<String, Object> params) {
-        processRuntime.start(ProcessPayloadBuilder
-                .start()
-                .withProcessDefinitionKey(key)
-                .withName(name)
-                .withBusinessKey(businessKey)
-                .withVariables(params)
-                .build());
-    }
 
     @Override
-    public Boolean approveUserTask(Long pipelineRecordId) {
+    public Boolean approveUserTask(String businessKey) {
         GetProcessInstancesPayload getProcessInstancesPayload = new GetProcessInstancesPayload();
-        getProcessInstancesPayload.setBusinessKey(pipelineRecordId.toString());
+        getProcessInstancesPayload.setBusinessKey(businessKey);
         Page<ProcessInstance> processInstances = processRuntime.processInstances(Pageable.of(0, 10), getProcessInstancesPayload);
         if (processInstances.getContent().size() > 0) {
             GetTasksPayload getTasksPayload = new GetTasksPayload();
@@ -96,9 +92,9 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
 
 
     @Override
-    public void stopInstance(Long pipelineRecordId) {
+    public void stopInstance(String businessKey) {
         GetProcessInstancesPayload getProcessInstancesPayload = new GetProcessInstancesPayload();
-        getProcessInstancesPayload.setBusinessKey(pipelineRecordId.toString());
+        getProcessInstancesPayload.setBusinessKey(businessKey);
         Page<ProcessInstance> processInstances = processRuntime.processInstances(Pageable.of(0, 10), getProcessInstancesPayload);
         if (processInstances.getContent().size() > 0) {
             DeleteProcessPayload deleteProcessPayload = new DeleteProcessPayload();

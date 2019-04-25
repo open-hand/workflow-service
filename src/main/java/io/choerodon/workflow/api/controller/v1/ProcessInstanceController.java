@@ -62,8 +62,8 @@ public class ProcessInstanceController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "实例Id", required = true)
-            @RequestParam(value = "pipeline_record_id") Long pipelineRecordId) {
-        return Optional.ofNullable(processInstanceService.approveUserTask(pipelineRecordId))
+            @RequestParam(value = "business_key") String businessKey) {
+        return Optional.ofNullable(processInstanceService.approveUserTask(businessKey))
                 .map(target -> new ResponseEntity<>(target, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.task.approve"));
     }
@@ -73,7 +73,7 @@ public class ProcessInstanceController {
      * 根据业务key删除实例
      *
      * @param  projectId  项目id
-     * @param  pipelineRecordId  流程实例id
+     * @param  businessKey  流程业务id
      * @return
      */
     @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
@@ -83,8 +83,8 @@ public class ProcessInstanceController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "实例Id", required = true)
-            @RequestParam(value = "pipeline_record_id") Long pipelineRecordId) {
-        processInstanceService.stopInstance(pipelineRecordId);
+            @RequestParam(value = "business_key") String businessKey) {
+        processInstanceService.stopInstance(businessKey);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

@@ -1,6 +1,5 @@
 package io.choerodon.workflow.domain.Delegate;
 
-import java.util.concurrent.CountDownLatch;
 
 import io.choerodon.workflow.domain.repository.DevopsServiceRepository;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -44,9 +43,7 @@ public class DevopsDeployDelegate implements JavaDelegate {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
                 }
-                System.out.println("123");
                 String deployResult = devopsServiceRepository.getAutoDeployTaskStatus(stageId, taskId);
-                System.out.println(deployResult);
                 if (SUCCRESS.equals(deployResult)) {
                     Thread.currentThread().interrupt();
                 }

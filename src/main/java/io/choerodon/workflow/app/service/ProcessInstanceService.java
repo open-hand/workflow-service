@@ -19,17 +19,17 @@ public interface ProcessInstanceService {
     /**
      * 审核DevopsCD任务
      *
-     * @param  pipelineRecordId  CD pipelineId
+     * @param  businessKey  CD业务id
      * @return
      */
-    Boolean approveUserTask(Long pipelineRecordId);
+    Boolean approveUserTask(String businessKey);
 
 
     /**
      * 停止实例
      *
-     * @param  pipelineRecordId  CD pipelineId
+     * @param  businessKey  CD业务id
      * @return
      */
-    void stopInstance(Long pipelineRecordId);
+    void stopInstance(String businessKey);
 }
