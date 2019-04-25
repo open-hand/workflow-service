@@ -39,12 +39,14 @@ public class DevopsDeployDelegate implements JavaDelegate {
 
         devopsServiceRepository.autoDeploy(stageId, taskId);
         CountDownLatch countDownLatch = new CountDownLatch(1);
+        int[] count = {0};
         Runnable runnable = () -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
                 }
+                count[0] = count[0]++;
                 String deployResult = devopsServiceRepository.getAutoDeployTaskStatus(stageId, taskId);
                 System.out.println(deployResult);
                 if (SUCCRESS.equals(deployResult)) {
@@ -52,7 +54,8 @@ public class DevopsDeployDelegate implements JavaDelegate {
                     countDownLatch.countDown();
 
                 }
-                if (FAILED.equals(deployResult)) {
+                //自动部署失败或者执行20s以上没反应也重置为失败
+                if (FAILED.equals(deployResult)||count[0]==7) {
                     devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId, false);
                     Thread.currentThread().interrupt();
                 }
