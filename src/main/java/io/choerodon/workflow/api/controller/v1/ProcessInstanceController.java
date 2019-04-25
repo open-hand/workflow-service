@@ -52,7 +52,7 @@ public class ProcessInstanceController {
      * 审核DevopsCD任务
      *
      * @param  projectId  项目id
-     * @param  pipelineRecordId  流程实例id
+     * @param  businessKey  流程实例id
      * @return Boolean
      */
     @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
