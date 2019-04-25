@@ -18,6 +18,7 @@ public class DevopsDeployDelegate implements JavaDelegate {
 
     @Autowired
     DevopsServiceRepository devopsServiceRepository;
+
     private Logger logger = LoggerFactory.getLogger(DevopsDeployDelegate.class);
 
     private final String SUCCRESS = "success";
@@ -37,17 +38,17 @@ public class DevopsDeployDelegate implements JavaDelegate {
 
         devopsServiceRepository.autoDeploy(stageId, taskId);
 
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
         Runnable runnable = () -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+                System.out.println("123");
                 String deployResult = devopsServiceRepository.getAutoDeployTaskStatus(stageId, taskId);
+                System.out.println(deployResult);
                 if (SUCCRESS.equals(deployResult)) {
-                    countDownLatch.countDown();
+                    Thread.currentThread().interrupt();
                 }
                 if (FAILED.equals(deployResult)) {
                     devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId, false);
@@ -58,10 +59,11 @@ public class DevopsDeployDelegate implements JavaDelegate {
         Thread thread = new Thread(runnable);
         thread.start();
         try {
-            countDownLatch.await();
+            thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId, true);
         logger.info(String.format("ServiceTask:%s  结束", delegateExecution.getCurrentActivityId()));
     }
