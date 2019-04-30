@@ -66,3 +66,4 @@ asgard-servie:
 logging:
   level:
     io.choerodon.event.consumer: debug
+    com.zaxxer: debug
