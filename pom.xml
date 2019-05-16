@@ -244,15 +244,15 @@
                     <execution>
                         <goals>
                             <goal>copy</goal>
-                            <goal>extract</goal>
+                            <!--<goal>extract</goal>-->
                             <goal>convert</goal>
                             <goal>permission</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <serviceBuild>${choerodon.serviceBuild}</serviceBuild>
-                </configuration>
+                <!--<configuration>-->
+                    <!--<serviceBuild>${choerodon.serviceBuild}</serviceBuild>-->
+                <!--</configuration>-->
             </plugin>
         </plugins>
     </build>
@@ -267,6 +267,15 @@
             </releases>
         </repository>
     </repositories>
+
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>Choerodon Release</id>
+            <name>Choerodon Release Repository</name>
+            <url>https://nexus.choerodon.com.cn/repository/choerodon-release</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
 
