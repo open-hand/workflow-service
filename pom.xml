@@ -242,7 +242,6 @@
                         <goals>
                             <goal>copy</goal>
                             <goal>extract</goal>
-                            <goal>convert</goal>
                             <goal>permission</goal>
                         </goals>
                     </execution>
