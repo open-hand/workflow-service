@@ -2,10 +2,10 @@ package io.choerodon.workflow.api.controller.v1;
 
 import java.util.Optional;
 
+import io.choerodon.base.annotation.Permission;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.InitRoleCode;
 import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.swagger.annotation.Permission;
 import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +35,7 @@ public class ProcessInstanceController {
      * @param  devopsPipelineDTO  CD流水线信息
      * @return String
      */
-    @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
+    @Permission(roles = {InitRoleCode.PROJECT_OWNER})
     @ApiOperation(value = "Devops部署pipeline")
     @PostMapping
     public ResponseEntity create(
@@ -55,7 +55,7 @@ public class ProcessInstanceController {
      * @param  businessKey  流程实例id
      * @return Boolean
      */
-    @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
+    @Permission(roles = {InitRoleCode.PROJECT_OWNER})
     @ApiOperation(value = "Devops部署pipeline")
     @PutMapping
     public ResponseEntity<Boolean> approveUserTask(
@@ -76,7 +76,7 @@ public class ProcessInstanceController {
      * @param  businessKey  流程业务id
      * @return
      */
-    @Permission(level = ResourceLevel.PROJECT, roles = {InitRoleCode.PROJECT_OWNER})
+    @Permission(roles = {InitRoleCode.PROJECT_OWNER})
     @ApiOperation(value = "根据业务key删除实例")
     @GetMapping
     public ResponseEntity stopInstance(
