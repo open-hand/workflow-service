@@ -7,9 +7,11 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.InitRoleCode;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
+import io.choerodon.workflow.app.service.PipelineService;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,8 @@ public class ProcessInstanceController {
 
     @Autowired
     ProcessInstanceService processInstanceService;
+    @Autowired
+    private PipelineService  pipelineService;
 
     /**
      * Devops部署pipeline
@@ -43,7 +47,7 @@ public class ProcessInstanceController {
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "应用信息", required = true)
             @RequestBody DevopsPipelineDTO devopsPipelineDTO) {
-        processInstanceService.beginDevopsPipeline(devopsPipelineDTO);
+        pipelineService.beginDevopsPipelineSaga(devopsPipelineDTO);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

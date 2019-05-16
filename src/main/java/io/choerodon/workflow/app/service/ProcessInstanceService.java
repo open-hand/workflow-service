@@ -8,8 +8,11 @@ import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
 public interface ProcessInstanceService {
 
 
+
+
+
     /**
-     * Devops部署pipeline
+     * Devops部署pipeline执行方法
      * @param  devopsPipelineDTO  CD流水线信息
      * @return String
      */
