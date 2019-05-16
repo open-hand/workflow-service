@@ -21,6 +21,8 @@
         <choerodon.starters.version>0.11.0.RELEASE</choerodon.starters.version>
         <powermock.version>2.0.0-beta.5</powermock.version>
         <activiti-dependencies.version>7.0.109</activiti-dependencies.version>
+        <choerodon.serviceBuild>true</choerodon.serviceBuild>
+        <choerodon.mainClass>io.choerodon.workflow.WorkFlowServiceApplication</choerodon.mainClass>
     </properties>
 
     <dependencyManagement>
@@ -205,7 +207,7 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <configuration>
-                        <mainClass>io.choerodon.workflow.WorkFlowServiceApplication</mainClass>
+                        <mainClass>${choerodon.mainClass}</mainClass>
                     </configuration>
                 </plugin>
             </plugins>
@@ -249,7 +251,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <serviceBuild>true</serviceBuild>
+                    <serviceBuild>${choerodon.serviceBuild}</serviceBuild>
                 </configuration>
             </plugin>
         </plugins>
