@@ -198,6 +198,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>app</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -242,6 +243,7 @@
                         <goals>
                             <goal>copy</goal>
                             <goal>extract</goal>
+                            <goal>convert</goal>
                             <goal>permission</goal>
                         </goals>
                     </execution>
