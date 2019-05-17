@@ -57,8 +57,8 @@ public class DevopsDeployDelegate implements JavaDelegate {
                         success[0] = true;
                         Thread.currentThread().interrupt();
                     }
-                    //自动部署失败或者执行20s以上没反应也重置为失败
-                    if (FAILED.equals(deployResult) || count[0] == 10) {
+                    //自动部署失败或者执行3min以上没反应也重置为失败
+                    if (FAILED.equals(deployResult) || count[0] == 60) {
                         devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId, false);
                         Thread.currentThread().interrupt();
                     }
@@ -75,6 +75,7 @@ public class DevopsDeployDelegate implements JavaDelegate {
                 devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId, true);
                 logger.info(String.format("ServiceTask:%s  结束", delegateExecution.getCurrentActivityId()));
             } else {
+                devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId, false);
                 delegateExecution.setVariable(DEPLOY_STATUS, "failed");
                 logger.info(String.format("ServiceTask:%s  失败", delegateExecution.getCurrentActivityId()));
             }
