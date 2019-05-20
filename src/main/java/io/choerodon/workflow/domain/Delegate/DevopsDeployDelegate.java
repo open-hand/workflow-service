@@ -75,7 +75,6 @@ public class DevopsDeployDelegate implements JavaDelegate {
                 devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId, true);
                 logger.info(String.format("ServiceTask:%s  结束", delegateExecution.getCurrentActivityId()));
             } else {
-                devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskId, false);
                 delegateExecution.setVariable(DEPLOY_STATUS, "failed");
                 logger.info(String.format("ServiceTask:%s  失败", delegateExecution.getCurrentActivityId()));
             }
