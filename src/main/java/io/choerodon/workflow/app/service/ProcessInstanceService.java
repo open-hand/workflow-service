@@ -8,28 +8,31 @@ import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
 public interface ProcessInstanceService {
 
 
+
+
+
     /**
-     * Devops部署pipeline
+     * Devops部署pipeline执行方法
      * @param  devopsPipelineDTO  CD流水线信息
      * @return String
      */
-    String beginDevopsPipeline(DevopsPipelineDTO devopsPipelineDTO);
+    void beginDevopsPipeline(DevopsPipelineDTO devopsPipelineDTO);
 
 
     /**
      * 审核DevopsCD任务
      *
-     * @param  processInstanceId  流程实例id
+     * @param  businessKey  CD业务id
      * @return
      */
-    Boolean approveUserTask(String processInstanceId);
+    Boolean approveUserTask(String businessKey);
 
 
     /**
      * 停止实例
      *
-     * @param  processInstanceId  流程实例id
+     * @param  businessKey  CD业务id
      * @return
      */
-    void stopInstance(String processInstanceId);
+    void stopInstance(String businessKey);
 }

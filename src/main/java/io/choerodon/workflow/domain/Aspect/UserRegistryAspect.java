@@ -42,7 +42,7 @@ public class UserRegistryAspect {
     /**
      * 为所有controller类下面增加一个activiti用户注册，注册到内存用户信息中，用于activiti7的登陆
      */
-    @Pointcut("execution(public * io.choerodon.workflow.api.controller.v1.*.*(..))")
+    @Pointcut("execution(public * io.choerodon.workflow.app.service.impl.ProcessInstanceServiceImpl.*(..))")
     public void userRegistry() {
     }
 

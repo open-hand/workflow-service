@@ -15,7 +15,7 @@ public class DevopsPipelineStageDTO {
     private Boolean parallel;
     private List<String> usernames;
     private String nextStageTriggerType;
-    private boolean isMultiAssign;
+    private boolean multiAssign;
 
 
     public Long getStageRecordId() {
@@ -58,12 +58,13 @@ public class DevopsPipelineStageDTO {
         this.usernames = usernames;
     }
 
-    public Boolean getMultiAssign() {
-        return isMultiAssign;
+
+    public boolean isMultiAssign() {
+        return multiAssign;
     }
 
-    public void setMultiAssign(Boolean isMultiAssign) {
-        this.isMultiAssign = isMultiAssign;
+    public void setMultiAssign(boolean multiAssign) {
+        this.multiAssign = multiAssign;
     }
 
     public String getStageName() {

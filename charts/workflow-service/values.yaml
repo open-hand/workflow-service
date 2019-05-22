@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: registry.cn-hangzhou.aliyuncs.com/choerodon-c7ncd/workflow-service
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 preJob:
   timeout: 300
@@ -54,7 +54,7 @@ persistence:
 service:
   enabled: false
   type: ClusterIP
-  port: 18080
+  port: 8065
   
 ingress:
   enabled: false

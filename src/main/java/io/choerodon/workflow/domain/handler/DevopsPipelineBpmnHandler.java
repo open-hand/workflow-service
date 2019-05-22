@@ -75,9 +75,9 @@ public class DevopsPipelineBpmnHandler {
                     if (devopsPipelineTaskDTO.getTaskType().equals(USER_TASK)) {
                         //设置会签
                         UserTask userTask = null;
-                        if (devopsPipelineTaskDTO.getMultiAssign()) {
+                        if (devopsPipelineTaskDTO.isMultiAssign()) {
                             userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + devopsPipelineStageDTO.getStageRecordId() + devopsPipelineTaskDTO.getTaskId(), "${user}");
-                            userTask.setLoopCharacteristics(getMultiInstanceLoopCharacteristics(devopsPipelineTaskDTO.getSign(), userTask.getName()));
+                            userTask.setLoopCharacteristics(getMultiInstanceLoopCharacteristics(devopsPipelineTaskDTO.isSign(), userTask.getName()));
                         } else {
                             userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + "." + devopsPipelineStageDTO.getStageRecordId() + "." + devopsPipelineTaskDTO.getTaskId(), devopsPipelineTaskDTO.getUsernames().get(0));
                         }
@@ -123,7 +123,7 @@ public class DevopsPipelineBpmnHandler {
             if (devopsPipelineStageDTO.getNextStageTriggerType() != null) {
                 if (devopsPipelineStageDTO.getNextStageTriggerType().equals(MANUAL)) {
                     UserTask userTask = null;
-                    if (devopsPipelineStageDTO.getMultiAssign()) {
+                    if (devopsPipelineStageDTO.isMultiAssign()) {
                         userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "ToNext", subProcess.getId() + "ToNext" + devopsPipelineStageDTO.getStageRecordId(), "${user}");
                         ActivitiListener activitiListener = new ActivitiListener();
                         activitiListener.setEvent("create");
