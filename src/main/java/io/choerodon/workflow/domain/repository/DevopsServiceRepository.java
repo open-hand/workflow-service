@@ -7,9 +7,9 @@ package io.choerodon.workflow.domain.repository;
 public interface DevopsServiceRepository {
 
 
-    void autoDeploy(Long stageRecordId, Long taskId);
+    void autoDeploy(Long stageRecordId, Long taskRecordId);
 
-    void setAutoDeployTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskId, Boolean status);
+    void setAutoDeployTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, Boolean status);
 
-    String getAutoDeployTaskStatus(Long stageRecordId, Long taskId);
+    String getAutoDeployTaskStatus(Long stageRecordId, Long taskRecordId);
 }

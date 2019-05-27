@@ -22,10 +22,10 @@ public class DevopsServiceRepositoryImpl implements DevopsServiceRepository {
     DevopsServiceClient devopsServiceClient;
 
     @Override
-    public void autoDeploy(Long stageRecordId, Long taskId) {
+    public void autoDeploy(Long stageRecordId, Long taskRecordId) {
 
         try {
-            devopsServiceClient.autoDeploy(stageRecordId, taskId);
+            devopsServiceClient.autoDeploy(stageRecordId, taskRecordId);
         } catch (FeignException e) {
             throw new CommonException(e);
         }
@@ -33,20 +33,20 @@ public class DevopsServiceRepositoryImpl implements DevopsServiceRepository {
     }
 
     @Override
-    public void setAutoDeployTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskId, Boolean status) {
+    public void setAutoDeployTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, Boolean status) {
 
         try {
-            devopsServiceClient.setAutoDeployTaskStatus(pipelineRecordId, stageRecordId, taskId, status);
+            devopsServiceClient.setAutoDeployTaskStatus(pipelineRecordId, stageRecordId, taskRecordId, status);
         } catch (FeignException e) {
             throw new CommonException(e);
         }
     }
 
     @Override
-    public String getAutoDeployTaskStatus(Long stageRecordId, Long taskId) {
+    public String getAutoDeployTaskStatus(Long stageRecordId, Long taskRecordId) {
 
         try {
-            ResponseEntity<String> responseEntity = devopsServiceClient.getAutoDeployTaskStatus(stageRecordId, taskId);
+            ResponseEntity<String> responseEntity = devopsServiceClient.getAutoDeployTaskStatus(stageRecordId, taskRecordId);
             Optional<String> result = Optional.ofNullable(responseEntity.getBody());
             if (result.isPresent()) {
                 return result.get();
