@@ -54,12 +54,12 @@ public class UserRegistryAspect {
     public void userRegistry(JoinPoint joinPoint) {
         CustomUserDetails details = DetailsHelper.getUserDetails();
         String activitiGroup = "Group_activiti" + details.getOrganizationId();
-        String[] user = {details.getUsername(), "password", "ROLE_ACTIVITI_USER", activitiGroup};
+        String[] user = {details.getUserId().toString(), "password", "ROLE_ACTIVITI_USER", activitiGroup};
         List<String> authoritiesStrings = Arrays.asList(Arrays.copyOfRange(user, 2, user.length));
-        if (!((InMemoryUserDetailsManager) userDetailsService).userExists(details.getUsername())) {
+        if (!((InMemoryUserDetailsManager) userDetailsService).userExists(details.getUserId().toString())) {
             ((InMemoryUserDetailsManager) userDetailsService).createUser(new User(user[0], passwordEncoder.encode(user[1]),
                     authoritiesStrings.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList())));
         }
-        activitiUserLoginUtil.logInAs(details.getUsername());
+        activitiUserLoginUtil.logInAs(details.getUserId().toString());
     }
 }
