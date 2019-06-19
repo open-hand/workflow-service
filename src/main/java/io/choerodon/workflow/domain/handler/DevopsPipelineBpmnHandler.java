@@ -88,7 +88,7 @@ public class DevopsPipelineBpmnHandler {
                         params.put(userTask.getName(), devopsPipelineTaskDTO.getUsernames());
                         devopsPipelineTaskDTO.setTaskName(userTask.getName());
                     } else {
-                        ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + SERVICE_TASK + SERVICE_TASK + "." + devopsPipelineDTO.getPipelineRecordId() + "." + devopsPipelineStageDTO.getStageRecordId() + "." + devopsPipelineTaskDTO.getTaskRecordId(), SERVICE_TASK + "." + devopsPipelineDTO.getPipelineRecordId() + "." + devopsPipelineStageDTO.getStageRecordId() + "." + devopsPipelineTaskDTO.getTaskRecordId());
+                        ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + SERVICE_TASK + "." + devopsPipelineDTO.getPipelineRecordId() + "." + devopsPipelineStageDTO.getStageRecordId() + "." + devopsPipelineTaskDTO.getTaskRecordId() + "." + devopsPipelineStageDTO.getParallel(), SERVICE_TASK + "." + devopsPipelineDTO.getPipelineRecordId() + "." + devopsPipelineStageDTO.getStageRecordId() + "." + devopsPipelineTaskDTO.getTaskRecordId() + "." + devopsPipelineStageDTO.getParallel());
                         serviceTask.setImplementation("${devopsDeployDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
                         //如果是并行，只需要把所有的serviceTask和并行控制路由连线，如果不是并行，只需要和上个节点连线即可

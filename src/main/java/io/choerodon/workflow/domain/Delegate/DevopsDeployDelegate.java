@@ -1,6 +1,5 @@
 package io.choerodon.workflow.domain.Delegate;
 
-
 import io.choerodon.workflow.domain.repository.DevopsServiceRepository;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -13,10 +12,11 @@ import org.springframework.stereotype.Component;
 /**
  * Created by Sheep on 2019/4/3.
  */
+
 @Component
 public class DevopsDeployDelegate implements JavaDelegate {
 
-    public static final String DEPLOY_STATUS = "deployStatus";
+    public static final String DEPLOY_FAILED = "deployFailed";
     @Autowired
     DevopsServiceRepository devopsServiceRepository;
     @Autowired
@@ -25,23 +25,35 @@ public class DevopsDeployDelegate implements JavaDelegate {
     private Logger logger = LoggerFactory.getLogger(DevopsDeployDelegate.class);
 
     private final String SUCCRESS = "success";
-    private final String RUNNING = "running";
     private final String FAILED = "failed";
+    private final String PARALLEL = "parallel";
 
     @Override
     public void execute(DelegateExecution delegateExecution) {
 
-        if (delegateExecution.getVariable(DEPLOY_STATUS) == null) {
+        String[] ids = delegateExecution.getCurrentActivityId().split("\\.");
+        Long pipelineId = Long.parseLong(ids[1]);
+        Long stageId = Long.parseLong(ids[2]);
+        Long taskRecordId = Long.parseLong(ids[3]);
+        String parallel = ids[4];
+
+
+        //并行任务中serviceTask即使有一个执行失败,其他的serviceTask也要继续执行
+        Boolean isDeploy = false;
+        if (delegateExecution.getVariable(DEPLOY_FAILED) == null) {
+            isDeploy = true;
+        } else {
+            if (delegateExecution.getVariable(DEPLOY_FAILED).equals(pipelineId + ":" + stageId) && delegateExecution.getVariable(PARALLEL).equals("true")) {
+                isDeploy = true;
+            }
+        }
+        if (isDeploy) {
 
             logger.info(String.format("ServiceTask:%s 开始", delegateExecution.getCurrentActivityId()));
 
-            String[] ids = delegateExecution.getCurrentActivityId().split("\\.");
-            Long pipelineId = Long.parseLong(ids[1]);
-            Long stageId = Long.parseLong(ids[2]);
-            Long taskRecordId = Long.parseLong(ids[3]);
-            delegateExecution.getProcessInstanceId();
 
-        devopsServiceRepository.autoDeploy(stageId, taskRecordId);
+            devopsServiceRepository.autoDeploy(stageId, taskRecordId);
+
             int[] count = {0};
             boolean[] success = {false};
             Runnable runnable = () -> {
@@ -75,7 +87,8 @@ public class DevopsDeployDelegate implements JavaDelegate {
                 devopsServiceRepository.setAutoDeployTaskStatus(pipelineId, stageId, taskRecordId, true);
                 logger.info(String.format("ServiceTask:%s  结束", delegateExecution.getCurrentActivityId()));
             } else {
-                delegateExecution.setVariable(DEPLOY_STATUS, "failed");
+                delegateExecution.setVariable(DEPLOY_FAILED, pipelineId + ":" + stageId);
+                delegateExecution.setVariable(PARALLEL, parallel);
                 logger.info(String.format("ServiceTask:%s  失败", delegateExecution.getCurrentActivityId()));
             }
         }
