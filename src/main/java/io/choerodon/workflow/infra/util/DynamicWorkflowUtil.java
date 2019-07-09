@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.choerodon.core.exception.CommonException;
-import io.choerodon.workflow.domain.handler.DevopsPipelineBpmnHandler;
+import io.choerodon.workflow.infra.bpmnhandler.DevopsPipelineBpmnHandler;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.*;
 import org.activiti.validation.ProcessValidator;

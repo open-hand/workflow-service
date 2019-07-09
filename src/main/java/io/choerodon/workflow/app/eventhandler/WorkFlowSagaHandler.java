@@ -1,9 +1,9 @@
-package io.choerodon.workflow.api.controller.eventhandler;
+package io.choerodon.workflow.app.eventhandler;
 
 import com.google.gson.Gson;
 import io.choerodon.asgard.saga.SagaDefinition;
 import io.choerodon.asgard.saga.annotation.SagaTask;
-import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
+import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public class WorkFlowSagaHandler {
             concurrentLimitPolicy = SagaDefinition.ConcurrentLimitPolicy.TYPE_AND_ID,
             seq = 1)
     public String workflowCreatePipeline(String data) {
-        DevopsPipelineDTO devopsPipelineDTO = gson.fromJson(data, DevopsPipelineDTO.class);
+        DevopsPipelineVO devopsPipelineDTO = gson.fromJson(data, DevopsPipelineVO.class);
         processInstanceService.beginDevopsPipeline(devopsPipelineDTO);
         return data;
     }

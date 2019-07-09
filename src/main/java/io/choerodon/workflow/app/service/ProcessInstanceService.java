@@ -1,6 +1,6 @@
 package io.choerodon.workflow.app.service;
 
-import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
+import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 
 /**
  * Created by Sheep on 2019/4/2.
@@ -13,10 +13,10 @@ public interface ProcessInstanceService {
 
     /**
      * Devops部署pipeline执行方法
-     * @param  devopsPipelineDTO  CD流水线信息
+     * @param  devopsPipelineVO  CD流水线信息
      * @return String
      */
-    void beginDevopsPipeline(DevopsPipelineDTO devopsPipelineDTO);
+    void beginDevopsPipeline(DevopsPipelineVO devopsPipelineVO);
 
 
     /**

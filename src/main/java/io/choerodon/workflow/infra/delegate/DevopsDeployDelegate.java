@@ -1,6 +1,6 @@
-package io.choerodon.workflow.domain.Delegate;
+package io.choerodon.workflow.infra.delegate;
 
-import io.choerodon.workflow.domain.repository.DevopsServiceRepository;
+import io.choerodon.workflow.infra.feginoperator.DevopsServiceRepository;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;

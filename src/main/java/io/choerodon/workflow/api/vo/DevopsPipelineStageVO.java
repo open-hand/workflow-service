@@ -1,17 +1,17 @@
-package io.choerodon.workflow.api.controller.dto;
+package io.choerodon.workflow.api.vo;
 
 import java.util.List;
 
 /**
  * Created by Sheep on 2019/4/2.
  */
-public class DevopsPipelineStageDTO {
+public class DevopsPipelineStageVO {
 
 
     private String stageName;
     private String stageTaskName;
     private Long stageRecordId;
-    private List<DevopsPipelineTaskDTO> tasks;
+    private List<DevopsPipelineTaskVO> tasks;
     private Boolean parallel;
     private List<String> usernames;
     private String nextStageTriggerType;
@@ -26,11 +26,11 @@ public class DevopsPipelineStageDTO {
         this.stageRecordId = stageRecordId;
     }
 
-    public List<DevopsPipelineTaskDTO> getTasks() {
+    public List<DevopsPipelineTaskVO> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<DevopsPipelineTaskDTO> tasks) {
+    public void setTasks(List<DevopsPipelineTaskVO> tasks) {
         this.tasks = tasks;
     }
 
