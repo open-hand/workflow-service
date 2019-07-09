@@ -1,4 +1,4 @@
-package io.choerodon.workflow.api.controller.dto;
+package io.choerodon.workflow.api.vo;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Sheep on 2019/4/2.
  */
-public class DevopsPipelineTaskDTO {
+public class DevopsPipelineTaskVO {
 
     private Long taskRecordId;
     private String taskName;
