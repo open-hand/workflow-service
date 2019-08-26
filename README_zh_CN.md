@@ -43,7 +43,6 @@
 - `eureka-server`: 注册&配置中心
 - `oauth-server` 认证中心
 - `asgard-service`: Asgard 服务
-- `oauth-server` 认证中心
 - `MySQL`: workflow_service 数据库
 
 
