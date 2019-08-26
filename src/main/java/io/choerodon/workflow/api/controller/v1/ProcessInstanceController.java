@@ -5,13 +5,11 @@ import java.util.Optional;
 import io.choerodon.base.annotation.Permission;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.InitRoleCode;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
+import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 import io.choerodon.workflow.app.service.PipelineService;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +34,7 @@ public class ProcessInstanceController {
     /**
      * Devops部署pipeline
      * @param  projectId  项目id
-     * @param  devopsPipelineDTO  CD流水线信息
+     * @param  devopsPipelineVO  CD流水线信息
      * @return String
      */
     @Permission(roles = {InitRoleCode.PROJECT_OWNER})
@@ -46,8 +44,8 @@ public class ProcessInstanceController {
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "应用信息", required = true)
-            @RequestBody DevopsPipelineDTO devopsPipelineDTO) {
-        pipelineService.beginDevopsPipelineSaga(devopsPipelineDTO);
+            @RequestBody DevopsPipelineVO devopsPipelineVO) {
+        pipelineService.beginDevopsPipelineSaga(devopsPipelineVO);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

@@ -1,10 +1,10 @@
-package io.choerodon.workflow.infra.persistence.impl;
+package io.choerodon.workflow.infra.feginoperator.impl;
 
 import java.util.Optional;
 
 import feign.FeignException;
 import io.choerodon.core.exception.CommonException;
-import io.choerodon.workflow.domain.repository.DevopsServiceRepository;
+import io.choerodon.workflow.infra.feginoperator.DevopsServiceRepository;
 import io.choerodon.workflow.infra.feign.DevopsServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

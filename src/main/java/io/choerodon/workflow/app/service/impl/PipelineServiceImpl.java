@@ -1,17 +1,14 @@
 package io.choerodon.workflow.app.service.impl;
 
 import com.google.gson.Gson;
-import io.choerodon.asgard.saga.SagaProperties;
+
 import io.choerodon.asgard.saga.annotation.Saga;
-import io.choerodon.asgard.saga.producer.ProducerBackCheckEndpoint;
 import io.choerodon.asgard.saga.producer.StartSagaBuilder;
 import io.choerodon.asgard.saga.producer.TransactionalProducer;
 import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.core.oauth.CustomUserDetails;
-import io.choerodon.core.oauth.DetailsHelper;
-import io.choerodon.workflow.api.controller.dto.DevopsPipelineDTO;
+import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 import io.choerodon.workflow.app.service.PipelineService;
-import org.checkerframework.checker.units.qual.A;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +27,7 @@ public class PipelineServiceImpl implements PipelineService {
     @Override
     @Saga(code = "workflow-create-pipeline",
             description = "启动cd pipeline", inputSchema = "{}")
-    public void beginDevopsPipelineSaga(DevopsPipelineDTO devopsPipelineDTO) {
+    public void beginDevopsPipelineSaga(DevopsPipelineVO devopsPipelineVO) {
         producer.apply(
                 StartSagaBuilder
                         .newBuilder()
@@ -38,7 +35,7 @@ public class PipelineServiceImpl implements PipelineService {
                         .withRefType("workflow")
                         .withSagaCode("workflow-create-pipeline"),
                 builder -> builder
-                        .withPayloadAndSerialize(devopsPipelineDTO)
+                        .withPayloadAndSerialize(devopsPipelineVO)
                         .withRefId("1"));
     }
 
