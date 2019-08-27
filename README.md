@@ -1,3 +1,5 @@
+简体中文 | [English](./README.en_US.md)
+
 # Workflow Service   
 
 `Workflow Service`是基于Activiti7搭建的工作流服务，能夠动态创建流程，启动流程，完成人工任务审核等操作。
@@ -49,10 +51,6 @@
 ## 问题报告
 
 如果您发现任何缺陷或bug，请在  [问题报告](https://github.com/choerodon/choerodon/issues/new?template=issue_template.md) 中提出
-
-## 链接
-
-[更新日志](CHANGELOG.zh-CN.md)
 
 ## 贡献
 
