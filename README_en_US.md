@@ -1,3 +1,5 @@
+English | [简体中文](./README.md)
+
 # Workflow Service   
 
 `Workflow Service` is a Workflow Service based on Activiti7, which can dynamically create processes, start processes, complete human task audit and other operations.
@@ -46,9 +48,6 @@
 
 ## Reporting Issues
 If you find any shortcomings or bugs, please describe them in the [issue](https://github.com/choerodon/choerodon/issues/new?template=issue_template.md).
-
-## Link
-[Update Log](CHANGELOG.en-US.md)
 
 ## How to Contribute
 Pull requests are welcome! [Follow](https://github.com/choerodon/choerodon/blob/master/CONTRIBUTING.md) to know for more information on how to contribute.
