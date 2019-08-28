@@ -2,7 +2,7 @@ English | [简体中文](./README.md)
 
 # Workflow Service   
 
-`Workflow Service` is a Workflow Service based on Activiti7, which can dynamically create processes, start processes, complete human task audit and other operations.
+`Workflow Service` is a Workflow Service based on Activiti7, which supports dynamically and flexibly creating processes, starting processes, monitoring processes and management processes.
 
 ## Feature
 

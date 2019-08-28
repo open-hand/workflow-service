@@ -2,7 +2,7 @@
 
 # Workflow Service   
 
-`Workflow Service`是基于Activiti7搭建的工作流服务，能夠动态创建流程，启动流程，完成人工任务审核等操作。
+`Workflow Service`是基于Activiti7搭建的工作流服务，支持动态灵活地创建流程，启动流程、监控流程以及管理流程。
 
 ## 功能
 
