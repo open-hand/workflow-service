@@ -18,7 +18,7 @@
 
     <properties>
         <java.version>8</java.version>
-        <choerodon.starters.version>0.11.0.RELEASE</choerodon.starters.version>
+        <choerodon.starters.version>0.12.0.RELEASE</choerodon.starters.version>
         <powermock.version>2.0.0-beta.5</powermock.version>
         <activiti-dependencies.version>7.0.109</activiti-dependencies.version>
         <choerodon.serviceBuild>true</choerodon.serviceBuild>
@@ -81,7 +81,7 @@
         </dependency>
         <dependency>
             <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-mybatis-mapper</artifactId>
+            <artifactId>choerodon-starter-mybatis</artifactId>
             <version>${choerodon.starters.version}</version>
         </dependency>
         <dependency>
