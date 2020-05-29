@@ -3,10 +3,11 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <groupId>choerodon-c7ncd</groupId>
-    <artifactId>workflow-service</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>workflow-service</artifactId>
+    <version>0.22.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <url>https://github.com/choerodon/workflow-service</url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -18,11 +19,10 @@
 
     <properties>
         <java.version>8</java.version>
-        <choerodon.starters.version>0.12.0.RELEASE</choerodon.starters.version>
-        <powermock.version>2.0.0-beta.5</powermock.version>
         <activiti-dependencies.version>7.0.109</activiti-dependencies.version>
         <choerodon.serviceBuild>true</choerodon.serviceBuild>
         <choerodon.mainClass>io.choerodon.workflow.WorkFlowServiceApplication</choerodon.mainClass>
+        <hzero.version>1.5.0-SNAPSHOT</hzero.version>
     </properties>
 
     <dependencyManagement>
@@ -51,62 +51,47 @@
             <version>1.9.3</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-jwt</artifactId>
-            <version>1.0.10.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
-            <version>2.3.5.RELEASE</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>5.1.4.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-oauth-resource</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-core</artifactId>
+            <version>${hzero.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-swagger</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-mybatis-mapper</artifactId>
+            <version>${hzero.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-core</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-metric</artifactId>
+            <version>${hzero.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-mybatis</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-feign-replay</artifactId>
+            <version>${hzero.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-metric</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-asgard</artifactId>
+            <version>${hzero.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-actuator</artifactId>
-            <version>${choerodon.starters.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-feign-replay</artifactId>
-            <version>${choerodon.starters.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-asgard</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>2.1.2.RELEASE</version>
             <exclusions>
                 <!--排除默认的tomcat-jdbc-->
                 <exclusion>
@@ -138,33 +123,6 @@
             <version>7.0.130</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <!-- Only needed at compile time -->
-            <optional>true</optional>
-        </dependency>
-
-        <!-- 以下是单元测试相关依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-liquibase</artifactId>
-            <version>${choerodon.starters.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.197</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -174,7 +132,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.46</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.javassist/javassist -->
@@ -187,21 +144,6 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.5</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/cglib/cglib-nodep -->
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -240,24 +182,6 @@
                         <include>**/*Spec.java</include>
                     </includes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>io.choerodon</groupId>
-                <artifactId>choerodon-maven-plugin</artifactId>
-                <version>0.11.0.RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>copy</goal>
-                            <!--<goal>extract</goal>-->
-                            <goal>convert</goal>
-                            <goal>permission</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <!--<configuration>-->
-                    <!--<serviceBuild>${choerodon.serviceBuild}</serviceBuild>-->
-                <!--</configuration>-->
             </plugin>
         </plugins>
     </build>

@@ -2,12 +2,6 @@ package io.choerodon.workflow.api.controller.v1;
 
 import java.util.Optional;
 
-import io.choerodon.base.annotation.Permission;
-import io.choerodon.core.exception.CommonException;
-import io.choerodon.core.iam.InitRoleCode;
-import io.choerodon.workflow.api.vo.DevopsPipelineVO;
-import io.choerodon.workflow.app.service.PipelineService;
-import io.choerodon.workflow.app.service.ProcessInstanceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import io.choerodon.core.exception.CommonException;
+import io.choerodon.swagger.annotation.Permission;
+import io.choerodon.workflow.api.vo.DevopsPipelineVO;
+import io.choerodon.workflow.app.service.PipelineService;
+import io.choerodon.workflow.app.service.ProcessInstanceService;
+
 /**
  * Created by Sheep on 2019/4/2.
  */
-
 
 @Controller
 @RequestMapping("/v1/projects/{project_id}/process_instances")
@@ -37,16 +36,16 @@ public class ProcessInstanceController {
      * @param  devopsPipelineVO  CD流水线信息
      * @return String
      */
-    @Permission(roles = {InitRoleCode.PROJECT_OWNER})
+    @Permission(permissionWithin = true)
     @ApiOperation(value = "Devops部署pipeline")
     @PostMapping
-    public ResponseEntity create(
+    public ResponseEntity<Void> create(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "应用信息", required = true)
             @RequestBody DevopsPipelineVO devopsPipelineVO) {
         pipelineService.beginDevopsPipelineSaga(devopsPipelineVO);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
 
@@ -57,7 +56,7 @@ public class ProcessInstanceController {
      * @param  businessKey  流程实例id
      * @return Boolean
      */
-    @Permission(roles = {InitRoleCode.PROJECT_OWNER})
+    @Permission(permissionWithin = true)
     @ApiOperation(value = "Devops部署pipeline")
     @PutMapping
     public ResponseEntity<Boolean> approveUserTask(
@@ -78,16 +77,16 @@ public class ProcessInstanceController {
      * @param  businessKey  流程业务id
      * @return
      */
-    @Permission(roles = {InitRoleCode.PROJECT_OWNER})
+    @Permission(permissionWithin = true)
     @ApiOperation(value = "根据业务key删除实例")
     @GetMapping
-    public ResponseEntity stopInstance(
+    public ResponseEntity<Void> stopInstance(
             @ApiParam(value = "项目id", required = true)
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "实例Id", required = true)
             @RequestParam(value = "business_key") String businessKey) {
         processInstanceService.stopInstance(businessKey);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
 }
