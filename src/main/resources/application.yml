@@ -56,7 +56,7 @@ ribbon:
   ConnectTimeout: 50000
   ReadTimeout: 50000
 
-asgard-servie:
+hzero-asgard:
   ribbon:
     ConnectTimeout: 50000
     ReadTimeout: 50000

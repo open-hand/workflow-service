@@ -80,9 +80,9 @@
             <version>${hzero.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hzero.starter</groupId>
-            <artifactId>hzero-starter-asgard</artifactId>
-            <version>${hzero.version}</version>
+            <groupId>io.choerodon</groupId>
+            <artifactId>choerodon-starter-asgard</artifactId>
+            <version>0.17.0.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
