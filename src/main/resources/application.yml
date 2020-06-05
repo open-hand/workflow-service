@@ -43,23 +43,25 @@ mybatis:
   mapperLocations: classpath*:/mapper/*.xml
   configuration:
     mapUnderscoreToCamelCase: true
-feign:
-  hystrix:
-    shareSecurityContext: true
-    command:
-      default:
-        execution:
-          isolation:
-            thread:
-              timeoutInMilliseconds: 30000
-ribbon:
-  ConnectTimeout: 50000
-  ReadTimeout: 50000
 
-hzero-asgard:
-  ribbon:
-    ConnectTimeout: 50000
-    ReadTimeout: 50000
+hystrix:
+  threadpool:
+    default:
+      coreSize: 1000
+      maximumSize: 1000
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 70000
+
+ribbon:
+  ReadTimeout: 30000
+  ConnectTimeout: 1000
+  OkToRetryOnAllOperations: true
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 1
 logging:
   level:
     io.choerodon.event.consumer: debug
