@@ -22,7 +22,7 @@
         <activiti-dependencies.version>7.0.109</activiti-dependencies.version>
         <choerodon.serviceBuild>true</choerodon.serviceBuild>
         <choerodon.mainClass>io.choerodon.workflow.WorkFlowServiceApplication</choerodon.mainClass>
-        <hzero.version>1.5.0-SNAPSHOT</hzero.version>
+        <hzero.version>1.4.4.BETA</hzero.version>
     </properties>
 
     <dependencyManagement>
@@ -80,9 +80,9 @@
             <version>${hzero.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hzero.starter</groupId>
-            <artifactId>hzero-starter-asgard</artifactId>
-            <version>${hzero.version}</version>
+            <groupId>io.choerodon</groupId>
+            <artifactId>choerodon-starter-asgard</artifactId>
+            <version>0.17.0.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
