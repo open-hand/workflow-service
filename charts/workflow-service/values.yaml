@@ -131,11 +131,11 @@ service:
     # 服务端口
     http:
       port: 8065
-      nodePort: 30110
+      nodePort: 30130
     # 管理端口
     actuator:
       port: 8066
-      nodePort: 30111
+      nodePort: 30131
   ## externalIPs 设置
   # externalIPs:
   #   - externalIp1
