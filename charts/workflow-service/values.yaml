@@ -54,6 +54,14 @@ env:
     # 数据库密码
     SPRING_DATASOURCE_PASSWORD: password
 
+     # Redis 主机地址
+     SPRING_REDIS_HOST: localhost
+     # Redis 端口
+     SPRING_REDIS_PORT: 6379
+     # Redis db
+     SPRING_REDIS_DATABASE: 8
+
+
     ## Skywalking 配置参数
     # SKYWALKING_OPTS: >-
     #   -javaagent:/agent/skywalking-agent.jar
