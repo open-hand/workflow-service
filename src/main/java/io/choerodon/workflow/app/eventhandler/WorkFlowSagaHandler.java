@@ -36,6 +36,21 @@ public class WorkFlowSagaHandler {
         return data;
     }
 
+    /**
+     * devops创建环境
+     */
+    @SagaTask(code = "cicdWorkflowCreatePipeline",
+            description = "cicd工作流启动cd",
+            sagaCode = "cicd-workflow-pipeline",
+            maxRetryCount = 1,
+            concurrentLimitPolicy = SagaDefinition.ConcurrentLimitPolicy.TYPE_AND_ID,
+            seq = 1)
+    public String workflowCreatePipelineCiCd(String data) {
+        DevopsPipelineVO devopsPipelineDTO = gson.fromJson(data, DevopsPipelineVO.class);
+        processInstanceService.beginDevopsPipelineCiCd(devopsPipelineDTO);
+        return data;
+    }
+
 
 
 }
