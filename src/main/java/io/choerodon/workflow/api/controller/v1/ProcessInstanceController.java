@@ -89,4 +89,22 @@ public class ProcessInstanceController {
         return ResponseEntity.noContent().build();
     }
 
+
+    /**
+     * Devops部署pipeline
+     * @param  projectId  项目id
+     * @param  devopsPipelineVO  CD流水线信息
+     * @return String
+     */
+    @Permission(permissionWithin = true)
+    @ApiOperation(value = "Devops cicd流水线")
+    @PostMapping("/cicd_pipeline")
+    public ResponseEntity<Void> createCiCdPipeline(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "project_id") Long projectId,
+            @ApiParam(value = "应用信息", required = true)
+            @RequestBody DevopsPipelineVO devopsPipelineVO) {
+        pipelineService.beginDevopsPipelineSagaCiCd(devopsPipelineVO);
+        return ResponseEntity.noContent().build();
+    }
 }
