@@ -22,4 +22,24 @@ public class DevopsServiceClientFallBack implements DevopsServiceClient {
     public ResponseEntity<String> getAutoDeployTaskStatus(Long stageRecordId, Long taskRecordId) {
         return new ResponseEntity("error.get.auto.deploy.task.status", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity<Boolean> cdHostDeploy(Long pipelineRecordId, Long stageRecordId, Long jobRecordId) {
+        return new ResponseEntity("error.get.cd.host.deploy", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<Boolean> envAutoDeploy(Long pipelineRecordId, Long stageRecordId, Long jobRecordId) {
+        return new ResponseEntity("error.get.env.auto.deploy", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity setAppDeployStatus(Long pipelineRecordId, Long stageRecordId, Long jobRecordId, Boolean status) {
+        return new ResponseEntity("error.update.deploy.job.status", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> getJobStatus(Long pipelineRecordId, Long stageRecordId, Long jobRecordId) {
+        return new ResponseEntity("error.get.deploy.job.status", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
