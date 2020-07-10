@@ -15,7 +15,7 @@ public interface DevopsServiceRepository {
 
     Boolean cdHostDeploy(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
 
-    Boolean envAutoDeploy(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
+    void envAutoDeploy(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
 
     void setAppDeployStatus(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId, Boolean status);
 
