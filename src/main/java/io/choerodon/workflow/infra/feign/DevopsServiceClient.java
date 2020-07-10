@@ -42,7 +42,7 @@ public interface DevopsServiceClient {
                                          @RequestParam(value = "job_record_id") Long jobRecordId);
 
     @PostMapping(value = "/v1/cd_pipeline/env_auto_deploy")
-    ResponseEntity<Boolean> envAutoDeploy(@RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
+    ResponseEntity envAutoDeploy(@RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
                                           @RequestParam(value = "stage_record_id") Long stageRecordId,
                                           @RequestParam(value = "job_record_id") Long jobRecordId);
 
