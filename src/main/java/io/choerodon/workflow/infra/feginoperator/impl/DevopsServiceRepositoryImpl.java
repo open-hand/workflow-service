@@ -61,15 +61,9 @@ public class DevopsServiceRepositoryImpl implements DevopsServiceRepository {
     }
 
     @Override
-    public Boolean cdHostDeploy(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId) {
+    public void cdHostDeploy(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId) {
         try {
-            ResponseEntity<Boolean> responseEntity = devopsServiceClient.cdHostDeploy(cdPipelineRecordId, cdStageRecordId, cdJobRecordId);
-            Optional<Boolean> result = Optional.ofNullable(responseEntity.getBody());
-            if (result.isPresent()) {
-                return result.get();
-            } else {
-                throw new CommonException("error.deploy.cd.host");
-            }
+            devopsServiceClient.cdHostDeploy(cdPipelineRecordId, cdStageRecordId, cdJobRecordId);
         } catch (FeignException e) {
             throw new CommonException(e);
         }

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import io.choerodon.workflow.infra.enums.JobStatusEnum;
 import io.choerodon.workflow.infra.feginoperator.DevopsServiceRepository;
 
 /**
@@ -25,8 +26,6 @@ public class DevopsCdDeployDelegate implements JavaDelegate {
 
     private Logger logger = LoggerFactory.getLogger(DevopsDeployDelegate.class);
 
-    private final String SUCCRESS = "success";
-    private final String FAILED = "failed";
 
     @Override
     public void execute(DelegateExecution delegateExecution) {
@@ -57,12 +56,12 @@ public class DevopsCdDeployDelegate implements JavaDelegate {
 
                 String deployResult = devopsServiceRepository.getJobStatus(pipelineRecordId, stageRecordId, taskRecordId);
                 logger.info(deployResult);
-                if (SUCCRESS.equals(deployResult)) {
+                if (JobStatusEnum.SUCCESS.value().equals(deployResult)) {
                     status[0] = true;
                     Thread.currentThread().interrupt();
                 }
 
-                if (FAILED.equals(deployResult) || count[0] == 60) {
+                if (JobStatusEnum.FAILED.value().equals(deployResult) || count[0] == 60) {
                     status[0] = false;
 
                     Thread.currentThread().interrupt();

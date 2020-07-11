@@ -37,7 +37,7 @@ public interface DevopsServiceClient {
             @RequestParam(value = "task_record_id") Long taskRecordId);
 
     @PostMapping(value = "/v1/cd_pipeline/cd_host_deploy")
-    ResponseEntity<Boolean> cdHostDeploy(@RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
+    ResponseEntity cdHostDeploy(@RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
                                          @RequestParam(value = "stage_record_id") Long stageRecordId,
                                          @RequestParam(value = "job_record_id") Long jobRecordId);
 

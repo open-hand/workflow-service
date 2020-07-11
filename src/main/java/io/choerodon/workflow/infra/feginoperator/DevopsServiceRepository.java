@@ -13,7 +13,7 @@ public interface DevopsServiceRepository {
 
     String getAutoDeployTaskStatus(Long stageRecordId, Long taskRecordId);
 
-    Boolean cdHostDeploy(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
+    void cdHostDeploy(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
 
     void envAutoDeploy(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
 
