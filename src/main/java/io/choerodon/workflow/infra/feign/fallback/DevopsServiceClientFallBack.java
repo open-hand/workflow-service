@@ -24,7 +24,7 @@ public class DevopsServiceClientFallBack implements DevopsServiceClient {
     }
 
     @Override
-    public ResponseEntity<Boolean> cdHostDeploy(Long pipelineRecordId, Long stageRecordId, Long jobRecordId) {
+    public ResponseEntity cdHostDeploy(Long pipelineRecordId, Long stageRecordId, Long jobRecordId) {
         return new ResponseEntity("error.get.cd.host.deploy", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
