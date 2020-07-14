@@ -15,6 +15,7 @@ import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
 import org.activiti.bpmn.BpmnAutoLayout;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.*;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Created by Sheep on 2019/4/2.
@@ -27,6 +28,7 @@ public class DevopsPipelineBpmnHandler {
     public static final String USER_TASK = "manual";
     public static final String SERVICE_TASK = "auto";
     public static final String DELEGATE_EXPRESSION = "delegateExpression";
+    public static final String PIPELINE_USER_TASK = "pipeline_user_task";
     public static final String MANUAL = "manual";
     public static final String PROCESS = "Process";
     public static final String PARALLEL_GATE_WAY = "ParallelGateWay";
@@ -177,13 +179,36 @@ public class DevopsPipelineBpmnHandler {
         //生成主流程节点
         StartEvent startProcess = dynamicWorkflowUtil.createStartEvent(START_PROCESS);
         EndEvent endProcess = dynamicWorkflowUtil.createEndEvent(END_PROCESS);
-        SequenceFlow startProcessToFirstStage = dynamicWorkflowUtil.createSequenceFlow(startProcess.getId(), ADHOC_SUB_PROCESS + 0);
         SequenceFlow lastStageToEndProcess = dynamicWorkflowUtil.createSequenceFlow(ADHOC_SUB_PROCESS + (devopsPipelineDTO.getStages().size() - 1), endProcess.getId());
         Process process = new Process();
+        if (!CollectionUtils.isEmpty(devopsPipelineDTO.getUserNames())) {
+            UserTask userTask = null;
+            if (devopsPipelineDTO.getMultiAssign()) {
+                userTask = dynamicWorkflowUtil.createUserTask(PIPELINE_USER_TASK, PIPELINE_USER_TASK + devopsPipelineDTO.getPipelineRecordId(), "${user}");
+                ActivitiListener activitiListener = new ActivitiListener();
+                activitiListener.setEvent("create");
+                activitiListener.setImplementation("${mangerTaskCreateDelegate}");
+                activitiListener.setImplementationType(DELEGATE_EXPRESSION);
+                userTask.setLoopCharacteristics(getMultiInstanceLoopCharacteristics(false, userTask.getName()));
+            } else {
+                userTask = dynamicWorkflowUtil.createUserTask(PIPELINE_USER_TASK, PIPELINE_USER_TASK + "." + devopsPipelineDTO.getPipelineRecordId(), devopsPipelineDTO.getUserNames().get(0));
+            }
+            SequenceFlow stageToUserTask = dynamicWorkflowUtil.createSequenceFlow(startProcess.getId(), userTask.getId());
+            SequenceFlow userTaskToNextStage = dynamicWorkflowUtil.createSequenceFlow(userTask.getId(), ADHOC_SUB_PROCESS + 0);
+            process.addFlowElement(userTask);
+            process.addFlowElement(stageToUserTask);
+            process.addFlowElement(userTaskToNextStage);
+            params.put(userTask.getName(), devopsPipelineDTO.getUserNames());
+        } else {
+            SequenceFlow startProcessToFirstStage = dynamicWorkflowUtil.createSequenceFlow(startProcess.getId(), ADHOC_SUB_PROCESS + 0);
+            process.addFlowElement(startProcessToFirstStage);
+        }
+
         process.setId(PROCESS);
         process.setName(PROCESS);
         process.addFlowElement(startProcess);
         process.addFlowElement(endProcess);
+
 
         //生成每个stage的子流程
         for (int i = 0; i < devopsPipelineDTO.getStages().size(); i++) {
@@ -272,7 +297,6 @@ public class DevopsPipelineBpmnHandler {
             process.addFlowElement(subProcess);
             devopsPipelineStageVO.setStageName(subProcess.getName());
         }
-        process.addFlowElement(startProcessToFirstStage);
         process.addFlowElement(lastStageToEndProcess);
         model.addProcess(process);
 

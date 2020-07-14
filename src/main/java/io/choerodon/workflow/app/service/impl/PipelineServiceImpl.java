@@ -8,6 +8,7 @@ import io.choerodon.asgard.saga.producer.TransactionalProducer;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 import io.choerodon.workflow.app.service.PipelineService;
+import io.choerodon.workflow.app.service.ProcessInstanceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class PipelineServiceImpl implements PipelineService {
 
     @Autowired
     TransactionalProducer producer;
+
+    @Autowired
+    ProcessInstanceService processInstanceService;
 
     @Override
     @Saga(code = "workflow-create-pipeline",
