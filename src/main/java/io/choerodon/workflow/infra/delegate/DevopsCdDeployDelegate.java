@@ -56,7 +56,7 @@ public class DevopsCdDeployDelegate implements JavaDelegate {
 
                 String deployResult = devopsServiceRepository.getJobStatus(pipelineRecordId, stageRecordId, taskRecordId);
                 logger.info(deployResult);
-                if (JobStatusEnum.SUCCESS.value().equals(deployResult)) {
+                if (JobStatusEnum.SUCCESS.value().equals(deployResult) || JobStatusEnum.SKIPPED.value().equals(deployResult)) {
                     status[0] = true;
                     Thread.currentThread().interrupt();
                 }
