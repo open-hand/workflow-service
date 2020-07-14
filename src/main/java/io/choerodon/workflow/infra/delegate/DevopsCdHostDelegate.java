@@ -57,12 +57,17 @@ public class DevopsCdHostDelegate implements JavaDelegate {
                 if (deployResult.equals(JobStatusEnum.SUCCESS.value()) ||
                         deployResult.equals(JobStatusEnum.SKIPPED.value())) {
                     status[0] = true;
+                    // 4.
+                    devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, status[0]);
+                    logger.info(String.format("cd ServiceTask:%s  结束,任务执行状态为%s", delegateExecution.getCurrentActivityId(), status[0]));
                     Thread.currentThread().interrupt();
                 }
 
                 if (JobStatusEnum.FAILED.value().equals(deployResult) || count[0] == 60) {
                     status[0] = false;
-
+                    // 4.
+                    devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, status[0]);
+                    logger.info(String.format("cd ServiceTask:%s  结束,任务执行状态为%s", delegateExecution.getCurrentActivityId(), status[0]));
                     Thread.currentThread().interrupt();
                 }
             }
@@ -76,9 +81,7 @@ public class DevopsCdHostDelegate implements JavaDelegate {
             logger.info(e.getMessage());
         }
 
-        // 4.
-        devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, status[0]);
-        logger.info(String.format("cd ServiceTask:%s  结束,任务执行状态为%s", delegateExecution.getCurrentActivityId(), status[0]));
+
     }
 }
 
