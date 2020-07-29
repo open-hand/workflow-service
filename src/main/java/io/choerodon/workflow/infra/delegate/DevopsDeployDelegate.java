@@ -1,6 +1,8 @@
 package io.choerodon.workflow.infra.delegate;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.workflow.infra.feginoperator.DevopsServiceRepository;
+
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
@@ -90,6 +92,7 @@ public class DevopsDeployDelegate implements JavaDelegate {
                 delegateExecution.setVariable(DEPLOY_FAILED, pipelineId + ":" + stageId);
                 delegateExecution.setVariable(PARALLEL, parallel);
                 logger.info(String.format("ServiceTask:%s  失败", delegateExecution.getCurrentActivityId()));
+                throw new CommonException("error.execute.service.task");
             }
         }
     }
