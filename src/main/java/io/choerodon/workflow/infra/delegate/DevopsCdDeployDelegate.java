@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.workflow.infra.enums.JobStatusEnum;
 import io.choerodon.workflow.infra.feginoperator.DevopsServiceRepository;
 
@@ -81,7 +82,9 @@ public class DevopsCdDeployDelegate implements JavaDelegate {
             logger.info(e.getMessage());
         }
 
-
+        if (!status[0]) {
+            throw new CommonException("error.execute.service.task");
+        }
     }
 }
 
