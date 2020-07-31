@@ -10,8 +10,16 @@ public interface PipelineService {
 
     /**
      * Devops部署pipeline
-     * @param  devopsPipelineVO  CD流水线信息
+     *
+     * @param devopsPipelineVO CD流水线信息
      * @return String
      */
     void beginDevopsPipelineSaga(DevopsPipelineVO devopsPipelineVO);
+
+    /**
+     * cicd 流水线 创建流程实例
+     * @param devopsPipelineVO
+     */
+    void beginDevopsPipelineSagaCiCd(DevopsPipelineVO devopsPipelineVO);
+
 }

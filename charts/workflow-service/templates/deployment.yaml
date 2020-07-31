@@ -9,14 +9,6 @@ metadata:
 {{- end }}
 spec:
   strategy:
-    type: {{ .Values.deploymentUpdate.type }}
-    {{- if eq .Values.deploymentUpdate.type "RollingUpdate" }}
-    rollingUpdate:
-      maxSurge: {{ .Values.deploymentUpdate.maxSurge }}
-      maxUnavailable: {{ .Values.deploymentUpdate.maxUnavailable }}
-    {{- else }}
-    rollingUpdate: null
-    {{- end}}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -41,7 +33,7 @@ spec:
       initContainers:
       - name: skywalking-agent
         image: {{ .Values.plugins.skywalkingAgentImage }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: IfNotPresent
         command:
         - sh
         - -c
@@ -61,12 +53,12 @@ spec:
 {{- end }}
 {{- end }}
         ports:
-        - name: http
-          containerPort: {{ .Values.env.open.SERVER_PORT }}
-          protocol: TCP
-        - name: actuator
-          containerPort: {{ .Values.env.open.MANAGEMENT_SERVER_PORT }}
-          protocol: TCP
+          - name: http
+            containerPort: {{ .Values.env.open.SERVER_PORT }}
+            protocol: TCP
+          - name: actuator
+            containerPort: {{ .Values.env.open.MANAGEMENT_SERVER_PORT }}
+            protocol: TCP
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
@@ -79,12 +71,12 @@ spec:
           successThreshold: {{ .Values.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           exec:
-            command: 
-            - /bin/sh
-            - -c
-            - >
-              nc -z localhost {{ .Values.env.open.SERVER_PORT }}
-              && curl -s --fail localhost:{{ .Values.env.open.MANAGEMENT_SERVER_PORT }}/actuator/health
+            command:
+              - /bin/sh
+              - -c
+              - >
+                nc -z localhost {{ .Values.env.open.SERVER_PORT }}
+                && curl -s --fail localhost:{{ .Values.env.open.MANAGEMENT_SERVER_PORT }}/actuator/health
         readinessProbe:
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
@@ -92,7 +84,7 @@ spec:
           successThreshold: {{ .Values.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           exec:
-            command: 
+            command:
             - /bin/sh
             - -c
             - >

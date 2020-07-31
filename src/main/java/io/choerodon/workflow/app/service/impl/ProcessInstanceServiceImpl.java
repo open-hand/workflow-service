@@ -15,6 +15,7 @@ import io.choerodon.workflow.infra.bpmnhandler.DevopsPipelineBpmnHandler;
 import io.choerodon.workflow.infra.feginoperator.DevopsServiceRepository;
 import io.choerodon.workflow.infra.util.ActivitiUserLoginUtil;
 import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
+
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.model.payloads.DeleteProcessPayload;
@@ -70,7 +71,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         BpmnModel model = DevopsPipelineBpmnHandler.initDevopsCDPipelineBpmn(devopsPipelineVO, params);
 
         if (!DynamicWorkflowUtil.checkValidate(model)) {
-            throw new CommonException("invlid workflow module");
+            throw new CommonException("invalid workflow module");
         }
         String filePath = "bmpn/" + UUID.randomUUID().toString() + ".bpmn";
         Deployment deployment = repositoryService.createDeployment().addBpmnModel(filePath, model).name("test").deploy();
@@ -88,6 +89,34 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
                 .withVariables(params)
                 .build());
     }
+
+
+    @Override
+    public void beginDevopsPipelineCiCd(DevopsPipelineVO devopsPipelineVO) {
+
+        Map<String, Object> params = new HashMap<>();
+        BpmnModel model = DevopsPipelineBpmnHandler.initDevopsCICDPipelineBpmn(devopsPipelineVO, params);
+
+        if (!DynamicWorkflowUtil.checkValidate(model)) {
+            throw new CommonException("invalid.workflow.module.ci.cd");
+        }
+        String filePath = "bmpn/" + UUID.randomUUID().toString() + ".bpmn";
+        //        DevopsPipelineBpmnHandler.saveDataToFile("temp", "test.bpmn", DynamicWorkflowUtil.converterBpmnToXML(model));
+        Deployment deployment = repositoryService.createDeployment().addBpmnModel(filePath, model).name("test").deploy();
+
+        org.activiti.engine.repository.ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                .deploymentId(deployment.getId()).singleResult();
+
+        logger.info(String.format("%s:%s 流程开始执行！", devopsPipelineVO.getPipelineName(), devopsPipelineVO.getPipelineRecordId()));
+        processRuntime.start(ProcessPayloadBuilder
+                .start()
+                .withProcessDefinitionKey(processDefinition.getKey())
+                .withName(devopsPipelineVO.getPipelineName())
+                .withBusinessKey(devopsPipelineVO.getBusinessKey())
+                .withVariables(params)
+                .build());
+    }
+
 
     @Override
     public Boolean approveUserTask(String businessKey) {
