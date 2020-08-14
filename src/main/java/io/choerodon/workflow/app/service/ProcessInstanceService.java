@@ -7,16 +7,14 @@ import io.choerodon.workflow.api.vo.DevopsPipelineVO;
  */
 public interface ProcessInstanceService {
 
-
-
-
-
     /**
      * Devops部署pipeline执行方法
      * @param  devopsPipelineVO  CD流水线信息
      * @return String
      */
     void beginDevopsPipeline(DevopsPipelineVO devopsPipelineVO);
+
+    void beginDevopsPipelineCiCd(DevopsPipelineVO devopsPipelineVO);
 
 
     /**

@@ -8,6 +8,7 @@ import io.choerodon.asgard.saga.producer.TransactionalProducer;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 import io.choerodon.workflow.app.service.PipelineService;
+import io.choerodon.workflow.app.service.ProcessInstanceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class PipelineServiceImpl implements PipelineService {
     @Autowired
     TransactionalProducer producer;
 
+    @Autowired
+    ProcessInstanceService processInstanceService;
+
     @Override
     @Saga(code = "workflow-create-pipeline",
             description = "启动cd pipeline", inputSchema = "{}")
@@ -34,6 +38,22 @@ public class PipelineServiceImpl implements PipelineService {
                         .withLevel(ResourceLevel.SITE)
                         .withRefType("workflow")
                         .withSagaCode("workflow-create-pipeline"),
+                builder -> builder
+                        .withPayloadAndSerialize(devopsPipelineVO)
+                        .withRefId("1"));
+    }
+
+
+    @Override
+    @Saga(code = "cicd-workflow-pipeline",
+            description = "创建cicd流水线创建流程实例", inputSchema = "{}")
+    public void beginDevopsPipelineSagaCiCd(DevopsPipelineVO devopsPipelineVO) {
+        producer.apply(
+                StartSagaBuilder
+                        .newBuilder()
+                        .withLevel(ResourceLevel.SITE)
+                        .withRefType("workflow")
+                        .withSagaCode("cicd-workflow-pipeline"),
                 builder -> builder
                         .withPayloadAndSerialize(devopsPipelineVO)
                         .withRefId("1"));
