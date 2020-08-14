@@ -23,6 +23,7 @@
         <choerodon.serviceBuild>true</choerodon.serviceBuild>
         <choerodon.mainClass>io.choerodon.workflow.WorkFlowServiceApplication</choerodon.mainClass>
         <hzero.version>1.4.0.RELEASE</hzero.version>
+        <choerodon.asgard.version>0.17.1.RELEASE</choerodon.asgard.version>
     </properties>
 
     <dependencyManagement>
@@ -77,7 +78,7 @@
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-starter-asgard</artifactId>
-            <version>0.17.1.RELEASE</version>
+            <version>${choerodon.asgard.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
