@@ -27,7 +27,7 @@ public class WorkFlowSagaHandler {
     @SagaTask(code = "workflowCreateCD",
             description = "工作流启动cd",
             sagaCode = "workflow-create-pipeline",
-            maxRetryCount = 1,
+            maxRetryCount = 0,
             concurrentLimitPolicy = SagaDefinition.ConcurrentLimitPolicy.TYPE_AND_ID,
             seq = 1)
     public String workflowCreatePipeline(String data) {
@@ -42,7 +42,7 @@ public class WorkFlowSagaHandler {
     @SagaTask(code = "cicdWorkflowCreatePipeline",
             description = "cicd工作流启动cd",
             sagaCode = "cicd-workflow-pipeline",
-            maxRetryCount = 1,
+            maxRetryCount = 0,
             concurrentLimitPolicy = SagaDefinition.ConcurrentLimitPolicy.TYPE_AND_ID,
             seq = 1)
     public String workflowCreatePipelineCiCd(String data) {
