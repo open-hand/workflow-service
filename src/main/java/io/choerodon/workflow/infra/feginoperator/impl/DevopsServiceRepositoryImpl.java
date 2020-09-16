@@ -102,4 +102,13 @@ public class DevopsServiceRepositoryImpl implements DevopsServiceRepository {
             throw new CommonException(e);
         }
     }
+
+    @Override
+    public void executeApiTestTask(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId) {
+        try {
+            devopsServiceClient.executeApiTestTask(cdPipelineRecordId, cdStageRecordId, cdJobRecordId);
+        } catch (FeignException e) {
+            throw new CommonException(e);
+        }
+    }
 }

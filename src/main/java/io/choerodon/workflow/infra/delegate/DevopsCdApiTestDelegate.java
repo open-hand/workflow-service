@@ -41,7 +41,7 @@ public class DevopsCdApiTestDelegate implements JavaDelegate {
 
 
         // 2.
-        devopsServiceRepository.envAutoDeploy(pipelineRecordId, stageRecordId, taskRecordId);
+        devopsServiceRepository.executeApiTestTask(pipelineRecordId, stageRecordId, taskRecordId);
 
         // 3.
         //自动部署失败或者执行6min以上没反应也重置为失败
