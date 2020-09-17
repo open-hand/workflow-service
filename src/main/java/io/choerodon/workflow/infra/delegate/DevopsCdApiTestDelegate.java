@@ -45,50 +45,57 @@ public class DevopsCdApiTestDelegate implements JavaDelegate {
 
         // 3.
         //自动部署失败或者执行6min以上没反应也重置为失败
-        if (Boolean.TRUE.equals(blockAfterJob)) {
-            int[] count = {0};
-            Boolean[] status = {false};
-            Runnable runnable = () -> {
-                while (!Thread.currentThread().isInterrupted()) {
-                    try {
-                        Thread.sleep(6000);
-                    } catch (InterruptedException e) {
-                        logger.warn("error.thread.sleep");
-                    }
-                    count[0] = count[0] + 1;
-
-                    String deployResult = devopsServiceRepository.getJobStatus(pipelineRecordId, stageRecordId, taskRecordId);
-                    logger.info(deployResult);
-                    if (JobStatusEnum.SUCCESS.value().equals(deployResult) || JobStatusEnum.SKIPPED.value().equals(deployResult)) {
-                        status[0] = true;
-                        devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, status[0]);
-                        logger.info(String.format("cd ServiceTask:%s  结束,任务执行状态为%s", delegateExecution.getCurrentActivityId(), status[0]));
-                        Thread.currentThread().interrupt();
-                    }
-
-                    if (JobStatusEnum.FAILED.value().equals(deployResult) || count[0] == 60) {
-                        status[0] = false;
-                        // 4.
-                        devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, status[0]);
-                        logger.info(String.format("cd ServiceTask:%s  结束,任务执行状态为%s", delegateExecution.getCurrentActivityId(), status[0]));
-                        Thread.currentThread().interrupt();
-                    }
+        int[] count = {0};
+        Boolean[] status = {false};
+        Runnable runnable = () -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    logger.warn("error.thread.sleep");
                 }
-            };
+                count[0] = count[0] + 1;
 
-            Thread thread = new Thread(runnable);
-            thread.start();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                logger.info(e.getMessage());
-            }
+                String deployResult = devopsServiceRepository.getJobStatus(pipelineRecordId, stageRecordId, taskRecordId);
+                logger.info(deployResult);
+                if (JobStatusEnum.SUCCESS.value().equals(deployResult) || JobStatusEnum.SKIPPED.value().equals(deployResult)) {
+                    status[0] = true;
+                    devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, status[0]);
+                    logger.info(String.format("cd ServiceTask:%s  结束,任务执行状态为%s", delegateExecution.getCurrentActivityId(), status[0]));
+                    Thread.currentThread().interrupt();
+                }
+                if (JobStatusEnum.FAILED.value().equals(deployResult)) {
+                    if (Boolean.TRUE.equals(blockAfterJob)) {
+                        status[0] = false;
+                    } else {
+                        status[0] = true;
+                    }
+                    // 4.
+                    devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, status[0]);
+                    logger.info(String.format("cd ServiceTask:%s  结束,任务执行状态为%s", delegateExecution.getCurrentActivityId(), status[0]));
+                    Thread.currentThread().interrupt();
+                }
 
-            if (!status[0]) {
-                throw new CommonException("error.execute.service.task");
+                if (count[0] == 60) {
+                    status[0] = false;
+                    // 4.
+                    devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, status[0]);
+                    logger.info(String.format("cd ServiceTask:%s  结束,任务执行状态为%s", delegateExecution.getCurrentActivityId(), status[0]));
+                    Thread.currentThread().interrupt();
+                }
             }
-        } else {
-            devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, true);
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            logger.info(e.getMessage());
+        }
+
+        if (!status[0]) {
+            throw new CommonException("error.execute.service.task");
         }
 
     }
