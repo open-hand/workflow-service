@@ -260,7 +260,7 @@ public class DevopsPipelineBpmnHandler {
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_API_TEST.value())) {
                         taskName += "." + devopsPipelineTaskVO.getBlockAfterJob();
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
-                        serviceTask.setImplementation("${devopsCdHostDelegate}");
+                        serviceTask.setImplementation("${devopsCdApiTestDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
                         SequenceFlow sequenceFlow = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
                         subProcess.addFlowElement(sequenceFlow);
