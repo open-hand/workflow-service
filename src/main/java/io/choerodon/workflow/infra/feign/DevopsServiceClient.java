@@ -67,4 +67,9 @@ public interface DevopsServiceClient {
             @RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
             @RequestParam(value = "stage_record_id") Long stageRecordId,
             @RequestParam(value = "job_record_id") Long jobRecordId);
+
+    @GetMapping(value = "/v1/cd_pipeline/deploy_status")
+    ResponseEntity<String> getDeployStatus(
+            @RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
+            @RequestParam(value = "deploy_job_name") String deployJobName);
 }

@@ -258,7 +258,7 @@ public class DevopsPipelineBpmnHandler {
                         subProcess.addFlowElement(serviceTask);
                         devopsPipelineTaskVO.setTaskName(serviceTask.getName());
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_API_TEST.value())) {
-                        taskName += "." + devopsPipelineTaskVO.getBlockAfterJob();
+                        taskName += "." + devopsPipelineTaskVO.getBlockAfterJob() + "." + devopsPipelineTaskVO.getDeployJobName();
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdApiTestDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
