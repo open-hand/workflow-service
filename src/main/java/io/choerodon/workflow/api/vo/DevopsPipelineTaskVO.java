@@ -15,6 +15,7 @@ public class DevopsPipelineTaskVO {
     private boolean multiAssign;
     private boolean sign;
     private Boolean blockAfterJob;
+    private String deployJobName;
 
     public Long getTaskRecordId() {
         return taskRecordId;
@@ -70,5 +71,13 @@ public class DevopsPipelineTaskVO {
 
     public void setBlockAfterJob(Boolean blockAfterJob) {
         this.blockAfterJob = blockAfterJob;
+    }
+
+    public String getDeployJobName() {
+        return deployJobName;
+    }
+
+    public void setDeployJobName(String deployJobName) {
+        this.deployJobName = deployJobName;
     }
 }

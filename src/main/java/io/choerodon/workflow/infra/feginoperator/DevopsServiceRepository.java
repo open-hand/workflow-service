@@ -23,4 +23,6 @@ public interface DevopsServiceRepository {
 
     void executeApiTestTask(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
 
+    String getDeployStatus(Long cdPipelineRecordId, String deployJobName);
+
 }

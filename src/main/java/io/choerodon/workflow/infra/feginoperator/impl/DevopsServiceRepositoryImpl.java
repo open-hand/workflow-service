@@ -111,4 +111,17 @@ public class DevopsServiceRepositoryImpl implements DevopsServiceRepository {
             throw new CommonException(e);
         }
     }
+
+    @Override
+    public String getDeployStatus(Long cdPipelineRecordId, String deployJobName) {
+        try {
+            ResponseEntity<String> responseEntity = devopsServiceClient.getDeployStatus(cdPipelineRecordId, deployJobName);
+            if (!responseEntity.getStatusCode().is2xxSuccessful()) {
+                throw new CommonException("error.get.deploy.status");
+            }
+            return responseEntity.getBody();
+        } catch (FeignException e) {
+            throw new CommonException(e);
+        }
+    }
 }
