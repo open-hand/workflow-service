@@ -48,4 +48,9 @@ public class DevopsServiceClientFallBack implements DevopsServiceClient {
     public ResponseEntity<Void> executeApiTestTask(Long pipelineRecordId, Long stageRecordId, Long jobRecordId) {
         throw new FeignException("error.execute.api.test.task");
     }
+
+    @Override
+    public ResponseEntity<String> getDeployStatus(Long pipelineRecordId, String deployJobName) {
+        throw new FeignException("error.get.deploy..status");
+    }
 }
