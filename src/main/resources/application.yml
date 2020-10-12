@@ -20,6 +20,7 @@ spring:
     async-executor-activate: true
 choerodon:
   saga:
+    service: choerodon-asgard
     consumer:
       core-thread-num: 20
       max-thread-num:  20 # 消费线程数
@@ -30,6 +31,26 @@ choerodon:
       enabled: true # 启用任务调度消费端
       thread-num: 1 # 任务调度消费线程数
       poll-interval-ms: 1000 # 拉取间隔，默认1000毫秒
+hzero:
+  service:
+    platform:
+      name: choerodon-platform
+    oauth:
+      name: choerodon-oauth
+    iam:
+      name: choerodon-iam
+    file:
+      name: choerodon-file
+    message:
+      name: choerodon-message
+    admin:
+      name: choerodon-admin
+    swagger:
+      name: choerodon-swagger
+    gateway:
+      name: choerodon-gateway
+    monitor:
+      name: choerodon-monitor
 eureka:
   instance:
     preferIpAddress: true
