@@ -25,7 +25,7 @@ public class DevopsCdDeployDelegate implements JavaDelegate {
     @Autowired
     ProcessRuntime processRuntime;
 
-    private Logger logger = LoggerFactory.getLogger(DevopsDeployDelegate.class);
+    private Logger logger = LoggerFactory.getLogger(DevopsCdDeployDelegate.class);
 
 
     @Override
