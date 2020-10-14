@@ -9,6 +9,7 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 import io.choerodon.workflow.api.vo.DevopsPipelineStageVO;
 import io.choerodon.workflow.api.vo.DevopsPipelineTaskVO;
+import io.choerodon.workflow.infra.constant.PipelineConstants;
 import io.choerodon.workflow.infra.enums.JobTypeEnum;
 import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
 
@@ -258,7 +259,7 @@ public class DevopsPipelineBpmnHandler {
                         subProcess.addFlowElement(serviceTask);
                         devopsPipelineTaskVO.setTaskName(serviceTask.getName());
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_API_TEST.value())) {
-                        taskName += "." + devopsPipelineTaskVO.getBlockAfterJob() + "." + devopsPipelineTaskVO.getDeployJobName();
+                        taskName += "." + devopsPipelineTaskVO.getBlockAfterJob() + "." + devopsPipelineTaskVO.getDeployJobName() != null ? devopsPipelineTaskVO.getDeployJobName() : PipelineConstants.NOT_WAIT_DEPLOY_JOB;
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdApiTestDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
