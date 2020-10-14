@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.workflow.infra.constant.PipelineConstants;
 import io.choerodon.workflow.infra.enums.JobStatusEnum;
 import io.choerodon.workflow.infra.feginoperator.DevopsServiceRepository;
 
@@ -40,7 +41,7 @@ public class DevopsCdApiTestDelegate implements JavaDelegate {
         Boolean blockAfterJob = Boolean.parseBoolean(ids[4]);
         String deployJobName = ids[5];
 
-        if (StringUtils.isNotBlank(deployJobName)) {
+        if (!PipelineConstants.NOT_WAIT_DEPLOY_JOB.equals(deployJobName)) {
             int[] count = {0};
             Runnable runnable = () -> {
                 while (!Thread.currentThread().isInterrupted()) {
