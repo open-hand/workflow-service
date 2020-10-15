@@ -43,6 +43,7 @@ public class DevopsCdApiTestDelegate implements JavaDelegate {
 
         if (!PipelineConstants.NOT_WAIT_DEPLOY_JOB.equals(deployJobName)) {
             int[] count = {0};
+            Boolean[] status = {false};
             Runnable runnable = () -> {
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
@@ -56,11 +57,14 @@ public class DevopsCdApiTestDelegate implements JavaDelegate {
                     logger.info(deployResult);
                     if (JobStatusEnum.SUCCESS.value().equals(deployResult)) {
                         logger.info("cd ServiceTask: {}, 关联部署任务部署成功，开始执行API测试任务", delegateExecution.getCurrentActivityId());
+                        status[0] = true;
                         devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, false);
                         Thread.currentThread().interrupt();
+
                     }
                     if (count[0] == 20) {
                         logger.info("cd ServiceTask: {}, 关联部署任务部署超时，API测试任务执行失败", delegateExecution.getCurrentActivityId());
+                        status[0] = false;
                         devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, false);
                         Thread.currentThread().interrupt();
                     }
@@ -72,6 +76,9 @@ public class DevopsCdApiTestDelegate implements JavaDelegate {
                 thread.join();
             } catch (InterruptedException e) {
                 logger.info(e.getMessage());
+            }
+            if (!status[0]) {
+                throw new CommonException("error.execute.service.task");
             }
         }
 
