@@ -1,5 +1,6 @@
 package io.choerodon.workflow.infra.feign;
 
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import io.choerodon.swagger.annotation.Permission;
 import io.choerodon.workflow.infra.feign.fallback.DevopsServiceClientFallBack;
 
 /**
@@ -38,13 +40,13 @@ public interface DevopsServiceClient {
 
     @PostMapping(value = "/v1/cd_pipeline/cd_host_deploy")
     ResponseEntity cdHostDeploy(@RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
-                                         @RequestParam(value = "stage_record_id") Long stageRecordId,
-                                         @RequestParam(value = "job_record_id") Long jobRecordId);
+                                @RequestParam(value = "stage_record_id") Long stageRecordId,
+                                @RequestParam(value = "job_record_id") Long jobRecordId);
 
     @PostMapping(value = "/v1/cd_pipeline/env_auto_deploy")
     ResponseEntity envAutoDeploy(@RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
-                                          @RequestParam(value = "stage_record_id") Long stageRecordId,
-                                          @RequestParam(value = "job_record_id") Long jobRecordId);
+                                 @RequestParam(value = "stage_record_id") Long stageRecordId,
+                                 @RequestParam(value = "job_record_id") Long jobRecordId);
 
     @PutMapping("/v1/cd_pipeline/auto_deploy/status")
     ResponseEntity setAppDeployStatus(
@@ -58,4 +60,16 @@ public interface DevopsServiceClient {
             @RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
             @RequestParam(value = "stage_record_id") Long stageRecordId,
             @RequestParam(value = "job_record_id") Long jobRecordId);
+
+
+    @PostMapping(value = "/v1/cd_pipeline/execute_api_test_task")
+    ResponseEntity<Void> executeApiTestTask(
+            @RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
+            @RequestParam(value = "stage_record_id") Long stageRecordId,
+            @RequestParam(value = "job_record_id") Long jobRecordId);
+
+    @GetMapping(value = "/v1/cd_pipeline/deploy_status")
+    ResponseEntity<String> getDeployStatus(
+            @RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
+            @RequestParam(value = "deploy_job_name") String deployJobName);
 }
