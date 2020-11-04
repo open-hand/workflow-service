@@ -43,7 +43,7 @@ public class WorkFlowSagaHandler {
             description = "cicd工作流启动cd",
             sagaCode = "cicd-workflow-pipeline",
             maxRetryCount = 0,
-            concurrentLimitPolicy = SagaDefinition.ConcurrentLimitPolicy.TYPE_AND_ID,
+//            concurrentLimitPolicy = SagaDefinition.ConcurrentLimitPolicy.TYPE_AND_ID,
             seq = 1)
     public String workflowCreatePipelineCiCd(String data) {
         DevopsPipelineVO devopsPipelineDTO = gson.fromJson(data, DevopsPipelineVO.class);
