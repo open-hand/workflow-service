@@ -58,7 +58,6 @@ public class DevopsCdApiTestDelegate implements JavaDelegate {
                     if (JobStatusEnum.SUCCESS.value().equals(deployResult)) {
                         logger.info("cd ServiceTask: {}, 关联部署任务部署成功，开始执行API测试任务", delegateExecution.getCurrentActivityId());
                         status[0] = true;
-                        devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, true);
                         Thread.currentThread().interrupt();
 
                     }
