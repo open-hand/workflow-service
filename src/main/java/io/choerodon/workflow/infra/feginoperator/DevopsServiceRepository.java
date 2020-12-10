@@ -25,4 +25,7 @@ public interface DevopsServiceRepository {
 
     String getDeployStatus(Long cdPipelineRecordId, String deployJobName);
 
+    Boolean executeExternalApproval(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
+
+    void setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut);
 }
