@@ -72,4 +72,10 @@ public interface DevopsServiceClient {
     ResponseEntity<String> getDeployStatus(
             @RequestParam(value = "pipeline_record_id") Long pipelineRecordId,
             @RequestParam(value = "deploy_job_name") String deployJobName);
+
+
+    @PostMapping("/v1/cd_pipeline/execute_external_approval_task")
+    ResponseEntity<Boolean> executeExternalApprovalTask(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
+
+    ResponseEntity<Void> setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut);
 }
