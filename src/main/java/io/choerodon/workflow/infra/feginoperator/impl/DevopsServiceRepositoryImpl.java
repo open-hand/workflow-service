@@ -138,15 +138,15 @@ public class DevopsServiceRepositoryImpl implements DevopsServiceRepository {
         }
     }
 
-    @Override
-    public void setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut) {
-        try {
-            ResponseEntity responseEntity = devopsServiceClient.setExternalApprovalTaskStatus(pipelineRecordId, stageRecordId, taskRecordId, execReslut);
-            if (!responseEntity.getStatusCode().is2xxSuccessful()) {
-                throw new CommonException("error.update.deploy.job.status");
-            }
-        } catch (FeignException e) {
-            throw new CommonException(e);
-        }
-    }
+//    @Override
+//    public void setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut) {
+//        try {
+//            ResponseEntity responseEntity = devopsServiceClient.setExternalApprovalTaskStatus(pipelineRecordId, stageRecordId, taskRecordId, execReslut);
+//            if (!responseEntity.getStatusCode().is2xxSuccessful()) {
+//                throw new CommonException("error.update.deploy.job.status");
+//            }
+//        } catch (FeignException e) {
+//            throw new CommonException(e);
+//        }
+//    }
 }

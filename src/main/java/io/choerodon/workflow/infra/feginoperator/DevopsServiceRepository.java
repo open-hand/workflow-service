@@ -27,5 +27,5 @@ public interface DevopsServiceRepository {
 
     Boolean executeExternalApproval(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
 
-    void setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut);
+//    void setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut);
 }
