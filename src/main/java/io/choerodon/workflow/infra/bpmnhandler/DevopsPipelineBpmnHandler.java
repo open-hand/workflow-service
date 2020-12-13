@@ -288,7 +288,7 @@ public class DevopsPipelineBpmnHandler {
                         subProcess.addFlowElement(sequenceFlow2);
                         subProcess.addFlowElement(userTask);
                         devopsPipelineTaskVO.setTaskName(serviceTask.getName());
-
+                        params.put(userTask.getName(), DEFAULT_AUDIT_USER);
 
                         devopsPipelineTaskVO.setTaskName(userTask.getName());
                     }
