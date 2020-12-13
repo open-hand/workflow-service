@@ -55,12 +55,12 @@ public class DevopsServiceClientFallBack implements DevopsServiceClient {
     }
 
     @Override
-    public ResponseEntity<Boolean> executeExternalApprovalTask(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId) {
+    public ResponseEntity<Void> executeExternalApprovalTask(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId) {
         throw new FeignException("error.get.deploy..status");
     }
 
-    @Override
-    public ResponseEntity<Void> setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut) {
-        throw new FeignException("error.get.deploy..status");
-    }
+//    @Override
+//    public ResponseEntity<Void> setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut) {
+//        throw new FeignException("error.get.deploy..status");
+//    }
 }

@@ -75,7 +75,8 @@ public interface DevopsServiceClient {
 
 
     @PostMapping("/v1/cd_pipeline/execute_external_approval_task")
-    ResponseEntity<Boolean> executeExternalApprovalTask(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
-
-    ResponseEntity<Void> setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut);
+    ResponseEntity<Void> executeExternalApprovalTask(@RequestParam(value = "pipeline_record_id") Long cdPipelineRecordId,
+                                                        @RequestParam(value = "stage_record_id") Long cdStageRecordId,
+                                                        @RequestParam(value = "job_record_id") Long cdJobRecordId);
+//    ResponseEntity<Void> setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut);
 }
