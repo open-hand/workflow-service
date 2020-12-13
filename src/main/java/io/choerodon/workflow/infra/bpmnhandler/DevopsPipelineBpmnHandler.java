@@ -35,7 +35,7 @@ public class DevopsPipelineBpmnHandler {
     public static final String PARALLEL_GATE_WAY = "ParallelGateWay";
     public static final String SUB_START_PROCESS = "subStartProcess";
     public static final String END_START_PROCESS = "endStartProcess";
-    public static final String DEFAULT_AUDIT_USER = "default_user";
+    public static final String DEFAULT_AUDIT_USER = "1";
 
     public static BpmnModel initDevopsCDPipelineBpmn(DevopsPipelineVO devopsPipelineDTO, Map<String, Object> params) {
 
@@ -287,10 +287,8 @@ public class DevopsPipelineBpmnHandler {
                         SequenceFlow sequenceFlow2 = dynamicWorkflowUtil.createSequenceFlow(serviceTask.getId(), userTask.getId());
                         subProcess.addFlowElement(sequenceFlow2);
                         subProcess.addFlowElement(userTask);
-                        devopsPipelineTaskVO.setTaskName(serviceTask.getName());
                         params.put(userTask.getName(), DEFAULT_AUDIT_USER);
 
-                        devopsPipelineTaskVO.setTaskName(userTask.getName());
                     }
                 }
                 SequenceFlow sequenceFlow = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), subProcessEnd.getId());
