@@ -21,4 +21,11 @@ public interface DevopsServiceRepository {
 
     String getJobStatus(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
 
+    void executeApiTestTask(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
+
+    String getDeployStatus(Long cdPipelineRecordId, String deployJobName);
+
+    void executeExternalApproval(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
+
+//    void setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut);
 }

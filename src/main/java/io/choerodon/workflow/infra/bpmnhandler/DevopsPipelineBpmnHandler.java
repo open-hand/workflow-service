@@ -9,6 +9,7 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 import io.choerodon.workflow.api.vo.DevopsPipelineStageVO;
 import io.choerodon.workflow.api.vo.DevopsPipelineTaskVO;
+import io.choerodon.workflow.infra.constant.PipelineConstants;
 import io.choerodon.workflow.infra.enums.JobTypeEnum;
 import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
 
@@ -34,6 +35,7 @@ public class DevopsPipelineBpmnHandler {
     public static final String PARALLEL_GATE_WAY = "ParallelGateWay";
     public static final String SUB_START_PROCESS = "subStartProcess";
     public static final String END_START_PROCESS = "endStartProcess";
+    public static final String DEFAULT_AUDIT_USER = "1";
 
     public static BpmnModel initDevopsCDPipelineBpmn(DevopsPipelineVO devopsPipelineDTO, Map<String, Object> params) {
 
@@ -257,6 +259,36 @@ public class DevopsPipelineBpmnHandler {
                         subProcess.addFlowElement(sequenceFlow);
                         subProcess.addFlowElement(serviceTask);
                         devopsPipelineTaskVO.setTaskName(serviceTask.getName());
+                    } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_API_TEST.value())) {
+                        String deployJobName = devopsPipelineTaskVO.getDeployJobName() != null ? devopsPipelineTaskVO.getDeployJobName() : PipelineConstants.NOT_WAIT_DEPLOY_JOB;
+                        taskName += "." + devopsPipelineTaskVO.getBlockAfterJob() + "." + deployJobName;
+                        ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
+                        serviceTask.setImplementation("${devopsCdApiTestDelegate}");
+                        serviceTask.setImplementationType(DELEGATE_EXPRESSION);
+                        SequenceFlow sequenceFlow = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
+                        subProcess.addFlowElement(sequenceFlow);
+                        subProcess.addFlowElement(serviceTask);
+                        devopsPipelineTaskVO.setTaskName(serviceTask.getName());
+                    } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_EXTERNAL_APPROVAL.value())) {
+                        // 外部卡点任务由 serviceTask和usertask组成
+                        String externalApprovalTaskName = JobTypeEnum.CD_EXTERNAL_APPROVAL.value() + "." + devopsPipelineDTO.getPipelineRecordId() + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId();
+
+                        ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + externalApprovalTaskName, externalApprovalTaskName);
+                        serviceTask.setImplementation("${devopsCdExternalApprovalDelegate}");
+                        serviceTask.setImplementationType(DELEGATE_EXPRESSION);
+
+                        UserTask userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId(), DEFAULT_AUDIT_USER);
+
+
+                        SequenceFlow sequenceFlow1 = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
+                        subProcess.addFlowElement(sequenceFlow1);
+                        subProcess.addFlowElement(serviceTask);
+
+                        SequenceFlow sequenceFlow2 = dynamicWorkflowUtil.createSequenceFlow(serviceTask.getId(), userTask.getId());
+                        subProcess.addFlowElement(sequenceFlow2);
+                        subProcess.addFlowElement(userTask);
+                        params.put(userTask.getName(), DEFAULT_AUDIT_USER);
+
                     }
                 }
                 SequenceFlow sequenceFlow = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), subProcessEnd.getId());

@@ -6,7 +6,7 @@
     <groupId>io.choerodon</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>workflow-service</artifactId>
-    <version>0.23.3.RELEASE</version>
+    <version>0.24.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <url>https://github.com/choerodon/workflow-service</url>
 
@@ -23,7 +23,8 @@
         <activiti-dependencies.version>7.0.109</activiti-dependencies.version>
         <choerodon.serviceBuild>true</choerodon.serviceBuild>
         <choerodon.mainClass>io.choerodon.workflow.WorkFlowServiceApplication</choerodon.mainClass>
-        <hzero.version>1.4.0.RELEASE</hzero.version>
+        <hzero.version>1.5.0.RELEASE</hzero.version>
+        <choerodon.asgard.version>0.18.0.RELEASE</choerodon.asgard.version>
     </properties>
 
     <dependencyManagement>
@@ -78,7 +79,7 @@
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-starter-asgard</artifactId>
-            <version>0.17.1.RELEASE</version>
+            <version>${choerodon.asgard.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
