@@ -227,7 +227,7 @@ public class DevopsPipelineBpmnHandler {
                 //生成每个子流程内部的task
                 for (int j = 0; j < devopsPipelineDTO.getStages().get(i).getTasks().size(); j++) {
                     DevopsPipelineTaskVO devopsPipelineTaskVO = devopsPipelineDTO.getStages().get(i).getTasks().get(j);
-                    String taskName = JobTypeEnum.CD_DEPLOY.value() + "." + devopsPipelineDTO.getPipelineRecordId() + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId();
+                    String pipelineInfo = "." + devopsPipelineDTO.getPipelineRecordId() + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId();
                     if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_AUDIT.value())) {
                         //设置会签
                         UserTask userTask = null;
@@ -244,6 +244,7 @@ public class DevopsPipelineBpmnHandler {
                         params.put(userTask.getName(), devopsPipelineTaskVO.getUsernames());
                         devopsPipelineTaskVO.setTaskName(userTask.getName());
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_DEPLOY.value())) {
+                        String taskName = JobTypeEnum.CD_DEPLOY.value() + pipelineInfo;
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdDeployDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
@@ -252,6 +253,7 @@ public class DevopsPipelineBpmnHandler {
                         subProcess.addFlowElement(serviceTask);
                         devopsPipelineTaskVO.setTaskName(serviceTask.getName());
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_HOST.value())) {
+                        String taskName = JobTypeEnum.CD_HOST.value() + pipelineInfo;
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdHostDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
@@ -261,17 +263,26 @@ public class DevopsPipelineBpmnHandler {
                         devopsPipelineTaskVO.setTaskName(serviceTask.getName());
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_API_TEST.value())) {
                         String deployJobName = devopsPipelineTaskVO.getDeployJobName() != null ? devopsPipelineTaskVO.getDeployJobName() : PipelineConstants.NOT_WAIT_DEPLOY_JOB;
-                        taskName += "." + devopsPipelineTaskVO.getBlockAfterJob() + "." + deployJobName;
+                        String taskName = JobTypeEnum.CD_API_TEST.value() + pipelineInfo + "." + deployJobName;
+
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdApiTestDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
-                        SequenceFlow sequenceFlow = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
-                        subProcess.addFlowElement(sequenceFlow);
+
+                        UserTask userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId(), DEFAULT_AUDIT_USER);
+
+                        SequenceFlow sequenceFlow1 = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
+                        subProcess.addFlowElement(sequenceFlow1);
                         subProcess.addFlowElement(serviceTask);
-                        devopsPipelineTaskVO.setTaskName(serviceTask.getName());
+
+                        SequenceFlow sequenceFlow2 = dynamicWorkflowUtil.createSequenceFlow(serviceTask.getId(), userTask.getId());
+                        subProcess.addFlowElement(sequenceFlow2);
+                        subProcess.addFlowElement(userTask);
+                        params.put(userTask.getName(), DEFAULT_AUDIT_USER);
+
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_EXTERNAL_APPROVAL.value())) {
                         // 外部卡点任务由 serviceTask和usertask组成
-                        String externalApprovalTaskName = JobTypeEnum.CD_EXTERNAL_APPROVAL.value() + "." + devopsPipelineDTO.getPipelineRecordId() + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId();
+                        String externalApprovalTaskName = JobTypeEnum.CD_EXTERNAL_APPROVAL.value() + pipelineInfo;
 
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + externalApprovalTaskName, externalApprovalTaskName);
                         serviceTask.setImplementation("${devopsCdExternalApprovalDelegate}");
