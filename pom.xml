@@ -23,8 +23,10 @@
         <activiti-dependencies.version>7.0.109</activiti-dependencies.version>
         <choerodon.serviceBuild>true</choerodon.serviceBuild>
         <choerodon.mainClass>io.choerodon.workflow.WorkFlowServiceApplication</choerodon.mainClass>
-        <hzero.version>1.5.0.RELEASE</hzero.version>
-        <choerodon.asgard.version>0.19.0.RELEASE</choerodon.asgard.version>
+        <hzero.version>1.6.1.RELEASE</hzero.version>
+        <hzero.feign.replay.version>1.6.0.RELEASE</hzero.feign.replay.version>
+        <hzero.starter.metric.version>1.6.0.RELEASE</hzero.starter.metric.version>
+        <choerodon.asgard.version>0.19.1-SNAPSHOT</choerodon.asgard.version>
     </properties>
 
     <dependencyManagement>
@@ -69,12 +71,12 @@
         <dependency>
             <groupId>org.hzero.starter</groupId>
             <artifactId>hzero-starter-metric</artifactId>
-            <version>${hzero.version}</version>
+            <version>${hzero.starter.metric.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hzero.starter</groupId>
             <artifactId>hzero-starter-feign-replay</artifactId>
-            <version>${hzero.version}</version>
+            <version>${hzero.feign.replay.version}</version>
         </dependency>
         <dependency>
             <groupId>io.choerodon</groupId>
