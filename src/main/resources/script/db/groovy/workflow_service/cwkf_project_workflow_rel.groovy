@@ -4,9 +4,9 @@ package script.db.groovy.workflow_service
  *
  * @author zhaotianxin* @date 2021-03-08 10:50
  **/
- databaseChangeLog(logicalFilePath: 'awkf_project_workflow_rel.groovy') {
-     changeSet(id: '2021-03-08-awkf-project-workflow-rel', author: 'ztxemail@163.com') {
-         createTable(tableName: "awkf_project_workflow_rel", remarks: '项目和工作流的关系') {
+ databaseChangeLog(logicalFilePath: 'cwkf_project_workflow_rel.groovy') {
+     changeSet(id: '2021-03-08-cwkf-project-workflow-rel', author: 'ztxemail@163.com') {
+         createTable(tableName: "cwkf_project_workflow_rel", remarks: '项目和工作流的关系') {
              column(name: 'id', type: 'BIGINT UNSIGNED', autoIncrement: true, remarks: '主键Id') {
                  constraints(primaryKey: true)
              }
