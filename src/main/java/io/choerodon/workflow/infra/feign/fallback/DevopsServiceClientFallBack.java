@@ -1,6 +1,7 @@
 package io.choerodon.workflow.infra.feign.fallback;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
 import io.choerodon.core.exception.FeignException;
 import io.choerodon.workflow.infra.feign.DevopsServiceClient;
@@ -8,6 +9,7 @@ import io.choerodon.workflow.infra.feign.DevopsServiceClient;
 /**
  * Created by Sheep on 2019/4/15.
  */
+@Component
 public class DevopsServiceClientFallBack implements DevopsServiceClient {
     @Override
     public ResponseEntity autoDeploy(Long stageRecordId, Long taskRecordId) {
