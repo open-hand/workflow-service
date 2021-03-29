@@ -31,3 +31,16 @@ gitlabci/.generated
 
 /bin
 src/main/resources/application-default.yml
+node_modules
+
+# frontend
+lib
+node_modules
+package-lock.json
+yarn.lock
+**/lib/dist/
+**/lib/assets/
+**/lib/fonts/
+.yalc
+yalc.lock
+yarn-error.log

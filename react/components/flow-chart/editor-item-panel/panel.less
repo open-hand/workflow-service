@@ -1,0 +1,48 @@
+@import '~choerodon-ui/lib/style/themes/default';
+
+.hwkf-left-panel {
+  :global {
+    .@{c7n-prefix}-collapse-content {
+      padding: 0 0.12rem;
+    }
+    .@{c7n-prefix}-collapse-header {
+      position: relative;
+      padding: 0.03rem !important;
+      padding-left: 0.3rem !important;
+      color: rgba(0, 0, 0, 0.85);
+      line-height: 0.22rem;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+      background-color: #f3f3f3;
+    }
+    .@{c7n-prefix}-collapse-expand-icon {
+      left: 0.05rem !important;
+    }
+    .@{c7n-prefix}-collapse-content-box :focus {
+      outline: none !important;
+    }
+  }
+
+  .item-node-name {
+    line-height: 0.28rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    img {
+      height: 0.12rem;
+      width: 0.12rem;
+      margin-right: 0.08rem;
+      margin-left: 0.06rem;
+      margin-bottom: 0.03rem;
+    }
+    > div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .item-node-name :hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,24 @@
+.c7n-backlogApprove-addApproveModal {
+  .c7n-pro-modal-header, .c7n-pro-modal-body {
+    padding-bottom: 0;
+  }
+  &-container {
+    &-currentTask-field {
+      position: relative;
+      &-title {
+        position: absolute;
+        left: -76px;
+        &::after {
+          display: inline-block;
+          width: 0.08rem;
+          margin-left: 0.04rem;
+          color: #d50000;
+          font-family: SimSun, sans-serif;
+          line-height: 1;
+          vertical-align: middle;
+          content: '*';
+        }
+      }
+    }
+  }
+}
