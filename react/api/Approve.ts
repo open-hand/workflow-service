@@ -80,7 +80,7 @@ class ApproveApi extends Api<ApproveApi> {
   }
 
   get ProcessPrefix() {
-    return this.levelType === 'project' ? `/ahworkflow/choerodon/v1/projects/${this.projectId}/project_invoke_workflow` : `/ahworkflow/choerodon/v1/organizations/${this.orgId}/organization_invoke_workflow`;
+    return this.levelType === 'project' ? `/cwkf/choerodon/v1/projects/${this.projectId}/project_invoke_workflow` : `/cwkf/choerodon/v1/organizations/${this.orgId}/organization_invoke_workflow`;
   }
 
   get levelType() {
