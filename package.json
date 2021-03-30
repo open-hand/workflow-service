@@ -1,6 +1,6 @@
 {
   "name": "@choerodon/workflow",
-  "routeName": "ahworkflow",
+  "routeName": "workflow",
   "version": "0.25.0",
   "description": "",
   "main": "./lib/index.js",
