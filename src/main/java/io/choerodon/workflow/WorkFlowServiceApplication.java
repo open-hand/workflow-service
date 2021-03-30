@@ -19,6 +19,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableHzeroWorkflow
 @ComponentScan(value = {"org.hzero.workflow", "io.choerodon.workflow"})
 public class WorkFlowServiceApplication {
+    
     public static void main(String[] args){
         SpringApplication.run(WorkFlowServiceApplication.class, args);
     }
