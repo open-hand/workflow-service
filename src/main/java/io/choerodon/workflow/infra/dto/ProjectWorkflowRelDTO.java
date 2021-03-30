@@ -15,7 +15,7 @@ import javax.persistence.Table;
  */
 @VersionAudit
 @ModifyAudit
-@Table(name = "awkf_project_workflow_rel")
+@Table(name = "cwkf_project_workflow_rel")
 public class ProjectWorkflowRelDTO extends AuditDomain {
     @Id
     @GeneratedValue
