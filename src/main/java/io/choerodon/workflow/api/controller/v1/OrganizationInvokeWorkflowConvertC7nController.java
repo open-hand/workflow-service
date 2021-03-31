@@ -2,6 +2,8 @@ package io.choerodon.workflow.api.controller.v1;
 
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
+import io.choerodon.workflow.app.service.OrganizationWorkflowC7nService;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
@@ -45,6 +47,8 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     private PersonalProcessService personalProcessService;
     @Autowired
     private PersonalActionService personalActionService;
+    @Autowired
+    private OrganizationWorkflowC7nService organizationWorkflowC7NService;
     @Autowired
     private AppointNextNodeApproverActionHandler appointNextNodeApproverActionHandler;
 
@@ -228,6 +232,15 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
                                          @RequestParam("instanceIds") List<Long> instanceIds,
                                          @RequestParam(name = "starter",required = false) String starter) {
         this.personalActionService.urge(organizationId, instanceIds, starter);
+        return Results.success();
+    }
+
+    @ApiOperation("组织层流程分类、定义初始化")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @PostMapping({"/def_workflow/init"})
+    public ResponseEntity<Void> initWorkflow(
+            @PathVariable("organization_id") Long tenantId){
+        organizationWorkflowC7NService.initDefWorkFlows(tenantId);
         return Results.success();
     }
 }
