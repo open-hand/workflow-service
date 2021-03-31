@@ -120,7 +120,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @ApiOperation("我的待办-审批拒绝")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/reject"})
-    public ResponseEntity<Void> flowReject(@PathVariable("organizationId") Long organizationId,
+    public ResponseEntity<Void> flowReject(@PathVariable("organization_id") Long organizationId,
                                            @RequestParam("taskIds") List<Long> taskIds,
                                            @RequestParam("comment") String comment,
                                            @RequestParam(name = "assignee",required = false) String assignee) {
