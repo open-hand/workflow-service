@@ -141,7 +141,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
 
     @ApiOperation("预测下一审批人")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
-    @GetMapping({"/persona_process/{taskId}/forecastNextNode"})
+    @GetMapping({"/personal_process/{taskId}/forecastNextNode"})
     public ResponseEntity<Map<String, Object>> forecastNextNode(@PathVariable("organization_id") Long organizationId,
                                                                 @PathVariable("taskId") Long taskId) {
         return Results.success(appointNextNodeApproverActionHandler.forecastNextNode(taskId));
@@ -149,7 +149,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
 
     @ApiOperation("我的待办-查询可驳回列表")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
-    @GetMapping({"/persona_process/{taskId}/rebutNodeList"})
+    @GetMapping({"/personal_process/{taskId}/rebutNodeList"})
     public ResponseEntity<ProcessRebutNodeDTO> getRebutNodes(@PathVariable("organization_id") Long organizationId,
                                                              @PathVariable("taskId") Long taskId) {
         return Results.success(personalActionService.getRebutNodes(organizationId, taskId));
