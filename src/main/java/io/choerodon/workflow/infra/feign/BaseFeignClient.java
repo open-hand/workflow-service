@@ -1,13 +1,13 @@
 package io.choerodon.workflow.infra.feign;
 
 import io.choerodon.workflow.infra.feign.fallback.BaseFeignClientFallback;
+import io.choerodon.workflow.infra.feign.vo.OrganizationInfoVO;
 
 import org.hzero.workflow.def.infra.feign.dto.UserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,4 +21,7 @@ public interface BaseFeignClient {
     @PostMapping(value = "/choerodon/v1/users/ids")
     List<UserDTO> listUsersByIds(@RequestBody Long[] ids,
                                                  @RequestParam(name = "only_enabled") Boolean onlyEnabled);
+
+    @GetMapping(value = "/choerodon/v1/organizations/{organization_id}")
+    ResponseEntity<OrganizationInfoVO> queryOrganizationInfo(@PathVariable(name = "organization_id") Long id);
 }
