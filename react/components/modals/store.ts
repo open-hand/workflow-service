@@ -28,7 +28,7 @@ class ApproveStore {
     const res = await approveApi.getProcess(taskId);
     this.setProcess(res);
     if (type === 'org') {
-      await this.getHistory(res.taskDetail.taskId);
+      await this.getHistory(res.taskDetail.instanceId);
       await this.getFlowData(res.taskDetail.instanceId);
       this.loading = false;
     } else {
@@ -57,8 +57,8 @@ class ApproveStore {
   @observable historyList: ProcessHistory[] = [];
 
   @action
-  async getHistory(taskId: string) {
-    const res = await approveApi.loadHistory(taskId);
+  async getHistory(instanceId: string) {
+    const res = await approveApi.loadHistoryByInstanceId(instanceId);
     this.historyList = res;
   }
 }
