@@ -77,6 +77,16 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
         });
     }
 
+    @Override
+    public Boolean checkInit(Long tenantId) {
+        OrganizationInfoVO organizationInfoVO = baseFeignClient.queryOrganizationInfo(tenantId).getBody();
+        if (ObjectUtils.isEmpty(organizationInfoVO)) {
+            throw new CommonException(ERROR_ORG_NOT_EXIST);
+        }
+        String typeCode = DEFAULT_TYPE_CODE + "_" + organizationInfoVO.getTenantNum();
+        return validInitDefType(tenantId, typeCode);
+    }
+
     private List<DefWorkflow> getDefaultWorkFlowFromJson() {
         List<DefWorkflow> defWorkFlows;
         try {
@@ -96,7 +106,9 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
             throw new CommonException(ERROR_ORG_NOT_EXIST);
         }
         String typeCode = DEFAULT_TYPE_CODE + "_" + organizationInfoVO.getTenantNum();
-        validInitDefType(tenantId, typeCode);
+        if (validInitDefType(tenantId, typeCode)) {
+            throw new CommonException(ERROR_WORK_FLOW_INIT_TYPE_EXIST);
+        }
         DefTypeDTO.DefTypeCreateDTO defTypeCreate = new DefTypeDTO.DefTypeCreateDTO();
         BeanUtils.copyProperties(defType, defTypeCreate);
         defTypeCreate.setTypeCode(typeCode);
@@ -109,11 +121,9 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
         return getDefTypeByCode(tenantId, typeCode);
     }
 
-    private void validInitDefType(Long tenantId, String typeCode) {
+    private boolean validInitDefType(Long tenantId, String typeCode) {
         DefType validDefType = getDefTypeByCode(tenantId, typeCode);
-        if (!ObjectUtils.isEmpty(validDefType)) {
-            throw new CommonException(ERROR_WORK_FLOW_INIT_TYPE_EXIST);
-        }
+        return !ObjectUtils.isEmpty(validDefType);
     }
 
 

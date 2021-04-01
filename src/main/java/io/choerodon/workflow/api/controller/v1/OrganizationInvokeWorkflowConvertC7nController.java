@@ -243,4 +243,12 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
         organizationWorkflowC7NService.initDefWorkFlows(tenantId);
         return Results.success();
     }
+
+    @ApiOperation("组织层流程分类、定义初始化")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping({"/def_workflow/check_init"})
+    public ResponseEntity<Boolean> checkInitWorkflow(
+            @PathVariable("organization_id") Long tenantId){
+        return Results.success(organizationWorkflowC7NService.checkInit(tenantId));
+    }
 }

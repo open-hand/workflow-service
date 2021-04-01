@@ -11,4 +11,11 @@ public interface OrganizationWorkflowC7nService {
      * @param tenantId 组织id
      */
     void initDefWorkFlows(Long tenantId);
+
+    /**
+     * 检查是否初始化组织层流程定义
+     * @param tenantId 租户id
+     * @return 是否初始化组织层流程定义
+     */
+    Boolean checkInit(Long tenantId);
 }
