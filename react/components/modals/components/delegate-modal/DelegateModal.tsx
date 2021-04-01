@@ -64,6 +64,7 @@ const openDelegateModal = (props: Props) => {
         color: '#000',
       },
     },
+    border: false,
   });
 };
 

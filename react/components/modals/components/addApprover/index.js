@@ -6,11 +6,14 @@ import SelectEmployee from '@/components/select/select-employee';
 import { forEach } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import store from '../../store';
+import './index.less';
+
+const prefix = 'c7n-backlogApprove-addSignModal';
 
 const AddApproverModal = (props) => {
   const { process: { taskDetail } } = store;
   const { modal, onSuccess } = props;
-  const { taskId, selfEmpNum, tenantId: organizationId } = taskDetail;
+  const { taskId, tenantId: organizationId } = taskDetail;
   const dataSet = useMemo(() => new DataSet({
     selection: false,
     pageSize: 10,
@@ -144,9 +147,11 @@ const AddApproverModal = (props) => {
 const ObserverAddApproverModal = observer(AddApproverModal);
 const openAddApproverModal = (props) => {
   Modal.open({
+    className: prefix,
     key: 'AddApproverModal',
     title: '加签',
     children: <ObserverAddApproverModal {...props} />,
+    border: false,
   });
 };
 export default openAddApproverModal;
