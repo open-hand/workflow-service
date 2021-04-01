@@ -98,13 +98,15 @@ const SubmittedModal: React.FC<SubmittedModalProps> = (props) => {
           >
             关闭
           </Button>
-          <Button
-            onClick={handleClickUrge}
-            color={'blue' as ButtonColor}
-            funcType={'raised' as FuncType}
-          >
-            催办
-          </Button>
+          {state.data.submittedDetail.urgeEnableFlag ? (
+            <Button
+              onClick={handleClickUrge}
+              color={'blue' as ButtonColor}
+              funcType={'raised' as FuncType}
+            >
+              催办
+            </Button>
+          ) : null}
         </>
       )}
     />
