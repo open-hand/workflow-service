@@ -8,8 +8,9 @@ const prefix = 'c7n-backlogApprove-historyItem';
 
 interface LogProps {
   log: ApproveLog,
+  isSubProcess?: boolean
 }
-const HistoryItem: React.FC<LogProps> = ({ log }) => {
+const HistoryItem: React.FC<LogProps> = ({ log, isSubProcess = false }) => {
   const {
     nodeType, nodeName, statusMeaning, commentContent, remark, attachmentUuid, assignee, carbonCopyComment,
   } = log;
@@ -36,12 +37,12 @@ const HistoryItem: React.FC<LogProps> = ({ log }) => {
     <div className={prefix}>
       {
         nodeType === 'startNode' && (
-          <span>审核流程开始</span>
+          <span>{isSubProcess ? '子流程开始' : '审核流程开始'}</span>
         )
       }
       {
         nodeType === 'endNode' && (
-          <span>审核流程结束</span>
+          <span>{isSubProcess ? '子流程结束' : '审核流程结束'}</span>
         )
       }
       {

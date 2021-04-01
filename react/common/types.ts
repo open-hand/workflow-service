@@ -97,6 +97,7 @@ export interface ApproveLog {
   remark?: string
   toPerson?: string
   carbonCopyComment?: string
+  subProcessHistoryList?: ApproveLog[]
 }
 
 export interface ProcessHistory {
