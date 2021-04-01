@@ -103,6 +103,7 @@ const OpenRebutModal = (props: Props) => {
         color: '#000',
       },
     },
+    border: false,
   });
 };
 

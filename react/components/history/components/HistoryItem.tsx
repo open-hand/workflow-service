@@ -11,7 +11,7 @@ interface LogProps {
 }
 const HistoryItem: React.FC<LogProps> = ({ log }) => {
   const {
-    nodeType, nodeName, statusMeaning, commentContent, remark, attachmentUuid, assignee,
+    nodeType, nodeName, statusMeaning, commentContent, remark, attachmentUuid, assignee, carbonCopyComment,
   } = log;
 
   const [attachmentList, setAttachmentList] = useState<IHistoryAttachment[]>([]);
@@ -53,12 +53,20 @@ const HistoryItem: React.FC<LogProps> = ({ log }) => {
                 marginRight: 5,
               }}
             >
-              {`${assignee}`}
+              {`${assignee ?? ''}`}
             </span>
             <span>在</span>
             <span className={`${prefix}-value`}>{`【${nodeName}】`}</span>
             <span>操作审批动作为</span>
             <span className={`${prefix}-value`}>{`【${statusMeaning}】`}</span>
+            {
+              carbonCopyComment && (
+                <>
+                  <span>填写评论</span>
+                  <span className={`${prefix}-value`}>{`【${carbonCopyComment}】`}</span>
+                </>
+              )
+            }
             {
               commentContent && (
               <>

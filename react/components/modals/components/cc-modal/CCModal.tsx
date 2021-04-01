@@ -64,6 +64,7 @@ const openCCModal = (props: Props) => {
         color: '#000',
       },
     },
+    border: false,
   });
 };
 

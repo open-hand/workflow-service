@@ -56,7 +56,7 @@ const AddApproveModal:React.FC<Props> = ({ modal, onClose }) => {
       valueField: 'employeeNum',
     }, {
       name: 'remark',
-      label: '加签备注',
+      label: '加审备注',
     }, {
       name: 'currentTask',
       label: '当前任务',
@@ -155,6 +155,7 @@ const openAddApproveModal = (props: Props) => {
         color: '#000',
       },
     },
+    border: false,
   });
 };
 

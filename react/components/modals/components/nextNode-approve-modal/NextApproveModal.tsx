@@ -192,6 +192,7 @@ const openNextApproveModal = (props: Props) => {
         color: '#000',
       },
     },
+    border: false,
   });
 };
 

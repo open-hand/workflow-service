@@ -96,6 +96,7 @@ export interface ApproveLog {
   tenantId: string | number
   remark?: string
   toPerson?: string
+  carbonCopyComment?: string
 }
 
 export interface ProcessHistory {
