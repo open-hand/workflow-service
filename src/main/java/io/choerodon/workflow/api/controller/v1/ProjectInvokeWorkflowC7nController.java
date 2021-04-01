@@ -1,18 +1,12 @@
 package io.choerodon.workflow.api.controller.v1;
 
-import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.hzero.workflow.def.api.dto.DefWorkflowDTO;
-import org.hzero.workflow.def.app.service.DefWorkflowService;
-import org.hzero.workflow.def.domain.entity.DefWorkflow;
 import org.hzero.workflow.engine.run.action.AppointNextNodeApproverActionHandler;
 import org.hzero.workflow.engine.run.dto.ProcessRebutNodeDTO;
 import org.hzero.workflow.personal.app.service.PersonalActionService;
@@ -42,8 +36,6 @@ public class ProjectInvokeWorkflowC7nController extends BaseController {
     private AppointNextNodeApproverActionHandler appointNextNodeApproverActionHandler;
     @Autowired
     private RunCommentTemplateService runCommentTemplateService;
-    @Autowired
-    private DefWorkflowService defWorkflowService;
     @Autowired
     private PersonalProcessService personalProcessService;
     @Autowired
@@ -127,17 +119,17 @@ public class ProjectInvokeWorkflowC7nController extends BaseController {
                                                                         @RequestParam(value = "self",required = false) String self) {
         return Results.success(runCommentTemplateService.commentTemplateList(tenantId, commentContent, self));
     }
-    @ApiOperation("项目层-查询流程定义列表")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @GetMapping({"/def-workflows/page"})
-    public ResponseEntity<Page<DefWorkflow>> pageByCondition(@PathVariable("project_id") Long projectId,
-                                                             @RequestParam("organizationId") Long tenantId,
-                                                             PageRequest pageRequest,
-                                                             DefWorkflowDTO.DefWorkflowQueryDTO queryDTO) {
-        queryDTO.setSiteFlag(BaseConstants.Flag.NO);
-        Page<DefWorkflow> page = defWorkflowService.pageByOptions(tenantId, pageRequest, queryDTO);
-        return Results.success(page);
-    }
+//    @ApiOperation("项目层-查询流程定义列表")
+//    @Permission(level = ResourceLevel.ORGANIZATION)
+//    @GetMapping({"/def-workflows/page"})
+//    public ResponseEntity<Page<DefWorkflow>> pageByCondition(@PathVariable("project_id") Long projectId,
+//                                                             @RequestParam("organizationId") Long tenantId,
+//                                                             PageRequest pageRequest,
+//                                                             DefWorkflowDTO.DefWorkflowQueryDTO queryDTO) {
+//        queryDTO.setSiteFlag(BaseConstants.Flag.NO);
+//        Page<DefWorkflow> page = defWorkflowService.pageByOptions(tenantId, pageRequest, queryDTO);
+//        return Results.success(page);
+//    }
 
     @ApiOperation("附件上传/删除")
     @Permission(level = ResourceLevel.ORGANIZATION)
