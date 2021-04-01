@@ -21,7 +21,13 @@ const HistoryList: React.FC<{
               <>
                 {
                   reverse(log.runTaskHistory?.subProcessHistoryList || []).map((sublog) => (
-                    <div key={sublog.taskHistoryId} className={`${prefix}-log`}>
+                    <div
+                      key={sublog.taskHistoryId}
+                      className={`${prefix}-log`}
+                      style={{
+                        marginLeft: 20,
+                      }}
+                    >
                       <div
                         className={`${prefix}-log-user`}
                       />
