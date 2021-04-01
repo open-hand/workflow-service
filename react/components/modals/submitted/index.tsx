@@ -69,7 +69,7 @@ const SubmittedModal: React.FC<SubmittedModalProps> = (props) => {
       tabTop={SummaryComponent}
       tabs={[...(extraTabs ?? []),
         {
-          title: '审核意见',
+          title: '流程信息',
           key: 'suggest',
           component: () => (state.data.submittedDetail ? <ProcessDetail data={state.data.submittedDetail} /> : null),
         },
@@ -98,13 +98,15 @@ const SubmittedModal: React.FC<SubmittedModalProps> = (props) => {
           >
             关闭
           </Button>
-          <Button
-            onClick={handleClickUrge}
-            color={'blue' as ButtonColor}
-            funcType={'raised' as FuncType}
-          >
-            催办
-          </Button>
+          {state.data.submittedDetail.urgeEnableFlag ? (
+            <Button
+              onClick={handleClickUrge}
+              color={'blue' as ButtonColor}
+              funcType={'raised' as FuncType}
+            >
+              催办
+            </Button>
+          ) : null}
         </>
       )}
     />

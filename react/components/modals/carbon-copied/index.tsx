@@ -72,7 +72,7 @@ const CarbonCopiedModal: React.FC<CarbonCopiedModalProps> = (props) => {
       tabTop={SummaryComponent}
       tabs={[...(extraTabs ?? []),
         {
-          title: '审核意见',
+          title: carbonCopyTodoFlag ? '审核意见' : '流程信息',
           key: 'suggest',
           component: () => (
             <>

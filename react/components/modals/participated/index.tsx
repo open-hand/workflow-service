@@ -66,7 +66,7 @@ const ParticipatedModal: React.FC<ParticipatedModalProps> = (props) => {
       tabTop={SummaryComponent}
       tabs={[...(extraTabs ?? []),
         {
-          title: '审核意见',
+          title: '流程信息',
           key: 'suggest',
           component: () => state.data.instanceDetail && <ProcessDetail data={state.data.instanceDetail} />,
         },

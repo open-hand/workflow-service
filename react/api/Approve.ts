@@ -73,6 +73,7 @@ export interface InstanceDetail {
   parentInstanceNodeId?: any;
   subProcessChildren?: any;
   parentDescription?: any;
+  urgeEnableFlag: 0 | 1
 }
 class ApproveApi extends Api<ApproveApi> {
   get prefix() {
