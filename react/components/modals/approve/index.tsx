@@ -18,11 +18,11 @@ export interface ApproveModalProps {
   taskId: string
   onClose: () => void
   SummaryComponent?: React.ReactNode
-  extraTabs?:BaseModalProps['tabs']
+  extraTabs?: BaseModalProps['tabs']
 }
-const ApproveModal:React.FC<ApproveModalProps> = (props) => {
+const ApproveModal: React.FC<ApproveModalProps> = (props) => {
   const {
-    modal, SummaryComponent, extraTabs, taskId,
+    modal, SummaryComponent, extraTabs, taskId, onClose,
   } = props;
   useEffect(() => {
     if (taskId) {
@@ -32,6 +32,10 @@ const ApproveModal:React.FC<ApproveModalProps> = (props) => {
   const handleClose = useCallback(() => {
     modal?.close();
   }, [modal]);
+  const handleRefresh = useCallback(() => {
+    onClose && onClose();
+    handleClose();
+  }, [handleClose, onClose]);
   const ref = useRef<SuggestRef>({} as SuggestRef);
   const getComment = async () => {
     const dataSet = ref.current?.dataSet;
@@ -64,7 +68,7 @@ const ApproveModal:React.FC<ApproveModalProps> = (props) => {
         <Buttons
           taskId={taskId}
           getComment={getComment}
-          onSubmit={handleClose}
+          onSubmit={handleRefresh}
           onClick={(item) => {
             if (activeTab !== 'suggest' && includes(needValidateActions, item.value)) {
               setActiveTab('suggest');
