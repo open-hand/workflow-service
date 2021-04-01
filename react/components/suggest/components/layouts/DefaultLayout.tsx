@@ -16,7 +16,7 @@ import styles from './index.less';
 export type SuggestLayoutProps = SuggestProps & {
   onManageClick: () => void
   onSaveCommentTemplateClick: () => void
-  dataSet:DataSet
+  dataSet: DataSet
 }
 const { Option } = Select;
 const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
@@ -51,6 +51,7 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
   }, [ModalProps]);
   const handleManageClick = useCallback(() => {
     const modal = Modal.open({
+      className: styles.modal,
       key: 'ManageListModal',
       title: '审批意见管理',
       drawer: true,

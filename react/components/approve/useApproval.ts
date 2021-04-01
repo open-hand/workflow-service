@@ -2,6 +2,7 @@ import { ICommentTemplate, IProcess, IProcessAttachment } from '@/common/types';
 import {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
+import { useObservable } from 'mobx-react-lite';
 import { usePersistFn } from 'ahooks';
 import { getOrganizationId } from '@choerodon/agile/lib/utils/common';
 import { approveApi } from '@/api';
@@ -19,13 +20,14 @@ export default function useApproval(config: Config): SuggestProps {
       setAttachmentUuid(process.attachmentUuid);
     }
   }, [process.attachmentUuid]);
-  const [commentTemplates, setCommentTemplates] = useState<ICommentTemplate[]>([]);
+  const commentTemplates = useObservable<ICommentTemplate[]>([]);
   const [processAttachments, setProcessAttachments] = useState<IProcessAttachment[]>([]);
 
   const [manageVisible, setManageVisible] = useState(false);
   const refresh = useCallback(async () => {
     const res = await approveApi.type(type).refreshCommentTemplates();
-    setCommentTemplates(res);
+    commentTemplates.length = 0;
+    commentTemplates.push(...res);
   }, [type]);
   useEffect(() => {
     refresh();

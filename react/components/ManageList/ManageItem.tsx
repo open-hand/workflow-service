@@ -62,12 +62,14 @@ const FilterItem: React.FC<Props> = ({
             <Tooltip title="保存">
               <Icon
                 type="check"
+                className="c7n-filterAction-icon"
                 onClick={handleSubmit}
               />
             </Tooltip>
             <Tooltip title="取消">
               <Icon
                 type="close"
+                className="c7n-filterAction-icon"
                 onClick={handleCancel}
               />
             </Tooltip>
@@ -77,6 +79,7 @@ const FilterItem: React.FC<Props> = ({
             <Tooltip title="修改">
               <Icon
                 type="mode_edit"
+                className="c7n-filterAction-icon"
                 onClick={() => {
                   setIsEditing(true);
                 }}
