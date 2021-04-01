@@ -69,7 +69,7 @@ const SubmittedModal: React.FC<SubmittedModalProps> = (props) => {
       tabTop={SummaryComponent}
       tabs={[...(extraTabs ?? []),
         {
-          title: '审核意见',
+          title: '流程信息',
           key: 'suggest',
           component: () => (state.data.submittedDetail ? <ProcessDetail data={state.data.submittedDetail} /> : null),
         },
