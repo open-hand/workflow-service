@@ -83,26 +83,26 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
           </Select>
         </div>
         <Button
+          color={'blue' as ButtonColor}
+          funcType={'raised' as FuncType}
+          onClick={onSaveCommentTemplateClick}
+          style={{ marginLeft: 14 }}
+        >
+          保留审批意见
+        </Button>
+        <Button
           icon="settings"
           color={'blue' as ButtonColor}
-          style={{ marginLeft: 20 }}
+          style={{ marginLeft: 10 }}
           onClick={handleManageClick}
         >
           审批意见管理
         </Button>
       </div>
       <TextArea name="commentContent" resize={'vertical' as ResizeType} />
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          color={'blue' as ButtonColor}
-          funcType={'raised' as FuncType}
-          onClick={onSaveCommentTemplateClick}
-        >
-          保留审批意见
-        </Button>
-        <Button color={'blue' as ButtonColor}>取消</Button>
+      <div style={{ marginTop: -10 }}>
+        <ProcessAttachment {...otherProps} />
       </div>
-      <ProcessAttachment {...otherProps} />
     </Form>
   );
 };
