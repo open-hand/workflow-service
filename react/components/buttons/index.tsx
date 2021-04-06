@@ -12,6 +12,7 @@ import openAddApproverModal from '@/components/modals/components/addApprover';
 import { ButtonColor, FuncType } from 'choerodon-ui/pro/lib/button/enum';
 import { IApproveBtn } from '@/common/types';
 import './index.less';
+import classNames from 'classnames';
 
 export interface ICustomBtn {
   checked: boolean,
@@ -116,14 +117,14 @@ const Buttons: React.FC<ButtonsProps> = ({
     }
   }, [getComment, handleOk, onClick, taskId]);
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', marginLeft: -10 }}>
       {
         outLoading || loading ? null : (
           <>
             {[...extraBtns, ...btns].filter((item) => item.checked).map((item) => (
               <Button
-                style={{ margin: 0, ...buttonStyle, ...((item as ICustomBtn).style || {}) }}
-                className={(item as ICustomBtn).className}
+                style={{ ...buttonStyle, ...((item as ICustomBtn).style || {}) }}
+                className={classNames((item as ICustomBtn).className, 'c7n-approve-btn')}
                 key={item.value}
                 onClick={() => handleClickBtn(item)}
                 // color={'blue' as ButtonColor}

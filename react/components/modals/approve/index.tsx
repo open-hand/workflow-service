@@ -82,6 +82,7 @@ const ApproveModal: React.FC<ApproveModalProps> = (props) => {
             checked: true,
             onClick: handleClose,
             style: {
+              marginLeft: 10,
               backgroundColor: '#3f51b5',
               color: '#FFF',
             },
