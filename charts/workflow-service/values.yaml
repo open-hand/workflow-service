@@ -73,6 +73,13 @@ env:
     # 配置中心地址
     SPRING_CLOUD_CONFIG_URI: http://register-server:8000
 
+    # Redis 主机地址
+    SPRING_REDIS_HOST: localhost
+    # Redis 端口
+    SPRING_REDIS_PORT: 6379
+    # Redis db
+    SPRING_REDIS_DATABASE: 9
+
     # 注册服务地址
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://register-server:8000/eureka/
 
