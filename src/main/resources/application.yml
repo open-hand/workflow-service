@@ -138,6 +138,7 @@ hzero:
     reject-applier-template: ${HWKF_REJECT_APPLIER_TEMPLATE:HWKF.REJECT_APPLIER}
     # 拒绝后通知审批人消息发送配置
     reject-approver-template: ${HWKF_REJECT_APPROVER_TEMPLATE:HWKF.REJECT_APPROVER}
+    web-domain-name: ${HWKF_WEB_DOMAIN_NAME:example.com}
     # 是否使用模型
     model:
       enabled: ${HWKF_MODEL_ENABLE:true}

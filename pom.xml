@@ -156,7 +156,7 @@
         <dependency>
             <groupId>org.hzero</groupId>
             <artifactId>hzero-workflow</artifactId>
-            <version>1.6.2.BETA.1</version>
+            <version>1.6.2.BETA.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.hzero.starter</groupId>
