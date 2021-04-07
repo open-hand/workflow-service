@@ -89,6 +89,8 @@ env:
     SPRING_DATASOURCE_USERNAME: choerodon
     # 数据库密码
     SPRING_DATASOURCE_PASSWORD: password
+    # 环境域名地址
+    HWKF_WEB_DOMAIN_NAME: http://example.com
 
     # 百分比使用物理内存，预留一部分用于堆外内存以及外部程序
     JAVA_OPTS: >-
