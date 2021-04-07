@@ -83,7 +83,7 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
         if (ObjectUtils.isEmpty(organizationInfoVO)) {
             throw new CommonException(ERROR_ORG_NOT_EXIST);
         }
-        String typeCode = DEFAULT_TYPE_CODE + "_" + organizationInfoVO.getTenantNum();
+        String typeCode = DEFAULT_TYPE_CODE + "_ORG";
         return validInitDefType(tenantId, typeCode);
     }
 
@@ -105,7 +105,7 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
         if (ObjectUtils.isEmpty(organizationInfoVO)) {
             throw new CommonException(ERROR_ORG_NOT_EXIST);
         }
-        String typeCode = DEFAULT_TYPE_CODE + "_" + organizationInfoVO.getTenantNum();
+        String typeCode = DEFAULT_TYPE_CODE + "_ORG";
         if (validInitDefType(tenantId, typeCode)) {
             throw new CommonException(ERROR_WORK_FLOW_INIT_TYPE_EXIST);
         }
