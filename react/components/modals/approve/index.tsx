@@ -19,16 +19,17 @@ export interface ApproveModalProps {
   onClose: () => void
   SummaryComponent?: React.ReactNode
   extraTabs?: BaseModalProps['tabs']
+  instanceId: string
 }
 const ApproveModal: React.FC<ApproveModalProps> = (props) => {
   const {
-    modal, SummaryComponent, extraTabs, taskId, onClose,
+    modal, SummaryComponent, extraTabs, taskId, onClose, instanceId,
   } = props;
   useEffect(() => {
     if (taskId) {
-      store.getProcess(taskId);
+      store.getProcess(taskId, 'org', instanceId);
     }
-  }, [taskId]);
+  }, [instanceId, taskId]);
   const handleClose = useCallback(() => {
     modal?.close();
   }, [modal]);
