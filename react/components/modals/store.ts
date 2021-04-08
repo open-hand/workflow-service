@@ -23,11 +23,11 @@ class ApproveStore {
   }
 
   @action
-  async getProcess(taskId: string, type: 'project' | 'org' = 'org', instanceId: string) {
+  async getProcess(taskId: string, type: 'project' | 'org' = 'org', instanceId?: string) {
     this.loading = true;
     const res = await approveApi.getProcess(taskId);
     this.setProcess(res);
-    if (type === 'org') {
+    if (type === 'org' && instanceId) {
       await this.getHistory(instanceId);
       await this.getFlowData(instanceId);
       this.loading = false;
