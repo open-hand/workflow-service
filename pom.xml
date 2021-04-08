@@ -26,7 +26,7 @@
         <hzero.version>1.6.1.RELEASE</hzero.version>
         <hzero.feign.replay.version>1.6.0.RELEASE</hzero.feign.replay.version>
         <hzero.starter.metric.version>1.6.0.RELEASE</hzero.starter.metric.version>
-        <choerodon.asgard.version>0.19.1-SNAPSHOT</choerodon.asgard.version>
+        <choerodon.asgard.version>0.19.1.RELEASE</choerodon.asgard.version>
     </properties>
 
     <dependencyManagement>
