@@ -27,9 +27,9 @@ class ApproveStore {
     this.loading = true;
     const res = await approveApi.getProcess(taskId);
     this.setProcess(res);
-    if (type === 'org') {
-      await this.getHistory(instanceId || res.taskDetail.instanceId);
-      await this.getFlowData(instanceId || res.taskDetail.instanceId);
+    if (type === 'org' && instanceId) {
+      await this.getHistory(instanceId);
+      await this.getFlowData(instanceId);
       this.loading = false;
     } else {
       this.loading = false;
