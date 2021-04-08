@@ -65,16 +65,16 @@ const Buttons: React.FC<ButtonsProps> = ({
         break;
       }
       case 'DELEGATE': {
-        openDelegateModal({ onClose: handleOk });
+        openDelegateModal({ taskId, onClose: handleOk });
         break;
       }
       case 'ADD_SIGN': {
         // 打开加签弹窗
-        openAddApproverModal({ onSuccess: handleOk });
+        openAddApproverModal({ taskId, onSuccess: handleOk });
         break;
       }
       case 'CARBON_COPY': {
-        openCCModal({});
+        openCCModal({ taskId });
         break;
       }
       case 'APPOINT_NEXT_NODE_APPROVER': {
@@ -83,7 +83,7 @@ const Buttons: React.FC<ButtonsProps> = ({
             Choerodon.prompt(res.message);
           } else {
             openNextApproveModal({
-              forecastNextNode: res, onClose: handleOk,
+              forecastNextNode: res, onClose: handleOk, taskId,
             });
           }
         });
@@ -96,7 +96,7 @@ const Buttons: React.FC<ButtonsProps> = ({
             Choerodon.prompt(res.message);
           } else if (res.startNode || res.previousNode) {
             openRebutModal({
-              rebutNodeList: res, onClose: handleOk,
+              rebutNodeList: res, onClose: handleOk, taskId,
             });
           } else {
             Choerodon.prompt('没有可驳回的节点，不可驳回');
@@ -105,7 +105,7 @@ const Buttons: React.FC<ButtonsProps> = ({
         break;
       }
       case 'ADD_TASK_APPROVER': {
-        openAddApproveModal({ onClose: handleOk });
+        openAddApproveModal({ onClose: handleOk, taskId });
         break;
       }
       default: {

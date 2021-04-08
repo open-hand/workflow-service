@@ -18,9 +18,10 @@ const prefix = 'c7n-backlogApprove-addApproveModal';
 interface Props {
   modal?: IModalProps
   onClose: () => void
+  taskId: string
 }
 
-const AddApproveModal:React.FC<Props> = ({ modal, onClose }) => {
+const AddApproveModal:React.FC<Props> = ({ modal, onClose, taskId }) => {
   const employeesRef = useRef<IEmployee[]>();
 
   const { process: { taskDetail } } = store;
@@ -99,12 +100,12 @@ const AddApproveModal:React.FC<Props> = ({ modal, onClose }) => {
         approveComment: addApproveDataSet?.current?.get('suggestion'),
         currentAction: addApproveDataSet?.current?.get('type') === 'AFTER_ADD_TASK_APPROVER' ? 'APPROVED' : undefined,
       };
-      await approveApi.addApprove(taskDetail.taskId, data);
+      await approveApi.addApprove(taskId, data);
       onClose();
       return true;
     }
     return false;
-  }, [addApproveDataSet, onClose, taskDetail.taskId]);
+  }, [addApproveDataSet, onClose, taskId]);
   useEffect(() => {
     modal?.handleOk(handleSubmit);
   }, [handleSubmit, modal]);

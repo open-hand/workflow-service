@@ -32,10 +32,11 @@ interface Props {
   modal?: IModalProps
   forecastNextNode: IForecastNextNode
   onClose: () => void
+  taskId: string
 }
 
 const NextApproveModal:React.FC<Props> = ({
-  modal, forecastNextNode, onClose,
+  modal, forecastNextNode, onClose, taskId,
 }) => {
   const employeesRef = useRef<IEmployee[]>();
   const { process: { taskDetail } } = store;
@@ -133,12 +134,12 @@ const NextApproveModal:React.FC<Props> = ({
         approveComment: nextApproveDataSet?.current?.get('comment'),
       };
 
-      await approveApi.nextNodeApprove(taskDetail.taskId, data);
+      await approveApi.nextNodeApprove(taskId, data);
       onClose();
       return true;
     }
     return false;
-  }, [forecastNextNode.nextNodeApprover, forecastNextNode.nextNodeCode, nextApproveDataSet, onClose, taskDetail.taskId]);
+  }, [forecastNextNode.nextNodeApprover, forecastNextNode.nextNodeCode, nextApproveDataSet, onClose, taskId]);
   useEffect(() => {
     modal?.handleOk(handleSubmit);
   }, [handleSubmit, modal]);
