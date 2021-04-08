@@ -13,9 +13,10 @@ const prefix = 'c7n-backlogApprove-ccModal';
 
 interface Props {
   modal?: IModalProps
+  taskId: string
 }
 
-const CCModal:React.FC<Props> = ({ modal }) => {
+const CCModal:React.FC<Props> = ({ modal, taskId }) => {
   const { process: { taskDetail } } = store;
 
   const ccDataSet = useMemo(() => new DataSet({
@@ -29,13 +30,12 @@ const CCModal:React.FC<Props> = ({ modal }) => {
 
   const handleSubmit = useCallback(async () => {
     const validate = await ccDataSet.validate();
-    console.log(ccDataSet?.current?.data);
     if (validate) {
-      approveApi.carbonCopy(taskDetail.taskId, ccDataSet.current?.get('cc'));
+      approveApi.carbonCopy(taskId, ccDataSet.current?.get('cc'));
       return true;
     }
     return false;
-  }, [ccDataSet, taskDetail.taskId]);
+  }, [ccDataSet, taskId]);
   useEffect(() => {
     modal?.handleOk(handleSubmit);
   }, [handleSubmit, modal]);

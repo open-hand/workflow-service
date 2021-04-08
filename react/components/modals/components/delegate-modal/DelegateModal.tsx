@@ -14,9 +14,10 @@ const prefix = 'c7n-backlogApprove-delegateModal';
 interface Props {
   modal?: IModalProps
   onClose: () => void
+  taskId: string
 }
 
-const DelegateModal:React.FC<Props> = ({ modal, onClose }) => {
+const DelegateModal:React.FC<Props> = ({ modal, onClose, taskId }) => {
   const { process: { taskDetail } } = store;
 
   const delegateDataSet = useMemo(() => new DataSet({
@@ -30,12 +31,12 @@ const DelegateModal:React.FC<Props> = ({ modal, onClose }) => {
   const handleSubmit = useCallback(async () => {
     const validate = await delegateDataSet.validate();
     if (validate) {
-      await approveApi.delegateTo(taskDetail.taskId, delegateDataSet.current?.get('delegate'));
+      await approveApi.delegateTo(taskId, delegateDataSet.current?.get('delegate'));
       onClose();
       return true;
     }
     return false;
-  }, [delegateDataSet, onClose, taskDetail.taskId]);
+  }, [delegateDataSet, onClose, taskId]);
   useEffect(() => {
     modal?.handleOk(handleSubmit);
   }, [handleSubmit, modal]);
