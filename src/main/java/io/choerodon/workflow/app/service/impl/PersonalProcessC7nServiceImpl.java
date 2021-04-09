@@ -1,12 +1,9 @@
 package io.choerodon.workflow.app.service.impl;
 
-import org.hzero.core.base.BaseConstants;
 import org.hzero.workflow.def.infra.feign.PlatformFeignClient;
 import org.hzero.workflow.def.infra.feign.dto.UserDTO;
 import org.hzero.workflow.engine.dao.dto.EmployeeUserDTO;
 import org.hzero.workflow.engine.dao.entity.RunTaskHistory;
-import org.hzero.workflow.engine.exception.EmployeeNotFoundException;
-import org.hzero.workflow.personal.api.dto.PersonalTodoDTO.*;
 import org.hzero.workflow.personal.domain.repository.PersonalTodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +14,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.choerodon.core.domain.Page;
-import io.choerodon.mybatis.pagehelper.PageHelper;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.workflow.api.vo.RunTaskHistoryVO;
 import io.choerodon.workflow.app.service.PersonalProcessC7nService;
-import io.choerodon.workflow.domain.repository.PersonalTodoC7nRepository;
 import io.choerodon.workflow.infra.feign.BaseFeignClient;
 
 /**
@@ -31,9 +24,6 @@ import io.choerodon.workflow.infra.feign.BaseFeignClient;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class PersonalProcessC7nServiceImpl implements PersonalProcessC7nService {
-
-    @Autowired
-    private PersonalTodoC7nRepository personalTodoC7nRepository;
 
     @Autowired
     private PersonalTodoRepository personalTodoRepository;
@@ -93,80 +83,5 @@ public class PersonalProcessC7nServiceImpl implements PersonalProcessC7nService 
                 }
             });
         });
-    }
-
-    @Override
-    public Page<PersonalTodoViewDTO> pageByOptions(Long tenantId, PageRequest pageRequest, PersonalTodoQueryDTO queryDTO) {
-        try {
-            return PageHelper.doPageAndSort(
-                    pageRequest,
-                    () -> this.personalTodoC7nRepository.selectPersonalTodo(tenantId, queryDTO));
-        } catch (EmployeeNotFoundException e) {
-            return new Page<>();
-        }
-    }
-
-    @Override
-    public Page<PersonalTodoViewDTO> pageDone(Long tenantId, PageRequest pageRequest, PersonalTodoQueryDTO queryDTO) {
-        queryDTO.setDoneFlag(BaseConstants.Flag.YES);
-        return PageHelper.doPageAndSort(pageRequest, () -> this.personalTodoC7nRepository.selectMobilePersonalTask(queryDTO));
-    }
-
-    @Override
-    public Page<ParticipatedDTO> mineParticipated(Long tenantId, PageRequest pageRequest, PersonalTodoQueryDTO queryDTO) {
-        queryDTO.setTenantId(tenantId);
-
-        try {
-            Page<ParticipatedDTO> participatedPage = PageHelper.doPageAndSort(
-                    pageRequest,
-                    () -> this.personalTodoC7nRepository.selectMineParticipated(tenantId, queryDTO));
-            this.selectSubProcess(tenantId, participatedPage.getContent(), queryDTO);
-            return participatedPage;
-        } catch (EmployeeNotFoundException e) {
-            return new Page<>();
-        }
-    }
-
-    @Override
-    public Page<SubmittedDTO> mineSubmitted(Long tenantId, PageRequest pageRequest, PersonalTodoQueryDTO queryDTO) {
-        queryDTO.setTenantId(tenantId);
-
-        try {
-            Page<SubmittedDTO> submittedPage = PageHelper.doPageAndSort(
-                    pageRequest,
-                    () -> this.personalTodoC7nRepository.selectMineSubmitted(tenantId, queryDTO));
-            this.selectSubProcess(tenantId, submittedPage.getContent(), queryDTO);
-            return submittedPage;
-        } catch (EmployeeNotFoundException e) {
-            return new Page<>();
-        }
-    }
-
-    @Override
-    public Page<CarbonCopyDTO> mineCarbonCopied(Long tenantId, PageRequest pageRequest, PersonalTodoQueryDTO queryDTO) {
-        queryDTO.setTenantId(tenantId);
-
-        try {
-            Page<CarbonCopyDTO> carbonCopyPage = PageHelper.doPageAndSort(
-                    pageRequest,
-                    () -> this.personalTodoC7nRepository.selectMineCarbonCopied(tenantId, queryDTO));
-            this.selectSubProcess(tenantId, carbonCopyPage.getContent(), queryDTO);
-            return carbonCopyPage;
-        } catch (EmployeeNotFoundException e) {
-            return new Page<>();
-        }
-    }
-
-    private <T extends BaseViewDTO> void selectSubProcess(Long tenantId, List<T> viewDTOS, PersonalTodoQueryDTO query) {
-        PersonalTodoQueryDTO queryDTO = new PersonalTodoQueryDTO();
-        queryDTO.setTenantId(tenantId).setSelf(query.getSelf()).setSeparator(query.getSeparator());
-        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(viewDTOS)) {
-            List<Long> parentInstanceIds = viewDTOS.stream().map(BaseViewDTO::getInstanceId).collect(Collectors.toList());
-            queryDTO.setParentInstanceIds(parentInstanceIds);
-            List<BaseViewDTO> subProcessInstance = this.personalTodoC7nRepository.selectSubProcess(queryDTO);
-            Map<Long, List<BaseViewDTO>> subProcessInstanceMap = subProcessInstance.stream().collect(Collectors.groupingBy(BaseViewDTO::getParentInstanceId));
-            viewDTOS.forEach((view) -> view.setSubProcessChildren(subProcessInstanceMap.get(view.getInstanceId())));
-            this.selectSubProcess(tenantId, subProcessInstance, query);
-        }
     }
 }
