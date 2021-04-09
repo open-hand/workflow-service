@@ -59,7 +59,7 @@ public class PersonalProcessC7nController {
             targetField = {"body"}
     )
     @ProcessUserDecrypt
-    public ResponseEntity<Page<PersonalTodoDTO.PersonalTodoViewDTO>> choerodonPageByOptions(@PathVariable("organizationId") Long tenantId, PageRequest pageRequest, @UserDecrypt(targetField = {"starter"}) PersonalTodoDTO.PersonalTodoQueryDTO queryDTO) {
+    public ResponseEntity<Page<PersonalTodoDTO.PersonalTodoViewDTO>> choerodonPageByOptions(@PathVariable("organization_id") Long tenantId, PageRequest pageRequest, @UserDecrypt(targetField = {"starter"}) PersonalTodoDTO.PersonalTodoQueryDTO queryDTO) {
         return Results.success(this.personalProcessC7nService.pageByOptions(tenantId, pageRequest, queryDTO));
     }
 
@@ -71,7 +71,7 @@ public class PersonalProcessC7nController {
     @ProcessLovValue(
             targetField = {"body"}
     )
-    public ResponseEntity<Page<PersonalTodoDTO.PersonalTodoViewDTO>> choerodonPageDone(@PathVariable("organizationId") Long tenantId, PageRequest pageRequest, PersonalTodoDTO.PersonalTodoQueryDTO queryDTO) {
+    public ResponseEntity<Page<PersonalTodoDTO.PersonalTodoViewDTO>> choerodonPageDone(@PathVariable("organization_id") Long tenantId, PageRequest pageRequest, PersonalTodoDTO.PersonalTodoQueryDTO queryDTO) {
         return Results.success(this.personalProcessC7nService.pageDone(tenantId, pageRequest, queryDTO));
     }
 
@@ -85,7 +85,7 @@ public class PersonalProcessC7nController {
             targetField = {"body", "body.subProcessChildren", "body.subProcessChildren.subProcessChildren"}
     )
     @ProcessUserDecrypt
-    public ResponseEntity<Page<PersonalTodoDTO.ParticipatedDTO>> choerodonMineParticipated(@PathVariable("organizationId") Long tenantId, @ApiIgnore PageRequest pageRequest, @UserDecrypt(targetField = {"starter", "assignee"}) PersonalTodoDTO.PersonalTodoQueryDTO queryDTO) {
+    public ResponseEntity<Page<PersonalTodoDTO.ParticipatedDTO>> choerodonMineParticipated(@PathVariable("organization_id") Long tenantId, @ApiIgnore PageRequest pageRequest, @UserDecrypt(targetField = {"starter", "assignee"}) PersonalTodoDTO.PersonalTodoQueryDTO queryDTO) {
         return Results.success(this.personalProcessC7nService.mineParticipated(tenantId, pageRequest, queryDTO));
     }
 
@@ -99,7 +99,7 @@ public class PersonalProcessC7nController {
             targetField = {"body", "body.subProcessChildren", "body.subProcessChildren.subProcessChildren"}
     )
     @ProcessUserDecrypt
-    public ResponseEntity<Page<PersonalTodoDTO.SubmittedDTO>> choerodonMineSubmitted(@PathVariable("organizationId") Long tenantId, @ApiIgnore PageRequest pageRequest, @UserDecrypt(targetField = {"assignee"}) PersonalTodoDTO.PersonalTodoQueryDTO queryDTO) {
+    public ResponseEntity<Page<PersonalTodoDTO.SubmittedDTO>> choerodonMineSubmitted(@PathVariable("organization_id") Long tenantId, @ApiIgnore PageRequest pageRequest, @UserDecrypt(targetField = {"assignee"}) PersonalTodoDTO.PersonalTodoQueryDTO queryDTO) {
         return Results.success(this.personalProcessC7nService.mineSubmitted(tenantId, pageRequest, queryDTO));
     }
 
@@ -113,7 +113,7 @@ public class PersonalProcessC7nController {
             targetField = {"body", "body.subProcessChildren", "body.subProcessChildren.subProcessChildren"}
     )
     @ProcessUserDecrypt
-    public ResponseEntity<Page<PersonalTodoDTO.CarbonCopyDTO>> choerodonMineCarbonCopied(@PathVariable("organizationId") Long tenantId, @ApiIgnore PageRequest pageRequest, @UserDecrypt(targetField = {"starter", "assignee"}) PersonalTodoDTO.PersonalTodoQueryDTO queryDTO) {
+    public ResponseEntity<Page<PersonalTodoDTO.CarbonCopyDTO>> choerodonMineCarbonCopied(@PathVariable("organization_id") Long tenantId, @ApiIgnore PageRequest pageRequest, @UserDecrypt(targetField = {"starter", "assignee"}) PersonalTodoDTO.PersonalTodoQueryDTO queryDTO) {
         return Results.success(this.personalProcessC7nService.mineCarbonCopied(tenantId, pageRequest, queryDTO));
     }
 
