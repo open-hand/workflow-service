@@ -1,5 +1,6 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { find } from 'lodash';
+import { Choerodon } from '@choerodon/master';
 import React, {
   useCallback, useMemo, forwardRef, useImperativeHandle,
 } from 'react';
@@ -51,9 +52,12 @@ const Suggest: React.ForwardRefRenderFunction<SuggestRef, SuggestProps> = (props
   }), [handleUpdate]);
   useImperativeHandle(ref, () => ({ dataSet }));
   const handleSaveCommentTemplate = usePersistFn(async () => {
-    const commentContent = dataSet.current?.get('commentContent');
-    if (commentContent) {
-      await onSaveCommentTemplate(commentContent);
+    if (await dataSet.current?.getField('commentContent')?.checkValidity()) {
+      const commentContent = dataSet.current?.get('commentContent');
+      if (commentContent) {
+        await onSaveCommentTemplate(commentContent);
+        Choerodon.prompt('保存成功', 'success');
+      }
     }
   });
   const handleManageClick = useCallback(() => {
