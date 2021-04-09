@@ -33,7 +33,7 @@
         FROM hwkf_run_task_history hrt
         LEFT JOIN hwkf_run_task task ON hrt.TASK_ID = task.TASK_ID
         JOIN hwkf_run_instance hri ON hrt.INSTANCE_ID = hri.INSTANCE_ID
-        JOIN cwkf_run_instance_extend ON crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
+        JOIN cwkf_run_instance_extend  crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
         JOIN hwkf_def_deployment hdd ON hri.DEPLOYMENT_ID = hdd.DEPLOYMENT_ID
         JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
         LEFT JOIN hwkf_run_task_history_tl hrttl ON ( hrt.TASK_HISTORY_ID = hrttl.TASK_HISTORY_ID AND hrttl.lang = #{lang} )
@@ -157,7 +157,7 @@
         FROM hwkf_run_task hrt
         LEFT JOIN hwkf_run_task_history hrth ON hrt.task_id = hrth.task_id AND hrt.instance_id = hrth.instance_id AND hrth.HISTORY_TYPE = #{TASK}
         JOIN hwkf_run_instance hri ON hrt.INSTANCE_ID = hri.INSTANCE_ID
-        JOIN cwkf_run_instance_extend ON crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
+        JOIN cwkf_run_instance_extend  crie ON crie.instance_id = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
         JOIN hwkf_def_deployment hdd ON hri.DEPLOYMENT_ID = hdd.DEPLOYMENT_ID
         JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
         LEFT JOIN hwkf_run_task_tl hrttl ON ( hrt.TASK_ID = hrttl.TASK_ID AND hrttl.lang = #{lang} )
@@ -225,7 +225,7 @@
             hri.PARENT_INSTANCE_NODE_ID,
             p_hri.DESCRIPTION AS PARENT_DESCRIPTION
         FROM hwkf_run_instance hri
-        JOIN cwkf_run_instance_extend ON crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
+        JOIN cwkf_run_instance_extend  crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
         JOIN hwkf_def_deployment hdd ON hri.deployment_id = hdd.deployment_id
         JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
         LEFT JOIN hwkf_run_instance p_hri ON hri.PARENT_INSTANCE_ID = p_hri.INSTANCE_ID
@@ -309,7 +309,7 @@
             hri.PARENT_INSTANCE_NODE_ID,
             p_hri.DESCRIPTION AS PARENT_DESCRIPTION
         FROM hwkf_run_instance hri
-        JOIN cwkf_run_instance_extend ON crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
+        JOIN cwkf_run_instance_extend  crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
         JOIN hwkf_def_deployment hdd ON hri.deployment_id = hdd.deployment_id
         JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
         LEFT JOIN hwkf_def_workflow_tl hdwt ON hdw.FLOW_ID = hdwt.FLOW_ID AND hdwt.LANG = #{lang}
@@ -390,7 +390,7 @@
             p_hri.DESCRIPTION AS PARENT_DESCRIPTION
         FROM hwkf_run_task_history hrth
         JOIN hwkf_run_instance hri ON hrth.instance_id = hri.instance_id
-        JOIN cwkf_run_instance_extend ON crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
+        JOIN cwkf_run_instance_extend  crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
         JOIN hwkf_def_deployment hdd ON hri.deployment_id = hdd.deployment_id
         JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
         LEFT JOIN hwkf_run_task_history_tl hrthtl ON ( hrth.TASK_HISTORY_ID = hrthtl.TASK_HISTORY_ID AND hrthtl.lang = #{lang} )
@@ -495,7 +495,7 @@
             hri.PARENT_INSTANCE_NODE_ID,
             p_hri.DESCRIPTION AS PARENT_DESCRIPTION
         FROM hwkf_run_instance hri
-        JOIN cwkf_run_instance_extend ON crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
+        JOIN cwkf_run_instance_extend  crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
         JOIN hwkf_def_deployment hdd ON hri.deployment_id = hdd.deployment_id
         JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
         LEFT JOIN hwkf_run_instance p_hri ON hri.PARENT_INSTANCE_ID = p_hri.INSTANCE_ID
