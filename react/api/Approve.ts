@@ -283,7 +283,7 @@ class ApproveApi extends Api<ApproveApi> {
   AttachUpload(data: IAttachUpload) {
     return axios({
       method: 'post',
-      url: `hwkf/v1/${this.orgId}/personal-process/attach-upload`,
+      url: `cwkf/choerodon/v1/organizations/${this.orgId}/organization_invoke_workflow/personal_process/attach_upload`,
       data,
     });
   }
@@ -397,20 +397,10 @@ class ApproveApi extends Api<ApproveApi> {
     });
   }
 
-  loadHistory(taskId: string) {
-    return axios({
-      method: 'get',
-      url: `/hwkf/choerodon/v1/organizations/${this.orgId}/personal_process/approve_history`,
-      params: {
-        taskId,
-      },
-    });
-  }
-
   loadHistoryByInstanceId(instanceId: string) {
     return axios({
       method: 'get',
-      url: `/hwkf/choerodon/v1/organizations/${this.orgId}/personal_process/approve_history`,
+      url: `/cwkf/choerodon/v1/organizations/${this.orgId}/personal_process/approve_history`,
       params: {
         instanceId,
       },
