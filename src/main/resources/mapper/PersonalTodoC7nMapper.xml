@@ -495,7 +495,6 @@
             hri.PARENT_INSTANCE_NODE_ID,
             p_hri.DESCRIPTION AS PARENT_DESCRIPTION
         FROM hwkf_run_instance hri
-        JOIN cwkf_run_instance_extend  crie ON crie.INSTANCE_ID = hri.INSTANCE_ID AND crie.organization_id = #{tenantId}
         JOIN hwkf_def_deployment hdd ON hri.deployment_id = hdd.deployment_id
         JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
         LEFT JOIN hwkf_run_instance p_hri ON hri.PARENT_INSTANCE_ID = p_hri.INSTANCE_ID
