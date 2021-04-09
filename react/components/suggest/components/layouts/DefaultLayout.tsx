@@ -83,17 +83,27 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
           </Select>
         </div>
         <Button
+          icon="save"
           color={'blue' as ButtonColor}
-          funcType={'raised' as FuncType}
           onClick={onSaveCommentTemplateClick}
-          style={{ marginLeft: 14 }}
+          style={{
+            marginLeft: 14,
+            border: '1px solid #3f51b5',
+            borderRadius: '4px',
+            background: 'white',
+          }}
         >
           保留审批意见
         </Button>
         <Button
           icon="settings"
           color={'blue' as ButtonColor}
-          style={{ marginLeft: 10 }}
+          style={{
+            marginLeft: 10,
+            border: '1px solid #3f51b5',
+            borderRadius: '4px',
+            background: 'white',
+          }}
           onClick={handleManageClick}
         >
           审批意见管理
