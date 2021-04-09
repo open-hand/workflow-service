@@ -19,7 +19,7 @@ const AddApproverModal = (props) => {
     pageSize: 10,
     transport: {
       submit: () => {
-        const url = `/cwkf/v1/${organizationId}/personal-process/${taskId}/executeTaskById`;
+        const url = `/cwkf/choerodon/v1/organizations/${organizationId}/organization_invoke_workflow/personal_process/${taskId}/executeTaskById`;
         return {
           url,
           data: dataSet.current.toData(),

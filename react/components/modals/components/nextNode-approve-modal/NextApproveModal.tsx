@@ -17,11 +17,13 @@ const { Option } = Select;
 const prefix = 'c7n-backlogApprove-nextApproveModal';
 
 interface INextNodeApprover {
-  employeeNum: string,
-  employeeCode: string,
-  value: string,
+  code: string,
+  employee: {
+    employeeNum: string,
+    employeeCode: string,
+     employeeName: string,
+  }
   name: string,
-  employeeName: string,
 }
 interface IForecastNextNode {
   nextNodeCode: string,
@@ -124,9 +126,9 @@ const NextApproveModal:React.FC<Props> = ({
       const data: NextNodeApproveData = {
         nextNodeCode: forecastNextNode.nextNodeCode,
         approverSourceType: source,
-        toPersonList: source === 'DEFAULT_APPROVER' ? (forecastNextNode.nextNodeApprover || []).filter((item) => includes(nextApproveDataSet?.current?.get('defaultApprover') || [], item.value)).map(((item) => ({
-          value: item.value,
-          name: item.employeeName,
+        toPersonList: source === 'DEFAULT_APPROVER' ? (forecastNextNode.nextNodeApprover || []).filter((item) => includes(nextApproveDataSet?.current?.get('defaultApprover') || [], item.code)).map(((item) => ({
+          value: item.code,
+          name: item.name,
         }))) : (employeesRef.current || []).filter((item) => includes(nextApproveDataSet?.current?.get('approver') || [], item.employeeNum)).map((item) => ({
           value: item.employeeNum,
           name: item.employeeName,
@@ -164,7 +166,7 @@ const NextApproveModal:React.FC<Props> = ({
             <Select name="defaultApprover">
               {
                 (forecastNextNode?.nextNodeApprover || []).map((item) => (
-                  <Option key={item.value} value={item.value}>{item.employeeName}</Option>
+                  <Option key={item.code} value={item.code}>{item.name}</Option>
                 ))
               }
             </Select>
