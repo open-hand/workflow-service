@@ -13,7 +13,9 @@ databaseChangeLog(logicalFilePath: 'cwkf_backlog_instance_rel.groovy') {
             column(name: 'instance_id', type: 'BIGINT UNSIGNED', remarks: '实例Id') {
                 constraints(nullable: false)
             }
-
+            column(name: 'backlog_id', type: 'BIGINT UNSIGNED', remarks: '需求Id') {
+                constraints(nullable: false)
+            }
             column(name: 'organization_id', type: 'BIGINT UNSIGNED', remarks: '组织Id') {
                 constraints(nullable: false)
             }

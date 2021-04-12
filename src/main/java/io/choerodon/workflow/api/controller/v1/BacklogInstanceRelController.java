@@ -30,7 +30,8 @@ public class BacklogInstanceRelController {
     @PostMapping
     public ResponseEntity<BacklogInstanceRelDTO> create(@ApiParam(value = "组织Id", required = true)
                                                         @PathVariable(name = "organization_id") Long organizationId,
-                                                        @RequestParam Long instanceId) {
-        return new ResponseEntity<>(backlogInstanceRelService.create(organizationId, instanceId), HttpStatus.CREATED);
+                                                        @RequestParam Long instanceId,
+                                                        @RequestParam Long backlogId) {
+        return new ResponseEntity<>(backlogInstanceRelService.create(organizationId, instanceId, backlogId), HttpStatus.CREATED);
     }
 }

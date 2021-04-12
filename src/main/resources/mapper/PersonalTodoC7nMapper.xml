@@ -112,6 +112,12 @@
             <if test="queryDTO.instanceStatus != null and queryDTO.instanceStatus != ''">
                 AND hri.status = #{queryDTO.instanceStatus}
             </if>
+            <if test="backlogIds != null and backlogIds.size > 0">
+                AND crie.backlog_id IN
+                <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
+                    #{backlogId}
+                </foreach>
+            </if>
         </where>
         <choose>
             <when test="queryDTO.doneFlag != null and queryDTO.doneFlag == 1">
@@ -206,7 +212,7 @@
                 AND hrt.tenant_id = #{queryDTO.tenantId}
             </if>
             <if test="backlogIds != null and backlogIds.size > 0">
-                AND hri.BUSINESS_KEY IN
+                AND crie.backlog_id IN
                 <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
                     #{backlogId}
                 </foreach>
@@ -291,7 +297,7 @@
                 AND hri.status = #{queryDTO.instanceStatus}
              </if>
             <if test="backlogIds != null and backlogIds.size > 0">
-                AND hri.BUSINESS_KEY IN
+                AND crie.backlog_id IN
                 <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
                     #{backlogId}
                 </foreach>
@@ -365,7 +371,7 @@
                 AND hri.status = #{queryDTO.instanceStatus}
             </if>
             <if test="backlogIds != null and backlogIds.size > 0">
-                AND hri.BUSINESS_KEY IN
+                AND crie.backlog_id IN
                 <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
                     #{backlogId}
                 </foreach>
@@ -495,7 +501,7 @@
                 AND hri.status = #{queryDTO.instanceStatus}
             </if>
             <if test="backlogIds != null and backlogIds.size > 0">
-                AND hri.BUSINESS_KEY IN
+                AND crie.backlog_id IN
                 <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
                     #{backlogId}
                 </foreach>
@@ -537,7 +543,7 @@
                 AND hri.PARENT_INSTANCE_ID IS NULL
             </if>
             <if test="backlogIds != null and backlogIds.size > 0">
-                AND hri.BUSINESS_KEY IN
+                AND crie.backlog_id IN
                 <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
                     #{backlogId}
                 </foreach>

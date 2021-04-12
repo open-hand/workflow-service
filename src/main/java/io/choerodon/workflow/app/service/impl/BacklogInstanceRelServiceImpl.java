@@ -22,8 +22,8 @@ public class BacklogInstanceRelServiceImpl implements BacklogInstanceRelService 
     private BacklogInstanceRelMapper backlogInstanceRelMapper;
 
     @Override
-    public BacklogInstanceRelDTO create(Long organizationId, Long instanceId) {
-        BacklogInstanceRelDTO backlogInstanceRelDTO = new BacklogInstanceRelDTO(instanceId, organizationId);
+    public BacklogInstanceRelDTO create(Long organizationId, Long instanceId, Long backlogId) {
+        BacklogInstanceRelDTO backlogInstanceRelDTO = new BacklogInstanceRelDTO(instanceId, organizationId, backlogId);
         List<BacklogInstanceRelDTO> businessKeyRelDTOS = backlogInstanceRelMapper.select(backlogInstanceRelDTO);
         if (CollectionUtils.isEmpty(businessKeyRelDTOS)) {
             if (backlogInstanceRelMapper.insertSelective(backlogInstanceRelDTO) != 1) {

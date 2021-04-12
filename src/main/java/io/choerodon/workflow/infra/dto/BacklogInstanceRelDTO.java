@@ -24,14 +24,17 @@ public class BacklogInstanceRelDTO extends AuditDomain {
 
     private Long instanceId;
 
+    private Long backlogId;
+
     private Long organizationId;
 
     public BacklogInstanceRelDTO() {
     }
 
-    public BacklogInstanceRelDTO(Long instanceId, Long organizationId) {
+    public BacklogInstanceRelDTO(Long instanceId, Long organizationId, Long backlogId) {
         this.instanceId = instanceId;
         this.organizationId = organizationId;
+        this.backlogId = backlogId;
     }
 
     public Long getId() {
@@ -56,5 +59,13 @@ public class BacklogInstanceRelDTO extends AuditDomain {
 
     public void setOrganizationId(Long organizationId) {
         this.organizationId = organizationId;
+    }
+
+    public Long getBacklogId() {
+        return backlogId;
+    }
+
+    public void setBacklogId(Long backlogId) {
+        this.backlogId = backlogId;
     }
 }
