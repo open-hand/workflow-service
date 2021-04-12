@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD BaseMapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.choerodon.workflow.infra.mapper.PersonalTodoC7nMapper">
+    <select id="selectPersonalTask"
+            resultType="org.hzero.workflow.personal.api.dto.PersonalTodoDTO$PersonalTodoViewDTO">
+        <bind name="ACTION" value="@org.hzero.workflow.engine.util.EngineConstants$HistoryType@ACTION" />
+        <bind name="TASK" value="@org.hzero.workflow.engine.util.EngineConstants$HistoryType@TASK" />
+        <bind name="END" value="@org.hzero.workflow.engine.util.EngineConstants$RunInstanceStatus@END" />
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()" />
+        SELECT
+        hri.DEPLOYMENT_ID,
+        hri.INSTANCE_ID,
+        hri.BUSINESS_KEY,
+        hri.START_DATE instance_start_date,
+        hdwt.FLOW_NAME,
+        hri.DESCRIPTION,
+        hrt.TASK_ID,
+        hrt.PARENT_TASK_ID,
+        hrttl.NODE_NAME task_name,
+        hrt.NODE_CODE task_code,
+        hrt.NODE_CODE,
+        hrttl.NODE_NAME,
+        hri.STARTER,
+        hrt.NODE_ID,
+        hrt.ASSIGNEE,
+        hrt.START_DATE,
+        hrt.STATUS task_status,
+        hrt.tenant_id,
+        hrt.LAST_UPDATE_DATE,
+        hrt.CARBON_COPY_COMMENT,
+        hrt.REMARK,
+        task.TASK_TYPE
+        FROM hwkf_run_task_history hrt
+        LEFT JOIN hwkf_run_task task ON hrt.TASK_ID = task.TASK_ID
+        JOIN hwkf_run_instance hri ON hrt.INSTANCE_ID = hri.INSTANCE_ID
+        JOIN cwkf_backlog_instance_rel  crie ON  crie.organization_id = #{tenantId} AND (crie.INSTANCE_ID = hri.INSTANCE_ID OR hri.PARENT_INSTANCE_ID = crie.INSTANCE_ID OR hri.PARENT_LEVEL_PATH REGEXP '^'+ crie.INSTANCE_ID + '|')
+        JOIN hwkf_def_deployment hdd ON hri.DEPLOYMENT_ID = hdd.DEPLOYMENT_ID
+        JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
+        LEFT JOIN hwkf_run_task_history_tl hrttl ON ( hrt.TASK_HISTORY_ID = hrttl.TASK_HISTORY_ID AND hrttl.lang = #{lang} )
+        LEFT JOIN hwkf_def_workflow_tl hdwt ON hdw.FLOW_ID = hdwt.FLOW_ID AND hdwt.LANG = #{lang}
+        <where>
+            <choose>
+                <when test="queryDTO.doneFlag != null and queryDTO.doneFlag == 1">
+                    AND hrt.HISTORY_TYPE IN (#{TASK}, #{ACTION})
+                    AND hrt.STATUS &lt;&gt; #{END}
+                    AND NOT EXISTS (
+                    SELECT 1 FROM hwkf_run_task hrtr WHERE hrtr.assignee = #{queryDTO.self} AND hrtr.task_id = hrt.task_id
+                    )
+                </when>
+                <when test="queryDTO.taskHistoryId != null">
+                    AND hrt.HISTORY_TYPE IN (#{TASK}, #{ACTION})
+                    AND hrt.task_history_id = #{queryDTO.taskHistoryId}
+                </when>
+                <otherwise>
+                    AND hrt.HISTORY_TYPE = #{TASK}
+                </otherwise>
+            </choose>
+            <if test="queryDTO.taskId != null">
+                AND hrt.task_id = #{queryDTO.taskId}
+            </if>
+            <if test="queryDTO.instanceId != null">
+                AND hri.INSTANCE_ID = #{queryDTO.instanceId}
+            </if>
+            <if test="queryDTO.flowName != null and queryDTO.flowName != ''">
+                <bind name="flowNameLike" value="'%'+queryDTO.flowName+'%'" />
+                AND hdw.flow_name LIKE #{flowNameLike}
+            </if>
+            <if test="queryDTO.description != null and queryDTO.description != ''">
+                <bind name="descriptionLike" value="'%'+queryDTO.description+'%'" />
+                AND hri.DESCRIPTION LIKE #{descriptionLike}
+            </if>
+            <if test="queryDTO.businessKey != null and queryDTO.businessKey != ''">
+                <bind name="businessKeyLike" value="'%'+queryDTO.businessKey+'%'" />
+                AND hri.BUSINESS_KEY LIKE #{businessKeyLike}
+            </if>
+            <if test="queryDTO.starter != null and queryDTO.starter != ''">
+                AND hri.STARTER = #{queryDTO.starter}
+            </if>
+            <if test="queryDTO.assignee != null and aqueryDTO.ssignee != ''">
+                AND EXISTS (
+                SELECT 1 FROM hwkf_run_task hrt
+                WHERE hrt.instance_id = hri.instance_id
+                AND hrt.ASSIGNEE = #{queryDTO.assignee}
+                )
+            </if>
+            <if test="queryDTO.self != null and queryDTO.self != ''">
+                <bind name="selfLikeCenter" value="'%,'+queryDTO.self+',%'"/>
+                <bind name="selfLikeRight" value="'%,'+queryDTO.self"/>
+                <bind name="selfLikeLeft" value="queryDTO.self+',%'"/>
+                AND (
+                hrt.ASSIGNEE = #{queryDTO.self}
+                OR hrt.to_person = #{queryDTO.self}
+                OR hrt.to_person LIKE #{selfLikeCenter}
+                OR hrt.to_person LIKE #{selfLikeRight}
+                OR hrt.to_person LIKE #{selfLikeLeft})
+            </if>
+            <if test="queryDTO.startDateFrom != null">
+                AND hrt.START_DATE >= #{queryDTO.startDateFrom}
+            </if>
+            <if test="queryDTO.startDateTo != null">
+                AND hrt.START_DATE &lt;= #{queryDTO.startDateTo}
+            </if>
+            <if test="queryDTO.instanceStartDateFrom != null">
+                AND hri.START_DATE >= #{queryDTO.instanceStartDateFrom}
+            </if>
+            <if test="queryDTO.instanceStartDateTo != null">
+                AND hri.START_DATE &lt;= #{queryDTO.instanceStartDateTo}
+            </if>
+            <if test="queryDTO.tenantId != null">
+                AND hri.tenant_id = #{queryDTO.tenantId}
+            </if>
+            <if test="queryDTO.instanceStatus != null and queryDTO.instanceStatus != ''">
+                AND hri.status = #{queryDTO.instanceStatus}
+            </if>
+            <if test="backlogIds != null and backlogIds.size > 0">
+                AND crie.backlog_id IN
+                <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
+                    #{backlogId}
+                </foreach>
+            </if>
+        </where>
+        <choose>
+            <when test="queryDTO.doneFlag != null and queryDTO.doneFlag == 1">
+                ORDER BY hrt.LAST_UPDATE_DATE DESC
+            </when>
+            <otherwise>
+                ORDER BY hrt.START_DATE DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectPersonalTodo" resultType="org.hzero.workflow.personal.api.dto.PersonalTodoDTO$PersonalTodoViewDTO">
+        <bind name="RUN" value="@org.hzero.workflow.engine.util.EngineConstants$RunInstanceStatus@RUN" />
+        <bind name="TASK" value="@org.hzero.workflow.engine.util.EngineConstants$HistoryType@TASK" />
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()" />
+        SELECT
+        hri.DEPLOYMENT_ID,
+        hri.INSTANCE_ID,
+        hri.BUSINESS_KEY,
+        hri.START_DATE instance_start_date,
+        hdwt.FLOW_NAME,
+        hri.DESCRIPTION,
+        hrt.TASK_ID,
+        hrttl.TASK_NAME NODE_NAME,
+        hri.STARTER,
+        hrt.NODE_ID,
+        hrt.TASK_CODE,
+        hrttl.TASK_NAME,
+        hrt.PARENT_TASK_ID,
+        hrt.OWNER,
+        hrt.ASSIGNEE,
+        hrt.PRIORITY,
+        hrt.START_DATE,
+        hrt.TASK_TYPE,
+        hrt.SUSPEND_FLAG,
+        (hrt.URGED_FLAG + hri.URGED_FLAG) URGED_FLAG,
+        hrth.STATUS task_status,
+        hrt.tenant_id,
+        hrt.DESCRIPTION TASK_DESCRIPTION,
+        hri.PARENT_INSTANCE_ID,
+        hri.PARENT_INSTANCE_NODE_ID,
+        p_hri.DESCRIPTION AS PARENT_DESCRIPTION
+        FROM hwkf_run_task hrt
+        LEFT JOIN hwkf_run_task_history hrth ON hrt.task_id = hrth.task_id AND hrt.instance_id = hrth.instance_id AND hrth.HISTORY_TYPE = #{TASK}
+        JOIN hwkf_run_instance hri ON hrt.INSTANCE_ID = hri.INSTANCE_ID
+        JOIN cwkf_backlog_instance_rel  crie ON  crie.organization_id = #{queryDTO.tenantId} AND (crie.INSTANCE_ID = hri.INSTANCE_ID OR hri.PARENT_INSTANCE_ID = crie.INSTANCE_ID OR hri.PARENT_LEVEL_PATH REGEXP '^'+ crie.INSTANCE_ID + '|')
+        JOIN hwkf_def_deployment hdd ON hri.DEPLOYMENT_ID = hdd.DEPLOYMENT_ID
+        JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
+        LEFT JOIN hwkf_run_task_tl hrttl ON ( hrt.TASK_ID = hrttl.TASK_ID AND hrttl.lang = #{lang} )
+        LEFT JOIN hwkf_def_workflow_tl hdwt ON hdw.FLOW_ID = hdwt.FLOW_ID AND hdwt.LANG = #{lang}
+        LEFT JOIN hwkf_run_instance p_hri ON hri.PARENT_INSTANCE_ID = p_hri.INSTANCE_ID
+        <where>
+            hrt.SUSPEND_FLAG = 0
+            AND hri.status = #{RUN}
+            <if test="queryDTO.instanceId != null">
+                AND hri.INSTANCE_ID = #{queryDTO.instanceId}
+            </if>
+            <if test="queryDTO.taskId != null">
+                AND hrt.task_id = #{queryDTO.taskId}
+            </if>
+            <if test="queryDTO.flowName != null and queryDTO.flowName != ''">
+                <bind name="flowNameLike" value="'%'+queryDTO.flowName+'%'" />
+                AND hdw.flow_name LIKE #{flowNameLike}
+            </if>
+            <if test="queryDTO.description != null and queryDTO.description != ''">
+                <bind name="descriptionLike" value="'%'+queryDTO.description+'%'" />
+                AND hri.DESCRIPTION LIKE #{descriptionLike}
+            </if>
+            <if test="queryDTO.businessKey != null and queryDTO.businessKey != ''">
+                <bind name="businessKeyLike" value="'%'+queryDTO.businessKey+'%'" />
+                AND hri.BUSINESS_KEY LIKE #{businessKeyLike}
+            </if>
+            <if test="queryDTO.starter != null and queryDTO.starter != ''">
+                AND hri.STARTER = #{queryDTO.starter}
+            </if>
+            <if test="queryDTO.self != null and queryDTO.self != ''">
+                AND hrt.ASSIGNEE = #{queryDTO.self}
+            </if>
+            <if test="queryDTO.startDateFrom != null">
+                AND hrt.START_DATE >= #{queryDTO.startDateFrom}
+            </if>
+            <if test="queryDTO.startDateTo != null">
+                AND hrt.START_DATE &lt;= #{queryDTO.startDateTo}
+            </if>
+            <if test="queryDTO.instanceStartDateFrom != null">
+                AND hri.START_DATE >= #{queryDTO.instanceStartDateFrom}
+            </if>
+            <if test="queryDTO.instanceStartDateTo != null">
+                AND hri.START_DATE &lt;= #{queryDTO.instanceStartDateTo}
+            </if>
+            <if test="queryDTO.tenantId != null">
+                AND hrt.tenant_id = #{queryDTO.tenantId}
+            </if>
+            <if test="backlogIds != null and backlogIds.size > 0">
+                AND crie.backlog_id IN
+                <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
+                    #{backlogId}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY hrt.START_DATE DESC
+    </select>
+    <select id="selectMineParticipated"
+            resultType="org.hzero.workflow.personal.api.dto.PersonalTodoDTO$ParticipatedDTO">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()" />
+        SELECT
+        hri.INSTANCE_ID,
+        hri.BUSINESS_KEY,
+        hdwt.FLOW_NAME,
+        hri.DESCRIPTION,
+        hri.STARTER,
+        hri.START_DATE,
+        hri.END_DATE,
+        hri.STATUS instance_status,
+        hri.tenant_id,
+        hri.PARENT_INSTANCE_ID,
+        hri.PARENT_INSTANCE_NODE_ID,
+        p_hri.DESCRIPTION AS PARENT_DESCRIPTION
+        FROM hwkf_run_instance hri
+        JOIN cwkf_backlog_instance_rel  crie ON  crie.organization_id = #{queryDTO.tenantId} AND (crie.INSTANCE_ID = hri.INSTANCE_ID OR hri.PARENT_INSTANCE_ID = crie.INSTANCE_ID OR hri.PARENT_LEVEL_PATH REGEXP '^'+ crie.INSTANCE_ID + '|')
+        JOIN hwkf_def_deployment hdd ON hri.deployment_id = hdd.deployment_id
+        JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
+        LEFT JOIN hwkf_run_instance p_hri ON hri.PARENT_INSTANCE_ID = p_hri.INSTANCE_ID
+        LEFT JOIN hwkf_def_workflow_tl hdwt ON hdw.FLOW_ID = hdwt.FLOW_ID AND hdwt.LANG = #{lang}
+        <where>
+            <if test="queryDTO.instanceId != null">
+                AND hri.INSTANCE_ID = #{queryDTO.instanceId}
+            </if>
+            <if test="queryDTO.flowName != null and queryDTO.flowName != ''">
+                <bind name="flowNameLike" value="'%'+queryDTO.flowName+'%'" />
+                AND hdw.flow_name LIKE #{flowNameLike}
+            </if>
+            <if test="queryDTO.description != null and queryDTO.description != ''">
+                <bind name="descriptionLike" value="'%'+queryDTO.description+'%'" />
+                AND hri.DESCRIPTION LIKE #{descriptionLike}
+            </if>
+            <if test="queryDTO.businessKey != null and queryDTO.businessKey != ''">
+                <bind name="businessKeyLike" value="'%'+queryDTO.businessKey+'%'" />
+                AND hri.BUSINESS_KEY LIKE #{businessKeyLike}
+            </if>
+            <if test="queryDTO.starter != null and queryDTO.starter != ''">
+                AND hri.STARTER = #{queryDTO.starter}
+            </if>
+            <if test="queryDTO.assignee != null and queryDTO.assignee != ''">
+                AND EXISTS (
+                SELECT 1 FROM hwkf_run_task hrt
+                WHERE hrt.instance_id = hri.instance_id
+                AND hrt.ASSIGNEE = #{queryDTO.assignee}
+                )
+            </if>
+            <if test="queryDTO.self != null and queryDTO.self != ''">
+                <bind name="selfLikeCenter" value="'%,'+queryDTO.self+',%'"/>
+                <bind name="selfLikeRight" value="'%,'+queryDTO.self"/>
+                <bind name="selfLikeLeft" value="queryDTO.self+',%'"/>
+                AND EXISTS (
+                SELECT 1 FROM hwkf_run_task_history hrth
+                WHERE hrth.instance_id = hri.instance_id
+                AND (
+                hrth.ASSIGNEE = #{queryDTO.self}
+                OR (hrth.HISTORY_TYPE = 'ACTION' AND hrth.STATUS = 'CARBON_COPY' AND (hrth.to_person = #{queryDTO.self}
+                OR hrth.to_person LIKE #{selfLikeCenter}
+                OR hrth.to_person LIKE #{selfLikeRight}
+                OR hrth.to_person LIKE #{selfLikeLeft}))
+                )
+                )
+            </if>
+            <if test="queryDTO.startDateFrom != null">
+                AND hri.START_DATE >= #{queryDTO.startDateFrom}
+            </if>
+            <if test="queryDTO.startDateTo != null">
+                AND hri.START_DATE &lt;= #{queryDTO.startDateTo}
+            </if>
+            <if test="queryDTO.tenantId != null">
+                AND hri.tenant_id = #{queryDTO.tenantId}
+            </if>
+            <if test="queryDTO.instanceStatus != null and queryDTO.instanceStatus != ''">
+                AND hri.status = #{queryDTO.instanceStatus}
+             </if>
+            <if test="backlogIds != null and backlogIds.size > 0">
+                AND crie.backlog_id IN
+                <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
+                    #{backlogId}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY hri.START_DATE DESC
+    </select>
+    <select id="selectMineSubmitted"
+            resultType="org.hzero.workflow.personal.api.dto.PersonalTodoDTO$SubmittedDTO">
+        <bind name="TASK" value="@org.hzero.workflow.engine.util.EngineConstants$HistoryType@TASK" />
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()" />
+        SELECT
+        hri.DEPLOYMENT_ID,
+        hri.INSTANCE_ID,
+        hri.BUSINESS_KEY,
+        hdwt.FLOW_NAME,
+        hri.DESCRIPTION,
+        hri.STARTER,
+        hri.START_DATE,
+        hri.START_DATE instance_start_date,
+        hri.END_DATE,
+        hri.STATUS instance_status,
+        hri.STATUS task_status,
+        hri.tenant_id,
+        (SELECT COUNT(hrth.TASK_HISTORY_ID) FROM hwkf_run_task_history hrth WHERE hrth.INSTANCE_ID = hri.INSTANCE_ID AND hrth.history_type = #{TASK} AND hrth.end_date IS NOT NULL) history_count,
+        hri.PARENT_INSTANCE_ID,
+        hri.PARENT_INSTANCE_NODE_ID,
+        p_hri.DESCRIPTION AS PARENT_DESCRIPTION
+        FROM hwkf_run_instance hri
+        JOIN cwkf_backlog_instance_rel  crie ON  crie.organization_id = #{queryDTO.tenantId} AND (crie.INSTANCE_ID = hri.INSTANCE_ID OR hri.PARENT_INSTANCE_ID = crie.INSTANCE_ID OR hri.PARENT_LEVEL_PATH REGEXP '^'+ crie.INSTANCE_ID + '|')
+        JOIN hwkf_def_deployment hdd ON hri.deployment_id = hdd.deployment_id
+        JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
+        LEFT JOIN hwkf_def_workflow_tl hdwt ON hdw.FLOW_ID = hdwt.FLOW_ID AND hdwt.LANG = #{lang}
+        LEFT JOIN hwkf_run_instance p_hri ON hri.PARENT_INSTANCE_ID = p_hri.INSTANCE_ID
+        <where>
+            <if test="queryDTO.instanceId != null">
+                AND hri.INSTANCE_ID = #{queryDTO.instanceId}
+            </if>
+            <if test="queryDTO.flowName != null and queryDTO.flowName != ''">
+                <bind name="flowNameLike" value="'%'+queryDTO.flowName+'%'" />
+                AND hdw.flow_name LIKE #{flowNameLike}
+            </if>
+            <if test="queryDTO.description != null and queryDTO.description != ''">
+                <bind name="descriptionLike" value="'%'+queryDTO.description+'%'" />
+                AND hri.DESCRIPTION LIKE #{descriptionLike}
+            </if>
+            <if test="queryDTO.businessKey != null and queryDTO.businessKey != ''">
+                <bind name="businessKeyLike" value="'%'+queryDTO.businessKey+'%'" />
+                AND hri.BUSINESS_KEY LIKE #{businessKeyLike}
+            </if>
+            <if test="queryDTO.self != null and queryDTO.self != ''">
+                AND hri.STARTER = #{queryDTO.self}
+            </if>
+            <if test="queryDTO.assignee != null and queryDTO.assignee != ''">
+                AND EXISTS (
+                SELECT 1 FROM hwkf_run_task hrt
+                WHERE hrt.instance_id = hri.instance_id
+                AND hrt.ASSIGNEE = #{queryDTO.assignee}
+                )
+            </if>
+            <if test="queryDTO.startDateFrom != null">
+                AND hri.START_DATE >= #{queryDTO.startDateFrom}
+            </if>
+            <if test="queryDTO.startDateTo != null">
+                AND hri.START_DATE &lt;= #{queryDTO.startDateTo}
+            </if>
+            <if test="queryDTO.tenantId != null">
+                AND hri.tenant_id = #{queryDTO.tenantId}
+            </if>
+            <if test="queryDTO.instanceStatus != null and queryDTO.instanceStatus != ''">
+                AND hri.status = #{queryDTO.instanceStatus}
+            </if>
+            <if test="backlogIds != null and backlogIds.size > 0">
+                AND crie.backlog_id IN
+                <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
+                    #{backlogId}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY hri.START_DATE DESC
+    </select>
+    <select id="selectMineCarbonCopied"
+            resultType="org.hzero.workflow.personal.api.dto.PersonalTodoDTO$CarbonCopyDTO">
+        <bind name="CARBON_COPY" value="@org.hzero.workflow.engine.util.EngineConstants$ApproveAction@CARBON_COPY" />
+        <bind name="AUTO_CARBON_COPY" value="@org.hzero.workflow.engine.util.EngineConstants$ApproveAction@AUTO_CARBON_COPY" />
+        <bind name="CARBON_COPY_COMMENT" value="@org.hzero.workflow.engine.util.EngineConstants$ApproveAction@CARBON_COPY_COMMENT" />
+        <bind name="ACTION" value="@org.hzero.workflow.engine.util.EngineConstants$HistoryType@ACTION" />
+        <bind name="COMMENT_NOT_ENABLE_STATUS" value="@org.hzero.workflow.engine.util.EngineConstants$RunInstanceStatus@COMMENT_NOT_ENABLE_STATUS" />
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()" />
+        SELECT
+        hrth.TASK_HISTORY_ID,
+        hrth.TASK_ID,
+        hrth.NODE_CODE TASK_CODE,
+        hrth.NODE_ID,
+        hrth.CARBON_COPY_COMMENT,
+        hrth.ASSIGNEE CARBON_COPY_FROM,
+        hrthtl.NODE_NAME TASK_NAME,
+        hrth.START_DATE,
+        hrth.END_DATE,
+        hri.INSTANCE_ID,
+        hri.DEPLOYMENT_ID,
+        hri.BUSINESS_KEY,
+        hdwt.FLOW_NAME,
+        hri.DESCRIPTION,
+        hri.STARTER,
+        hri.START_DATE INSTANCE_START_DATE,
+        hri.END_DATE INSTANCE_END_DATE,
+        hrth.TO_PERSON,
+        hrth.READ_PERSON,
+        hri.STATUS instance_status,
+        hri.tenant_id,
+        hri.PARENT_INSTANCE_ID,
+        hri.PARENT_INSTANCE_NODE_ID,
+        p_hri.DESCRIPTION AS PARENT_DESCRIPTION
+        FROM hwkf_run_task_history hrth
+        JOIN hwkf_run_instance hri ON hrth.instance_id = hri.instance_id
+        JOIN cwkf_backlog_instance_rel  crie ON  crie.organization_id = #{queryDTO.tenantId} AND (crie.INSTANCE_ID = hri.INSTANCE_ID OR hri.PARENT_INSTANCE_ID = crie.INSTANCE_ID OR hri.PARENT_LEVEL_PATH REGEXP '^'+ crie.INSTANCE_ID + '|')
+        JOIN hwkf_def_deployment hdd ON hri.deployment_id = hdd.deployment_id
+        JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
+        LEFT JOIN hwkf_run_task_history_tl hrthtl ON ( hrth.TASK_HISTORY_ID = hrthtl.TASK_HISTORY_ID AND hrthtl.lang = #{lang} )
+        LEFT JOIN hwkf_def_workflow_tl hdwt ON hdw.FLOW_ID = hdwt.FLOW_ID AND hdwt.LANG = #{lang}
+        LEFT JOIN hwkf_run_instance p_hri ON hri.PARENT_INSTANCE_ID = p_hri.INSTANCE_ID
+        <where>
+            hrth.status IN (#{CARBON_COPY}, #{AUTO_CARBON_COPY})
+            AND hrth.history_type = #{ACTION}
+            <choose>
+                <when test="taskHistoryId != null">
+                    AND hrth.task_history_id = #{queryDTO.taskHistoryId}
+                </when>
+                <otherwise>
+                    <choose>
+                        <when test="queryDTO.carbonCopyTodoFlag == 1">
+                            AND hri.STATUS NOT IN
+                            <foreach collection="COMMENT_NOT_ENABLE_STATUS" separator="," close=")" open="(" item="s">
+                                #{s}
+                            </foreach>
+                            AND NOT EXISTS (
+                            SELECT 1 FROM hwkf_run_task_history t
+                            WHERE t.TASK_ID = hrth.TASK_ID AND t.INSTANCE_ID = hrth.INSTANCE_ID AND t.STATUS = #{CARBON_COPY_COMMENT}
+                            AND t.ASSIGNEE = #{queryDTO.self}
+                            )
+                        </when>
+                        <otherwise>
+                            AND NOT EXISTS (
+                            SELECT 1 FROM hwkf_run_task_history t WHERE t.CREATION_DATE > hrth.CREATION_DATE
+                            AND t.status = #{CARBON_COPY}
+                            AND t.history_type = #{ACTION}
+                            AND hrth.instance_id = t.instance_id
+                            <if test="queryDTO.self != null and queryDTO.self != ''">
+                                <bind name="selfLikeCenter" value="'%,'+queryDTO.self+',%'"/>
+                                <bind name="selfLikeRight" value="'%,'+queryDTO.self"/>
+                                <bind name="selfLikeLeft" value="queryDTO.self+',%'"/>
+                                AND (
+                                t.to_person = #{queryDTO.self}
+                                OR t.to_person LIKE #{selfLikeCenter}
+                                OR t.to_person LIKE #{selfLikeRight}
+                                OR t.to_person LIKE #{selfLikeLeft}
+                                )
+                            </if>
+                            )
+                        </otherwise>
+                    </choose>
+                </otherwise>
+            </choose>
+            <if test="queryDTO.flowName != null and queryDTO.flowName != ''">
+                <bind name="flowNameLike" value="'%'+flowName+'%'" />
+                AND hdw.flow_name LIKE #{flowNameLike}
+            </if>
+            <if test="queryDTO.description != null and queryDTO.description != ''">
+                <bind name="descriptionLike" value="'%'+queryDTO.description+'%'" />
+                AND hri.DESCRIPTION LIKE #{descriptionLike}
+            </if>
+            <if test="queryDTO.businessKey != null and queryDTO.businessKey != ''">
+                <bind name="businessKeyLike" value="'%'+queryDTO.businessKey+'%'" />
+                AND hri.BUSINESS_KEY LIKE #{businessKeyLike}
+            </if>
+            <if test="queryDTO.starter != null and queryDTO.starter != ''">
+                AND hri.STARTER = #{starter}
+            </if>
+            <if test="queryDTO.self != null and queryDTO.self != ''">
+                <bind name="selfLikeCenter" value="'%,'+queryDTO.self+',%'"/>
+                <bind name="selfLikeRight" value="'%,'+queryDTO.self"/>
+                <bind name="selfLikeLeft" value="queryDTO.self+',%'"/>
+                AND (
+                hrth.to_person = #{queryDTO.self}
+                OR hrth.to_person LIKE #{selfLikeCenter}
+                OR hrth.to_person LIKE #{selfLikeRight}
+                OR hrth.to_person LIKE #{selfLikeLeft}
+                )
+            </if>
+            <if test="queryDTO.startDateFrom != null">
+                AND hri.START_DATE >= #{queryDTO.startDateFrom}
+            </if>
+            <if test="queryDTO.startDateTo != null">
+                AND hri.START_DATE &lt;= #{queryDTO.startDateTo}
+            </if>
+            <if test="queryDTO.tenantId != null">
+                AND hri.tenant_id = #{queryDTO.tenantId}
+            </if>
+            <if test="queryDTO.instanceStatus != null and queryDTO.instanceStatus != ''">
+                AND hri.status = #{queryDTO.instanceStatus}
+            </if>
+            <if test="backlogIds != null and backlogIds.size > 0">
+                AND crie.backlog_id IN
+                <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
+                    #{backlogId}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY hrth.TASK_HISTORY_ID DESC
+    </select>
+    <select id="selectSubProcess" resultType="org.hzero.workflow.personal.api.dto.PersonalTodoDTO$BaseViewDTO">
+        SELECT
+        hri.INSTANCE_ID,
+        hdd.DEPLOYMENT_ID,
+        hri.BUSINESS_KEY,
+        hdw.FLOW_NAME,
+        hri.DESCRIPTION,
+        hri.STARTER,
+        hri.START_DATE,
+        hri.END_DATE,
+        hri.STATUS instance_status,
+        hri.tenant_id,
+        hri.PARENT_INSTANCE_ID,
+        hri.PARENT_INSTANCE_NODE_ID,
+        p_hri.DESCRIPTION AS PARENT_DESCRIPTION
+        FROM hwkf_run_instance hri
+        JOIN cwkf_backlog_instance_rel  crie ON  crie.organization_id = #{tenantId} AND (crie.INSTANCE_ID = hri.INSTANCE_ID OR hri.PARENT_INSTANCE_ID = crie.INSTANCE_ID OR hri.PARENT_LEVEL_PATH REGEXP '^'+ crie.INSTANCE_ID + '|')
+        JOIN hwkf_def_deployment hdd ON hri.deployment_id = hdd.deployment_id
+        JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
+        LEFT JOIN hwkf_run_instance p_hri ON hri.PARENT_INSTANCE_ID = p_hri.INSTANCE_ID
+        <where>
+            <if test="queryDTO.tenantId != null">
+                AND hri.tenant_id = #{queryDTO.tenantId}
+            </if>
+            <if test="queryDTO.arentInstanceIds != null and queryDTO.parentInstanceIds.size() > 0">
+                AND hri.PARENT_INSTANCE_ID IN
+                <foreach collection="queryDTO.parentInstanceIds" item="parentInstanceId" open="(" close=")" separator=",">
+                    #{parentInstanceId}
+                </foreach>
+            </if>
+            <if test="queryDTO.excludeSubProcessFlag != null and queryDTO.excludeSubProcessFlag == 1">
+                AND hri.PARENT_INSTANCE_ID IS NULL
+            </if>
+            <if test="backlogIds != null and backlogIds.size > 0">
+                AND crie.backlog_id IN
+                <foreach collection="backlogIds" item="backlogId" open="(" close=")" separator=",">
+                    #{backlogId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>
