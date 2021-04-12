@@ -17,11 +17,13 @@ const { Option } = Select;
 const prefix = 'c7n-backlogApprove-nextApproveModal';
 
 interface INextNodeApprover {
-  employeeNum: string,
-  employeeCode: string,
-  value: string,
+  code: string,
+  employee: {
+    employeeNum: string,
+    employeeCode: string,
+     employeeName: string,
+  }
   name: string,
-  employeeName: string,
 }
 interface IForecastNextNode {
   nextNodeCode: string,
@@ -32,10 +34,11 @@ interface Props {
   modal?: IModalProps
   forecastNextNode: IForecastNextNode
   onClose: () => void
+  taskId: string
 }
 
 const NextApproveModal:React.FC<Props> = ({
-  modal, forecastNextNode, onClose,
+  modal, forecastNextNode, onClose, taskId,
 }) => {
   const employeesRef = useRef<IEmployee[]>();
   const { process: { taskDetail } } = store;
@@ -123,9 +126,9 @@ const NextApproveModal:React.FC<Props> = ({
       const data: NextNodeApproveData = {
         nextNodeCode: forecastNextNode.nextNodeCode,
         approverSourceType: source,
-        toPersonList: source === 'DEFAULT_APPROVER' ? (forecastNextNode.nextNodeApprover || []).filter((item) => includes(nextApproveDataSet?.current?.get('defaultApprover') || [], item.value)).map(((item) => ({
-          value: item.value,
-          name: item.employeeName,
+        toPersonList: source === 'DEFAULT_APPROVER' ? (forecastNextNode.nextNodeApprover || []).filter((item) => includes(nextApproveDataSet?.current?.get('defaultApprover') || [], item.code)).map(((item) => ({
+          value: item.code,
+          name: item.name,
         }))) : (employeesRef.current || []).filter((item) => includes(nextApproveDataSet?.current?.get('approver') || [], item.employeeNum)).map((item) => ({
           value: item.employeeNum,
           name: item.employeeName,
@@ -133,12 +136,12 @@ const NextApproveModal:React.FC<Props> = ({
         approveComment: nextApproveDataSet?.current?.get('comment'),
       };
 
-      await approveApi.nextNodeApprove(taskDetail.taskId, data);
+      await approveApi.nextNodeApprove(taskId, data);
       onClose();
       return true;
     }
     return false;
-  }, [forecastNextNode.nextNodeApprover, forecastNextNode.nextNodeCode, nextApproveDataSet, onClose, taskDetail.taskId]);
+  }, [forecastNextNode.nextNodeApprover, forecastNextNode.nextNodeCode, nextApproveDataSet, onClose, taskId]);
   useEffect(() => {
     modal?.handleOk(handleSubmit);
   }, [handleSubmit, modal]);
@@ -163,7 +166,7 @@ const NextApproveModal:React.FC<Props> = ({
             <Select name="defaultApprover">
               {
                 (forecastNextNode?.nextNodeApprover || []).map((item) => (
-                  <Option key={item.value} value={item.value}>{item.employeeName}</Option>
+                  <Option key={item.code} value={item.code}>{item.name}</Option>
                 ))
               }
             </Select>

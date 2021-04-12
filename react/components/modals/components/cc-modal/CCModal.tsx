@@ -7,15 +7,17 @@ import { IModalProps } from '@choerodon/agile/lib/common/types';
 import './CCModal.less';
 import { approveApi } from '@/api';
 import SelectEmployee from '@/components/select/select-employee';
+import { Choerodon } from '@choerodon/boot';
 import store from '../../store';
 
 const prefix = 'c7n-backlogApprove-ccModal';
 
 interface Props {
   modal?: IModalProps
+  taskId: string
 }
 
-const CCModal:React.FC<Props> = ({ modal }) => {
+const CCModal:React.FC<Props> = ({ modal, taskId }) => {
   const { process: { taskDetail } } = store;
 
   const ccDataSet = useMemo(() => new DataSet({
@@ -29,13 +31,13 @@ const CCModal:React.FC<Props> = ({ modal }) => {
 
   const handleSubmit = useCallback(async () => {
     const validate = await ccDataSet.validate();
-    console.log(ccDataSet?.current?.data);
     if (validate) {
-      approveApi.carbonCopy(taskDetail.taskId, ccDataSet.current?.get('cc'));
+      await approveApi.carbonCopy(taskId, ccDataSet.current?.get('cc'));
+      Choerodon.prompt('抄送完成');
       return true;
     }
     return false;
-  }, [ccDataSet, taskDetail.taskId]);
+  }, [ccDataSet, taskId]);
   useEffect(() => {
     modal?.handleOk(handleSubmit);
   }, [handleSubmit, modal]);

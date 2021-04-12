@@ -1,5 +1,6 @@
 package io.choerodon.workflow.api.vo;
 
+import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.hzero.workflow.def.domain.entity.DefWorkflow;
 
 /**
@@ -7,6 +8,7 @@ import org.hzero.workflow.def.domain.entity.DefWorkflow;
  * @date 2021-03-08 19:14
  */
 public class ProjectWorkflowRelVO {
+    @Encrypt
     private Long id;
 
     private String flowCode;

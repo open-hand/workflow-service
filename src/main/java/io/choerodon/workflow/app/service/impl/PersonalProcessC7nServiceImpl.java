@@ -1,15 +1,9 @@
 package io.choerodon.workflow.app.service.impl;
 
-import io.choerodon.workflow.api.vo.RunTaskHistoryVO;
-import io.choerodon.workflow.app.service.PersonalProcessC7nService;
-import io.choerodon.workflow.infra.feign.BaseFeignClient;
-
 import org.hzero.workflow.def.infra.feign.PlatformFeignClient;
 import org.hzero.workflow.def.infra.feign.dto.UserDTO;
 import org.hzero.workflow.engine.dao.dto.EmployeeUserDTO;
 import org.hzero.workflow.engine.dao.entity.RunTaskHistory;
-import org.hzero.workflow.personal.api.dto.PersonalTodoDTO;
-import org.hzero.workflow.personal.app.service.PersonalProcessService;
 import org.hzero.workflow.personal.domain.repository.PersonalTodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,15 +14,16 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import io.choerodon.workflow.api.vo.RunTaskHistoryVO;
+import io.choerodon.workflow.app.service.PersonalProcessC7nService;
+import io.choerodon.workflow.infra.feign.BaseFeignClient;
+
 /**
  * @author huaxin.deng@hand-china.com 2021-03-12 14:21:57
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class PersonalProcessC7nServiceImpl implements PersonalProcessC7nService {
-
-    @Autowired
-    private PersonalProcessService personalProcessService;
 
     @Autowired
     private PersonalTodoRepository personalTodoRepository;
@@ -48,7 +43,7 @@ public class PersonalProcessC7nServiceImpl implements PersonalProcessC7nService 
 
     private void listApproveHistoryWithUserDTO(Long tenantId, Long instanceId, List<RunTaskHistoryVO> runTaskHistoryVOList) {
         List<RunTaskHistory> runTaskHistories = personalTodoRepository.selectHistory(tenantId, instanceId);
-        if (CollectionUtils.isEmpty(runTaskHistories)){
+        if (CollectionUtils.isEmpty(runTaskHistories)) {
             return;
         }
         Collections.reverse(runTaskHistories);

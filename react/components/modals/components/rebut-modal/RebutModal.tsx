@@ -24,22 +24,23 @@ interface Props {
     }
   }
   onClose: () => void
+  taskId: string
 }
 
 const RebutModal:React.FC<Props> = ({
-  rebutNodeList, modal, onClose,
+  rebutNodeList, modal, onClose, taskId,
 }) => {
   const { process: { taskDetail } } = store;
   const [checkedValue, setCheckedValue] = useState<'startNode' | 'preNode' | undefined>();
   const handleSubmit = useCallback(async () => {
     if (checkedValue) {
-      approveApi.rebut(taskDetail.taskId, checkedValue === 'startNode' ? rebutNodeList.startNode.nodeId : rebutNodeList.previousNode.nodeId);
+      await approveApi.rebut(taskId, checkedValue === 'startNode' ? rebutNodeList.startNode.nodeId : rebutNodeList.previousNode.nodeId);
       onClose();
       return true;
     }
     Choerodon.prompt('请选择驳回节点！');
     return false;
-  }, [checkedValue, onClose, rebutNodeList?.previousNode?.nodeId, rebutNodeList?.startNode?.nodeId, taskDetail.taskId]);
+  }, [checkedValue, onClose, rebutNodeList?.previousNode?.nodeId, rebutNodeList?.startNode?.nodeId, taskId]);
 
   const handleStartNodeChange = useCallback((value, oldValue) => {
     if (value) {

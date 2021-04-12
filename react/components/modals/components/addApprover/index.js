@@ -12,14 +12,14 @@ const prefix = 'c7n-backlogApprove-addSignModal';
 
 const AddApproverModal = (props) => {
   const { process: { taskDetail } } = store;
-  const { modal, onSuccess } = props;
-  const { taskId, tenantId: organizationId } = taskDetail;
+  const { modal, onSuccess, taskId } = props;
+  const { tenantId: organizationId } = taskDetail;
   const dataSet = useMemo(() => new DataSet({
     selection: false,
     pageSize: 10,
     transport: {
       submit: () => {
-        const url = `/hwkf/v1/${organizationId}/personal-process/${taskId}/executeTaskById`;
+        const url = `/cwkf/choerodon/v1/organizations/${organizationId}/organization_invoke_workflow/personal_process/${taskId}/executeTaskById`;
         return {
           url,
           data: dataSet.current.toData(),

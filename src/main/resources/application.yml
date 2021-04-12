@@ -138,6 +138,7 @@ hzero:
     reject-applier-template: ${HWKF_REJECT_APPLIER_TEMPLATE:HWKF.REJECT_APPLIER}
     # 拒绝后通知审批人消息发送配置
     reject-approver-template: ${HWKF_REJECT_APPROVER_TEMPLATE:HWKF.REJECT_APPROVER}
+    web-domain-name: ${HWKF_WEB_DOMAIN_NAME:example.com}
     # 是否使用模型
     model:
       enabled: ${HWKF_MODEL_ENABLE:true}
@@ -159,7 +160,7 @@ eureka:
     leaseExpirationDurationInSeconds: 3
     # 服务的一些元数据信息
     metadata-map:
-      VERSION: 0.24.0
+      VERSION: 0.25.0
   client:
     serviceUrl:
       defaultZone: http://localhost:8000/eureka/

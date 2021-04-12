@@ -10,6 +10,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.hzero.starter.keyencrypt.core.Encrypt;
 import org.hzero.workflow.engine.run.action.AppointNextNodeApproverActionHandler;
 import org.hzero.workflow.engine.run.dto.ProcessRebutNodeDTO;
 import org.hzero.workflow.monitor.api.dto.ProcessInstanceDTO;
@@ -101,7 +102,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @ProcessLovValue(targetField = {"body", "body.processInstanceNodeHistory.taskHistoryList"})
     @GetMapping({"/monitor_process/{instanceId}/diagram"})
     public ResponseEntity<ProcessInstanceDTO.ProcessInstanceDiagramDTO> getProcessInstanceDiagram(@PathVariable("organization_id") Long organizationId,
-                                                                                                  @PathVariable("instanceId") Long instanceId) {
+                                                                                                  @PathVariable("instanceId") @Encrypt Long instanceId) {
         ProcessInstanceDTO.ProcessInstanceDiagramDTO diagramDTO = monitorProcessService.getProcessInstanceDiagram(organizationId, instanceId);
         return Results.success(diagramDTO);
     }
@@ -110,7 +111,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/approve"})
     public ResponseEntity<Void> flowApprove(@PathVariable("organization_id") Long organizationId,
-                                            @RequestParam("taskIds") List<Long> taskIds,
+                                            @RequestParam("taskIds") @Encrypt List<Long> taskIds,
                                             @RequestParam("comment") String comment,
                                             @RequestParam(name = "assignee",required = false) String assignee) {
         personalActionService.approve(organizationId, taskIds, comment, assignee);
@@ -121,7 +122,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/reject"})
     public ResponseEntity<Void> flowReject(@PathVariable("organization_id") Long organizationId,
-                                           @RequestParam("taskIds") List<Long> taskIds,
+                                           @RequestParam("taskIds") @Encrypt List<Long> taskIds,
                                            @RequestParam("comment") String comment,
                                            @RequestParam(name = "assignee",required = false) String assignee) {
         personalActionService.reject(organizationId, taskIds, comment, assignee);
@@ -143,7 +144,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @GetMapping({"/personal_process/{taskId}/forecastNextNode"})
     public ResponseEntity<Map<String, Object>> forecastNextNode(@PathVariable("organization_id") Long organizationId,
-                                                                @PathVariable("taskId") Long taskId) {
+                                                                @PathVariable("taskId") @Encrypt Long taskId) {
         return Results.success(appointNextNodeApproverActionHandler.forecastNextNode(taskId));
     }
 
@@ -151,14 +152,14 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @GetMapping({"/personal_process/{taskId}/rebutNodeList"})
     public ResponseEntity<ProcessRebutNodeDTO> getRebutNodes(@PathVariable("organization_id") Long organizationId,
-                                                             @PathVariable("taskId") Long taskId) {
+                                                             @PathVariable("taskId") @Encrypt Long taskId) {
         return Results.success(personalActionService.getRebutNodes(organizationId, taskId));
     }
     @ApiOperation("我的待办-根据taskId处理审批动作")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/{taskId}/executeTaskById"})
     public ResponseEntity<Void> executeTaskById(@PathVariable("organization_id") Long organizationId,
-                                                @PathVariable("taskId") Long taskId,
+                                                @PathVariable("taskId") @Encrypt Long taskId,
                                                 @RequestParam String approveAction,
                                                 @RequestBody Map<String, Object> paramMap,
                                                 @RequestParam(name = "assignee",required = false) String assignee) {
@@ -170,7 +171,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/carbon-copy"})
     public ResponseEntity<Void> flowCarbonCopy(@PathVariable("organization_id") Long organizationId,
-                                               @RequestParam("taskId") Long taskId,
+                                               @RequestParam("taskId") @Encrypt Long taskId,
                                                @RequestParam("toPerson") String toPerson,
                                                @RequestParam(name = "assignee",required = false) String assignee) {
         personalActionService.carbonCopy(organizationId, taskId, toPerson, assignee);
@@ -182,7 +183,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @GetMapping({"/personal_process/task/{taskId}"})
     @ProcessLovValue(targetField = {"body.taskDetail", "body.historyList"})
     public ResponseEntity<DetailDTO.TaskDetailDTO> taskDetail(@PathVariable("organization_id") Long organizationId,
-                                                              @PathVariable("taskId") Long taskId) {
+                                                              @PathVariable("taskId") @Encrypt Long taskId) {
         return Results.success(this.personalProcessService.taskDetail(organizationId, taskId));
     }
 
@@ -191,7 +192,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @GetMapping({"/personal_process/participated/{instanceId}"})
     @ProcessLovValue(targetField = {"body.instanceDetail", "body.historyList"})
     public ResponseEntity<DetailDTO.ParticipatedDetailDTO> participatedDetail(@PathVariable("organization_id") Long organizationId,
-                                                                              @PathVariable("instanceId") Long instanceId) {
+                                                                              @PathVariable("instanceId") @Encrypt Long instanceId) {
         return Results.success(this.personalProcessService.participatedDetail(organizationId, instanceId));
     }
 
@@ -200,7 +201,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @GetMapping({"/personal_process/submitted/{instanceId}"})
     @ProcessLovValue(targetField = {"body.submittedDetail", "body.historyList"})
     public ResponseEntity<DetailDTO.SubmittedDetailDTO> submittedDetail(@PathVariable("organization_id") Long organizationId,
-                                                                        @PathVariable("instanceId") Long instanceId) {
+                                                                        @PathVariable("instanceId") @Encrypt Long instanceId) {
         return Results.success(this.personalProcessService.submittedDetail(organizationId, instanceId));
     }
 
@@ -209,7 +210,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @GetMapping({"/personal_process/carbon_copied/{taskHistoryId}"})
     @ProcessLovValue(targetField = {"body.carbonCopyDetail", "body.historyList"})
     public ResponseEntity<DetailDTO.CarbonCopiedDetailDTO> carbonCopiedDetail(@PathVariable("organization_id") Long organizationId,
-                                                                              @PathVariable("taskHistoryId") Long taskHistoryId,
+                                                                              @PathVariable("taskHistoryId") @Encrypt Long taskHistoryId,
                                                                               @RequestParam(required = false) Integer carbonCopyTodoFlag) {
         return Results.success(this.personalProcessService.carbonCopiedDetail(organizationId, taskHistoryId, carbonCopyTodoFlag));
     }
@@ -218,7 +219,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/carbon_comment"})
     public ResponseEntity<Void> carbonCopyComment(@PathVariable("organization_id") Long organizationId,
-                                                  @RequestParam("taskHistoryId") Long taskHistoryId,
+                                                  @RequestParam("taskHistoryId") @Encrypt Long taskHistoryId,
                                                   @RequestParam("comment") String comment,
                                                   @RequestParam(name = "assignee",required = false) String assignee) {
         this.personalActionService.carbonCopyComment(organizationId, taskHistoryId, comment, assignee);
@@ -229,7 +230,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/urge"})
     public ResponseEntity<Void> flowUrge(@PathVariable("organization_id") Long organizationId,
-                                         @RequestParam("instanceIds") List<Long> instanceIds,
+                                         @RequestParam("instanceIds") @Encrypt List<Long> instanceIds,
                                          @RequestParam(name = "starter",required = false) String starter) {
         this.personalActionService.urge(organizationId, instanceIds, starter);
         return Results.success();

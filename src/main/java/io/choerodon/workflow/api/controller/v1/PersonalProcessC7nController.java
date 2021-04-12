@@ -30,7 +30,7 @@ public class PersonalProcessC7nController {
     @Permission(level = ResourceLevel.ORGANIZATION,permissionLogin = true)
     @ApiOperation("通过instanceId查询工作流审批历史记录")
     @ProcessLovValue(
-            targetField = {"body.runTaskHistory"}
+            targetField = {"body.runTaskHistory",  "body.runTaskHistory.subProcessHistoryList", "body.runTaskHistory.subProcessHistoryList.subProcessHistoryList"}
     )
     @GetMapping({"/approve_history"})
     public ResponseEntity<List<RunTaskHistoryVO>> listApproveHistoryByInstanceId(@ApiParam(value = "组织id", required = true)
@@ -41,5 +41,4 @@ public class PersonalProcessC7nController {
                 .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                 .orElseThrow(() -> new CommonException("error.list.approveHistory"));
     }
-
 }
