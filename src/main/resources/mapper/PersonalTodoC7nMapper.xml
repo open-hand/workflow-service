@@ -33,7 +33,7 @@
         FROM hwkf_run_task_history hrt
         LEFT JOIN hwkf_run_task task ON hrt.TASK_ID = task.TASK_ID
         JOIN hwkf_run_instance hri ON hrt.INSTANCE_ID = hri.INSTANCE_ID
-        JOIN cwkf_backlog_instance_rel  crie ON  crie.organization_id = #{tenantId} AND (crie.INSTANCE_ID = hri.INSTANCE_ID OR hri.PARENT_INSTANCE_ID = crie.INSTANCE_ID OR hri.PARENT_LEVEL_PATH REGEXP '^'+ crie.INSTANCE_ID + '|')
+        JOIN cwkf_backlog_instance_rel  crie ON  crie.organization_id = #{queryDTO.tenantId} AND (crie.INSTANCE_ID = hri.INSTANCE_ID OR hri.PARENT_INSTANCE_ID = crie.INSTANCE_ID OR hri.PARENT_LEVEL_PATH REGEXP '^'+ crie.INSTANCE_ID + '|')
         JOIN hwkf_def_deployment hdd ON hri.DEPLOYMENT_ID = hdd.DEPLOYMENT_ID
         JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
         LEFT JOIN hwkf_run_task_history_tl hrttl ON ( hrt.TASK_HISTORY_ID = hrttl.TASK_HISTORY_ID AND hrttl.lang = #{lang} )
@@ -424,7 +424,7 @@
             hrth.status IN (#{CARBON_COPY}, #{AUTO_CARBON_COPY})
             AND hrth.history_type = #{ACTION}
             <choose>
-                <when test="taskHistoryId != null">
+                <when test="queryDTO.taskHistoryId != null">
                     AND hrth.task_history_id = #{queryDTO.taskHistoryId}
                 </when>
                 <otherwise>
@@ -525,7 +525,7 @@
         hri.PARENT_INSTANCE_NODE_ID,
         p_hri.DESCRIPTION AS PARENT_DESCRIPTION
         FROM hwkf_run_instance hri
-        JOIN cwkf_backlog_instance_rel  crie ON  crie.organization_id = #{tenantId} AND (crie.INSTANCE_ID = hri.INSTANCE_ID OR hri.PARENT_INSTANCE_ID = crie.INSTANCE_ID OR hri.PARENT_LEVEL_PATH REGEXP '^'+ crie.INSTANCE_ID + '|')
+        JOIN cwkf_backlog_instance_rel  crie ON  crie.organization_id = #{queryDTO.tenantId} AND (crie.INSTANCE_ID = hri.INSTANCE_ID OR hri.PARENT_INSTANCE_ID = crie.INSTANCE_ID OR hri.PARENT_LEVEL_PATH REGEXP '^'+ crie.INSTANCE_ID + '|')
         JOIN hwkf_def_deployment hdd ON hri.deployment_id = hdd.deployment_id
         JOIN hwkf_def_workflow hdw ON hdw.FLOW_CODE = hdd.FLOW_KEY AND hdw.tenant_id = hdd.tenant_id
         LEFT JOIN hwkf_run_instance p_hri ON hri.PARENT_INSTANCE_ID = p_hri.INSTANCE_ID
@@ -533,7 +533,7 @@
             <if test="queryDTO.tenantId != null">
                 AND hri.tenant_id = #{queryDTO.tenantId}
             </if>
-            <if test="queryDTO.arentInstanceIds != null and queryDTO.parentInstanceIds.size() > 0">
+            <if test="queryDTO.parentInstanceIds != null and queryDTO.parentInstanceIds.size() > 0">
                 AND hri.PARENT_INSTANCE_ID IN
                 <foreach collection="queryDTO.parentInstanceIds" item="parentInstanceId" open="(" close=")" separator=",">
                     #{parentInstanceId}
