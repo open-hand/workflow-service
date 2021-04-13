@@ -9,7 +9,8 @@
   ],
   "dependencies": {
     "@choerodon/components": "^0.0.1",
-    "gg-editor2": "^2.0.42"
+    "gg-editor2": "^2.0.42",
+    "file-saver": "^2.0.2"
   },
   "devDependencies": {
     "@choerodon/agile": "^0.25.0",
