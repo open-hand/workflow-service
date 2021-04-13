@@ -59,7 +59,7 @@ const HistoryItem: React.FC<LogProps> = ({ log, isSubProcess = false }) => {
             <span>在</span>
             <span className={`${prefix}-value`}>{`【${nodeName}】`}</span>
             <span>操作审批动作为</span>
-            <span className={`${prefix}-value`}>{`【${statusMeaning}】`}</span>
+            <span className={`${prefix}-value`}>{`【${statusMeaning || '暂无'}】`}</span>
             {
               carbonCopyComment && (
                 <>
