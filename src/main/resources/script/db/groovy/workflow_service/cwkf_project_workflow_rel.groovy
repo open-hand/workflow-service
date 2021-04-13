@@ -28,4 +28,13 @@ package script.db.groovy.workflow_service
              column(name: "last_update_date", type: "DATETIME", defaultValueComputed: "CURRENT_TIMESTAMP")
          }
      }
+
+     changeSet(id: '2021-04-13-cwkf-project-workflow-rel-add-index', author: 'ztxemail@163.com'){
+         createIndex(indexName: "idx_organization_id", tableName: "cwkf_project_workflow_rel") {
+             column(name: "organization_id")
+         }
+         createIndex(indexName: "idx_project_id", tableName: "cwkf_project_workflow_rel") {
+             column(name: "project_id")
+         }
+     }
  }
