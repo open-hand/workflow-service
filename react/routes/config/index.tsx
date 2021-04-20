@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import { Button, Modal } from 'choerodon-ui/pro';
 import {
-  Page, Content, Breadcrumb, Choerodon, Header,
+  Page, Content, Breadcrumb, Choerodon, Header, getCookie,
 } from '@choerodon/master';
 import Empty from '@choerodon/agile/lib/components/Empty';
 import { ButtonColor, FuncType } from 'choerodon-ui/pro/lib/button/enum';
@@ -13,7 +13,9 @@ import pic from './hzero.svg';
 const Config = () => {
   const handleClick = useCallback(() => {
     const { HZERO_FRONT } = window._env_;
-    window.open(`${HZERO_FRONT}/hwkf`);
+    const accessToken = getCookie('access_token', { path: '/' });
+    const tokenType = getCookie('token_type', { path: '/' });
+    window.open(`${HZERO_FRONT}/hwkf#access_token=${accessToken}&token_type=${tokenType}`);
   }, []);
   const {
     data: inited, refresh,
