@@ -39,7 +39,7 @@ import io.choerodon.workflow.infra.feign.vo.OrganizationInfoVO;
 public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC7nService {
 
     private static final String FILE_PATH = "/templates/default_flow.json";
-    private static final String ORG_TYPE_NAME = "需求审核";
+    private static final String ORG_TYPE_NAME = "需求审核-预定义";
     private static final String DEFAULT_TYPE_CODE = "HWKF_BACKLOG_APPROVE";
     private static final String ERROR_WORK_FLOW_INIT_TYPE_EXIST = "error.work.flow.init.type.exist";
     private static final String ERROR_WORK_FLOW_INIT_FILE_INVALID = "error.init_file_invalid";
