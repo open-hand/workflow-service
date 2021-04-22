@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author huaxin.deng@hand-china.com 2021-03-12 14:37:45
@@ -24,4 +25,8 @@ public interface BaseFeignClient {
 
     @GetMapping(value = "/choerodon/v1/organizations/{organization_id}")
     ResponseEntity<OrganizationInfoVO> queryOrganizationInfo(@PathVariable(name = "organization_id") Long id);
+
+    @PostMapping(value = "/choerodon/v1/users/real_names")
+    ResponseEntity<List<UserDTO>> listUsersByRealNames(@RequestParam(name = "only_enabled") Boolean onlyEnabled,
+                                                       @RequestBody Set<String> realNames);
 }

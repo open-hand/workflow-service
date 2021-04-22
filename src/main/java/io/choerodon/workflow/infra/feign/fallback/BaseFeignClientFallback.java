@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author huaxin.deng@hand-china.com 2021-03-12 14:38:41
@@ -24,5 +25,10 @@ public class BaseFeignClientFallback implements BaseFeignClient {
     @Override
     public ResponseEntity<OrganizationInfoVO> queryOrganizationInfo(Long id) {
         throw new CommonException("error.organization.query");
+    }
+
+    @Override
+    public ResponseEntity<List<UserDTO>> listUsersByRealNames(Boolean onlyEnabled, Set<String> realNames) {
+        throw new CommonException("error.UserFeign.queryList");
     }
 }
