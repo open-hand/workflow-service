@@ -53,8 +53,8 @@ const AddApproveModal:React.FC<Props> = ({ modal, onClose, taskId }) => {
       label: '选择审批人',
       required: true,
       multiple: true,
-      textField: 'employeeName',
-      valueField: 'employeeNum',
+      textField: 'realName',
+      valueField: 'id',
     }, {
       name: 'remark',
       label: '加审备注',
@@ -88,14 +88,14 @@ const AddApproveModal:React.FC<Props> = ({ modal, onClose, taskId }) => {
   const handleSubmit = useCallback(async () => {
     const validate = await addApproveDataSet.validate();
     if (validate) {
-      const addApproverPerson = (employeesRef?.current || []).filter((item) => includes((addApproveDataSet?.current?.get('approver') || []), item.employeeNum));
+      const addApproverPerson = (employeesRef?.current || []).filter((item) => includes((addApproveDataSet?.current?.get('approver') || []), item.id));
       const data: AddApproveData = {
         addApproverPerson,
         addApproverType: addApproveDataSet?.current?.get('type'),
         remark: addApproveDataSet?.current?.get('remark'),
         toPersonList: addApproverPerson.map((item) => ({
-          name: item.employeeName,
-          value: item.employeeNum,
+          name: item.realName,
+          value: item.id,
         })),
         approveComment: addApproveDataSet?.current?.get('suggestion'),
         currentAction: addApproveDataSet?.current?.get('type') === 'AFTER_ADD_TASK_APPROVER' ? 'APPROVED' : undefined,

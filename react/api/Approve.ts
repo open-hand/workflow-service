@@ -17,11 +17,8 @@ export interface NextNodeApproveData {
 
 export interface AddApproveData {
   addApproverPerson: {
-    employeeName: string
-    employeeNum: string
-    positionName?: string
-    unitName?: string,
-    unitCompanyName?: string
+    id: string
+    realName: string
   }[],
   addApproverType: string
   remark: string

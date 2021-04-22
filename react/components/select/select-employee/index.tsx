@@ -7,10 +7,7 @@ import FlatSelect from '@choerodon/agile/lib/components/flat-select';
 
 export interface IEmployee {
   realName: string
-  employeeNum: string
-  positionName?: string
-  unitName?: string,
-  unitCompanyName?: string
+  id: string
 }
 
 interface Props extends Partial<SelectProps> {
@@ -49,15 +46,8 @@ const SelectEmployee: React.FC<Props> = forwardRef(({
     },
     optionRenderer: (item: IEmployee) => (
       <>
-        {
-          item.unitName ? (
-            <Tooltip title={`部门：${item.unitName}${item.positionName ? `，岗位：${item.positionName}` : ''}`}>
-              <span>{`${item.realName}`}</span>
-            </Tooltip>
-          ) : (
-            <span>{`${item.realName}`}</span>
-          )
-        }
+
+        <span>{`${item.realName}`}</span>
       </>
     ),
   }), [request, selfEmpNum]);
