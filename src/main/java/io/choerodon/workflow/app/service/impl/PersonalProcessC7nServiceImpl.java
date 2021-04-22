@@ -57,22 +57,16 @@ public class PersonalProcessC7nServiceImpl implements PersonalProcessC7nService 
             return;
         }
         Collections.reverse(runTaskHistories);
-        List<String> empNumList = new ArrayList<>();
+        List<Long> userIds = new ArrayList<>();
         runTaskHistories.forEach(history -> {
             String assignee = history.getAssignee();
             RunTaskHistoryVO runTaskHistoryVO = new RunTaskHistoryVO();
             runTaskHistoryVO.setRunTaskHistory(history);
             if (!Objects.isNull(assignee)) {
-                String empNum = assignee.substring(assignee.lastIndexOf("(") + 1, assignee.lastIndexOf(")"));
-                empNumList.add(empNum);
+                userIds.add(Long.valueOf(assignee));
             }
             runTaskHistoryVOList.add(runTaskHistoryVO);
         });
-        if (CollectionUtils.isEmpty(empNumList)) {
-            return;
-        }
-        List<EmployeeUserDTO> empList = CollectionUtils.isEmpty(empNumList) ? new ArrayList<>() : platformFeignClient.getEmpUsersByEmpNumList(tenantId, empNumList);
-        List<Long> userIds = empList.stream().map(EmployeeUserDTO::getUserId).collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(userIds)) {
             fillUser(tenantId, userIds, runTaskHistoryVOList);
         }
@@ -81,17 +75,11 @@ public class PersonalProcessC7nServiceImpl implements PersonalProcessC7nService 
     private void fillUser(Long tenantId, List<Long> userIds, List<RunTaskHistoryVO> runTaskHistoryVOList) {
         List<UserDTO> userDTOList = baseFeignClient.listUsersByIds(userIds.toArray(new Long[0]), false);
         Map<Long, UserDTO> userMap = userDTOList.stream().collect(Collectors.toMap(UserDTO::getId, Function.identity()));
-        userIds.forEach(id -> {
-            EmployeeUserDTO employeeUserVO = platformFeignClient.getEmployeeByUserId(tenantId, null, id);
-            runTaskHistoryVOList.forEach(history -> {
-                String assignee = history.getRunTaskHistory().getAssignee();
-                if (!Objects.isNull(assignee)) {
-                    String empNum = assignee.substring(assignee.lastIndexOf("(") + 1, assignee.lastIndexOf(")"));
-                    if (Objects.equals(employeeUserVO.getEmployeeNum(), empNum)) {
-                        history.setUserDTO(userMap.get(employeeUserVO.getUserId()));
-                    }
-                }
-            });
+        runTaskHistoryVOList.forEach(history -> {
+            String assignee = history.getRunTaskHistory().getAssignee();
+            if (!Objects.isNull(assignee)) {
+                history.setUserDTO(userMap.get(Long.valueOf(assignee)));
+            }
         });
     }
 
