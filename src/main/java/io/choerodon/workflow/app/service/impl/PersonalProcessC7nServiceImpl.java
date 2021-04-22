@@ -25,6 +25,7 @@ import io.choerodon.workflow.api.vo.RunTaskHistoryVO;
 import io.choerodon.workflow.app.service.PersonalProcessC7nService;
 import io.choerodon.workflow.domain.repository.PersonalTodoC7nRepository;
 import io.choerodon.workflow.infra.feign.BaseFeignClient;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author huaxin.deng@hand-china.com 2021-03-12 14:21:57
@@ -58,33 +59,39 @@ public class PersonalProcessC7nServiceImpl implements PersonalProcessC7nService 
             return;
         }
         Collections.reverse(runTaskHistories);
-        List<Long> userIds = new ArrayList<>();
+        List<String>  realNames = new ArrayList<>();
         runTaskHistories.forEach(history -> {
             String assignee = history.getAssignee();
             RunTaskHistoryVO runTaskHistoryVO = new RunTaskHistoryVO();
             runTaskHistoryVO.setRunTaskHistory(history);
             if (!Objects.isNull(assignee)) {
-                String userId = assignee.substring(assignee.lastIndexOf("(") + 1, assignee.lastIndexOf(")"));
-                if (StringUtils.isNumeric(userId) && !Objects.equals("", userId)) {
-                    userIds.add(Long.valueOf(userId));
+                String realName = assignee.substring(0,assignee.lastIndexOf("("));
+                if (!ObjectUtils.isEmpty(realName)) {
+                    realNames.add(realName);
                 }
             }
             runTaskHistoryVOList.add(runTaskHistoryVO);
         });
-        if (!CollectionUtils.isEmpty(userIds)) {
-            fillUser(userIds, runTaskHistoryVOList);
+        if (!CollectionUtils.isEmpty(realNames)) {
+            fillUser(realNames, runTaskHistoryVOList);
         }
     }
 
-    private void fillUser(List<Long> userIds, List<RunTaskHistoryVO> runTaskHistoryVOList) {
-        List<UserDTO> userDTOList = baseFeignClient.listUsersByIds(userIds.toArray(new Long[0]), false);
-        Map<Long, UserDTO> userMap = userDTOList.stream().collect(Collectors.toMap(UserDTO::getId, Function.identity()));
+    private void fillUser(List<String> realNames, List<RunTaskHistoryVO> runTaskHistoryVOList) {
+        List<UserDTO> userDTOList = baseFeignClient.listUsersByRealNames(false,new HashSet<>(realNames)).getBody();
+        Map<String, List<UserDTO>> userDTOMap= userDTOList.stream().collect(Collectors.groupingBy(UserDTO::getRealName));
         runTaskHistoryVOList.forEach(history -> {
             String assignee = history.getRunTaskHistory().getAssignee();
             if (!Objects.isNull(assignee)) {
-                String userId = assignee.substring(assignee.lastIndexOf("(") + 1, assignee.lastIndexOf(")"));
-                if (StringUtils.isNumeric(userId) && !Objects.equals("", userId)) {
-                    history.setUserDTO(userMap.get(Long.valueOf(userId)));
+                String loginName = assignee.substring(assignee.lastIndexOf("(") + 1, assignee.lastIndexOf(")"));
+                String realName = assignee.substring(0, assignee.lastIndexOf("("));
+                List<UserDTO> userDTOS = userDTOMap.get(realName);
+                if(!CollectionUtils.isEmpty(userDTOS)){
+                    for (UserDTO userDTO : userDTOS) {
+                        if (Objects.equals(loginName, userDTO.getLoginName()) || Objects.equals(loginName, userDTO.getEmail())) {
+                            history.setUserDTO(userDTO);
+                        }
+                    }
                 }
             }
         });
