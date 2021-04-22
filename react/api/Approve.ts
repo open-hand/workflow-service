@@ -211,7 +211,7 @@ class ApproveApi extends Api<ApproveApi> {
       method: 'get',
       url: '/hpfm/v1/lovs/sql/data',
       params: {
-        lovCode: 'HWKF.RULE.SELECT_EMPLOYEE',
+        lovCode: 'HWKF.RULE.SELECT_USER',
         enabledFlag: 1,
         tenantId: getOrganizationId(),
         page,

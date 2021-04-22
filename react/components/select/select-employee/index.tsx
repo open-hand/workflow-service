@@ -6,7 +6,7 @@ import { SelectProps } from 'choerodon-ui/pro/lib/select/Select';
 import FlatSelect from '@choerodon/agile/lib/components/flat-select';
 
 export interface IEmployee {
-  employeeName: string
+  realName: string
   employeeNum: string
   positionName?: string
   unitName?: string,
@@ -26,8 +26,8 @@ const SelectEmployee: React.FC<Props> = forwardRef(({
 }, ref: React.Ref<Select>) => {
   const config = useMemo((): SelectConfig => ({
     name: 'employee',
-    textField: 'employeeName',
-    valueField: 'employeeNum',
+    textField: 'realName',
+    valueField: 'id',
     request: ({ page, filter }) => {
       if (!request) {
         return approveApi.getEmployees(page, selfEmpNum, filter);
@@ -52,10 +52,10 @@ const SelectEmployee: React.FC<Props> = forwardRef(({
         {
           item.unitName ? (
             <Tooltip title={`部门：${item.unitName}${item.positionName ? `，岗位：${item.positionName}` : ''}`}>
-              <span>{`${item.employeeName}（${item.employeeNum}）`}</span>
+              <span>{`${item.realName}`}</span>
             </Tooltip>
           ) : (
-            <span>{`${item.employeeName}（${item.employeeNum}）`}</span>
+            <span>{`${item.realName}`}</span>
           )
         }
       </>
