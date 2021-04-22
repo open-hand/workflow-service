@@ -1,5 +1,6 @@
 package io.choerodon.workflow.app.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.workflow.def.infra.feign.PlatformFeignClient;
 import org.hzero.workflow.def.infra.feign.dto.UserDTO;
@@ -63,22 +64,28 @@ public class PersonalProcessC7nServiceImpl implements PersonalProcessC7nService 
             RunTaskHistoryVO runTaskHistoryVO = new RunTaskHistoryVO();
             runTaskHistoryVO.setRunTaskHistory(history);
             if (!Objects.isNull(assignee)) {
-                userIds.add(Long.valueOf(assignee));
+                String userId = assignee.substring(assignee.lastIndexOf("(") + 1, assignee.lastIndexOf(")"));
+                if (StringUtils.isNumeric(userId) && !Objects.equals("", userId)) {
+                    userIds.add(Long.valueOf(userId));
+                }
             }
             runTaskHistoryVOList.add(runTaskHistoryVO);
         });
         if (!CollectionUtils.isEmpty(userIds)) {
-            fillUser(tenantId, userIds, runTaskHistoryVOList);
+            fillUser(userIds, runTaskHistoryVOList);
         }
     }
 
-    private void fillUser(Long tenantId, List<Long> userIds, List<RunTaskHistoryVO> runTaskHistoryVOList) {
+    private void fillUser(List<Long> userIds, List<RunTaskHistoryVO> runTaskHistoryVOList) {
         List<UserDTO> userDTOList = baseFeignClient.listUsersByIds(userIds.toArray(new Long[0]), false);
         Map<Long, UserDTO> userMap = userDTOList.stream().collect(Collectors.toMap(UserDTO::getId, Function.identity()));
         runTaskHistoryVOList.forEach(history -> {
             String assignee = history.getRunTaskHistory().getAssignee();
             if (!Objects.isNull(assignee)) {
-                history.setUserDTO(userMap.get(Long.valueOf(assignee)));
+                String userId = assignee.substring(assignee.lastIndexOf("(") + 1, assignee.lastIndexOf(")"));
+                if (StringUtils.isNumeric(userId) && !Objects.equals("", userId)) {
+                    history.setUserDTO(userMap.get(Long.valueOf(userId)));
+                }
             }
         });
     }
