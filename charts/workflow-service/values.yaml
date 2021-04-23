@@ -124,10 +124,10 @@ readinessProbe:
 resources:
   limits:
     # cpu: 100m
-    memory: 2Gi
+    memory: 3Gi
   requests:
     # cpu: 100m
-    memory: 2Gi
+    memory: 3Gi
 
 plugins:
   skywalkingAgentImage: registry.cn-shanghai.aliyuncs.com/c7n/skywalking-agent:6.6.0
