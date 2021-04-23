@@ -2,8 +2,9 @@
 import React, { useCallback } from 'react';
 import { Button, Modal } from 'choerodon-ui/pro';
 import {
-  Page, Content, Breadcrumb, Choerodon, Header, getCookie,
+  Page, Content, Breadcrumb, Choerodon, Header,
 } from '@choerodon/master';
+import { getCookie } from '@choerodon/master/lib/utils';
 import Empty from '@choerodon/agile/lib/components/Empty';
 import { ButtonColor, FuncType } from 'choerodon-ui/pro/lib/button/enum';
 import { workFlowApi } from '@/api';
