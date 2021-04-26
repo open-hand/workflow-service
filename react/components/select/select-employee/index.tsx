@@ -1,9 +1,9 @@
 import React, { useMemo, forwardRef } from 'react';
 import { Select, Tooltip } from 'choerodon-ui/pro';
-import useSelect, { SelectConfig } from '@choerodon/agile/lib/hooks/useSelect';
+import { useSelect, FlatSelect } from '@choerodon/components';
+import { SelectConfig } from '@choerodon/components/lib/hooks/useSelect';
 import { approveApi } from '@/api';
 import { SelectProps } from 'choerodon-ui/pro/lib/select/Select';
-import FlatSelect from '@choerodon/agile/lib/components/flat-select';
 
 export interface IEmployee {
   realName: string
