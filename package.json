@@ -8,7 +8,6 @@
     "lib"
   ],
   "dependencies": {
-    "@choerodon/components": "^0.0.1",
     "gg-editor2": "^2.0.42",
     "file-saver": "^2.0.2"
   },
