@@ -1,6 +1,5 @@
 package io.choerodon.workflow.app.service;
 
-import org.hzero.workflow.personal.api.dto.PersonalTodoDTO;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;

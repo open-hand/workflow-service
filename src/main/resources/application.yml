@@ -121,7 +121,7 @@ hzero:
   cache-value:
     enable: true
   workflow:
-    global-dimension: ${HWKF_GLOBAL_DIMENSION:EMPLOYEE}
+    global-dimension: ${HWKF_GLOBAL_DIMENSION:USER}
     admin-temp-api: ${HWKF_ADMIN_TEMP_API:http://hzeronb.saas.hand-china.com/hadm/v1/swagger/tree}
     #企业微信消息发送agentId
     wco-agent-id: ${HWKF_WCO_AGENT_ID:1}

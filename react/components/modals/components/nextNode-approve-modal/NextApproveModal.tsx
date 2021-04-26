@@ -19,9 +19,9 @@ const prefix = 'c7n-backlogApprove-nextApproveModal';
 interface INextNodeApprover {
   code: string,
   employee: {
-    employeeNum: string,
+    realName: string,
     employeeCode: string,
-     employeeName: string,
+    id: string,
   }
   name: string,
 }
@@ -129,9 +129,9 @@ const NextApproveModal:React.FC<Props> = ({
         toPersonList: source === 'DEFAULT_APPROVER' ? (forecastNextNode.nextNodeApprover || []).filter((item) => includes(nextApproveDataSet?.current?.get('defaultApprover') || [], item.code)).map(((item) => ({
           value: item.code,
           name: item.name,
-        }))) : (employeesRef.current || []).filter((item) => includes(nextApproveDataSet?.current?.get('approver') || [], item.employeeNum)).map((item) => ({
-          value: item.employeeNum,
-          name: item.employeeName,
+        }))) : (employeesRef.current || []).filter((item) => includes(nextApproveDataSet?.current?.get('approver') || [], item.id)).map((item) => ({
+          value: item.id,
+          name: item.realName,
         })),
         approveComment: nextApproveDataSet?.current?.get('comment'),
       };

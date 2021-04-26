@@ -17,11 +17,8 @@ export interface NextNodeApproveData {
 
 export interface AddApproveData {
   addApproverPerson: {
-    employeeName: string
-    employeeNum: string
-    positionName?: string
-    unitName?: string,
-    unitCompanyName?: string
+    id: string
+    realName: string
   }[],
   addApproverType: string
   remark: string
@@ -211,7 +208,7 @@ class ApproveApi extends Api<ApproveApi> {
       method: 'get',
       url: '/hpfm/v1/lovs/sql/data',
       params: {
-        lovCode: 'HWKF.RULE.SELECT_EMPLOYEE',
+        lovCode: 'HWKF.RULE.SELECT_USER',
         enabledFlag: 1,
         tenantId: getOrganizationId(),
         page,

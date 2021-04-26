@@ -24,6 +24,5 @@ public class WorkFlowServiceApplication {
         SpringApplication.run(WorkFlowServiceApplication.class, args);
     }
     
-    
 }
 

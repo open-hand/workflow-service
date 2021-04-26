@@ -6,11 +6,8 @@ import { approveApi } from '@/api';
 import { SelectProps } from 'choerodon-ui/pro/lib/select/Select';
 
 export interface IEmployee {
-  employeeName: string
-  employeeNum: string
-  positionName?: string
-  unitName?: string,
-  unitCompanyName?: string
+  realName: string
+  id: string
 }
 
 interface Props extends Partial<SelectProps> {
@@ -26,8 +23,8 @@ const SelectEmployee: React.FC<Props> = forwardRef(({
 }, ref: React.Ref<Select>) => {
   const config = useMemo((): SelectConfig => ({
     name: 'employee',
-    textField: 'employeeName',
-    valueField: 'employeeNum',
+    textField: 'realName',
+    valueField: 'id',
     request: ({ page, filter }) => {
       if (!request) {
         return approveApi.getEmployees(page, selfEmpNum, filter);
@@ -49,15 +46,8 @@ const SelectEmployee: React.FC<Props> = forwardRef(({
     },
     optionRenderer: (item: IEmployee) => (
       <>
-        {
-          item.unitName ? (
-            <Tooltip title={`部门：${item.unitName}${item.positionName ? `，岗位：${item.positionName}` : ''}`}>
-              <span>{`${item.employeeName}（${item.employeeNum}）`}</span>
-            </Tooltip>
-          ) : (
-            <span>{`${item.employeeName}（${item.employeeNum}）`}</span>
-          )
-        }
+
+        <span>{`${item.realName}`}</span>
       </>
     ),
   }), [request, selfEmpNum]);

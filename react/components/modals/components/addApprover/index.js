@@ -40,23 +40,23 @@ const AddApproverModal = (props) => {
         name: 'addSignPerson',
         label: '加签人',
         type: 'object',
-        // lovCode: 'HWKF.RULE.SELECT_EMPLOYEE',
+        // lovCode: 'HWKF.RULE.SELECT_USER',
         // lovPara: { enabledFlag: 1, tenantId: organizationId, selfEmpNum },
         multiple: true,
         required: true,
-        textField: 'employeeName',
-        valueField: 'employeeNum',
+        textField: 'realName',
+        valueField: 'id',
         ignore: 'always',
       },
       {
-        name: 'employeeNum',
+        name: 'id',
         type: 'string',
-        bind: 'addSignPerson.employeeNum',
+        bind: 'addSignPerson.id',
       },
       {
-        name: 'employeeName',
+        name: 'realName',
         type: 'string',
-        bind: 'addSignPerson.employeeName',
+        bind: 'addSignPerson.realName',
       },
       {
         name: 'remark',
@@ -101,7 +101,7 @@ const AddApproverModal = (props) => {
         if (name === 'addSignPerson' && value) {
           const toPersonList = [];
           forEach(value || [], (item) => {
-            toPersonList.push({ value: item.employeeNum, name: item.employeeName });
+            toPersonList.push({ value: item.id, name: item.realName });
           });
           record.set('toPersonList', toPersonList);
         }
