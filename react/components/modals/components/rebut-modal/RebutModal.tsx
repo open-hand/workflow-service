@@ -34,9 +34,13 @@ const RebutModal:React.FC<Props> = ({
   const [checkedValue, setCheckedValue] = useState<'startNode' | 'preNode' | undefined>();
   const handleSubmit = useCallback(async () => {
     if (checkedValue) {
-      await approveApi.rebut(taskId, checkedValue === 'startNode' ? rebutNodeList.startNode.nodeId : rebutNodeList.previousNode.nodeId);
-      onClose();
-      return true;
+      try {
+        await approveApi.rebut(taskId, checkedValue === 'startNode' ? rebutNodeList.startNode.nodeId : rebutNodeList.previousNode.nodeId);
+        onClose();
+        return true;
+      } catch (e) {
+        return false;
+      }
     }
     Choerodon.prompt('请选择驳回节点！');
     return false;
