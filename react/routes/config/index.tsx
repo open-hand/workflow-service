@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import { Button, Modal } from 'choerodon-ui/pro';
 import {
-  Page, Content, Breadcrumb, Choerodon, Header,
+  Page, Content, Breadcrumb, Choerodon, Header, HeaderButtons
 } from '@choerodon/master';
 import { getCookie } from '@choerodon/master/lib/utils';
 import Empty from '@choerodon/agile/lib/components/Empty';
@@ -22,7 +22,7 @@ const Config = () => {
     data: inited, refresh,
   } = useRequest(() => workFlowApi.checkInit());
   const handleInitClick = useCallback(() => {
-    Modal.confirm({
+    Modal.open({
       title: '导入预置需求审核流程',
       children: '确认导入预置需求审核流程？导入后，系统将在组织预置一套需求审核流程分类和需求审核流程，您可以按需配置好审批人规则，并且发布流程后即可使用。',
       onOk: async () => {
@@ -37,14 +37,17 @@ const Config = () => {
     <Page>
       {!inited && (
         <Header>
-          <Button
-            icon="archive"
-            onClick={handleInitClick}
-            funcType={'flat' as FuncType}
-            color={'blue' as ButtonColor}
-          >
-            导入预置流程模板
-          </Button>
+          <HeaderButtons
+            showClassName={false}
+            items={[
+              {
+                name: '导入预置流程模板',
+                icon: 'archive',
+                display: true,
+                handler: handleInitClick,
+              },
+            ]}
+          />
         </Header>
       )}
       <Breadcrumb />
@@ -62,7 +65,7 @@ const Config = () => {
               </div>
               <Button
                 style={{ fontSize: '14px', marginTop: 15 }}
-                color={'blue' as ButtonColor}
+                color={'primary' as ButtonColor}
                 funcType={'raised' as FuncType}
                 onClick={handleClick}
               >
