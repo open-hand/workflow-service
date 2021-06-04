@@ -103,11 +103,7 @@ const OpenRebutModal = (props: Props) => {
       width: 520,
     },
     children: <ObserverRebutModal {...props} />,
-    cancelProps: {
-      style: {
-        color: '#000',
-      },
-    },
+    
     border: false,
   });
 };

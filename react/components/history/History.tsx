@@ -31,7 +31,7 @@ const History: React.FC<{
           ) : (
             <div style={{
               textAlign: 'center',
-              color: 'rgba(0,0,0,0.65)',
+              color: 'var(--text-color3)',
             }}
             >
               暂无记录

@@ -53,7 +53,7 @@ const ManageList: React.FC<ManageListProps> = ({
               ))
             }
           </ul>
-        ) : <div style={{ textAlign: 'center', marginTop: 15, color: 'rgba(0,0,0,0.65)' }}>暂无数据</div>
+        ) : <div style={{ textAlign: 'center', marginTop: 15, color: 'var(--text-color3)' }}>暂无数据</div>
       }
     </>
   );

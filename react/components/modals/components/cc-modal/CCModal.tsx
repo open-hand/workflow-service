@@ -61,11 +61,6 @@ const openCCModal = (props: Props) => {
       width: 520,
     },
     children: <ObserverCCModal {...props} />,
-    cancelProps: {
-      style: {
-        color: '#000',
-      },
-    },
     border: false,
   });
 };

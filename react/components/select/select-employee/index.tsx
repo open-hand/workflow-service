@@ -1,5 +1,5 @@
 import React, { useMemo, forwardRef } from 'react';
-import { Select, Tooltip } from 'choerodon-ui/pro';
+import { Select } from 'choerodon-ui/pro';
 import { useSelect, FlatSelect } from '@choerodon/components';
 import { SelectConfig } from '@choerodon/components/lib/hooks/useSelect';
 import { approveApi } from '@/api';
@@ -8,6 +8,7 @@ import { SelectProps } from 'choerodon-ui/pro/lib/select/Select';
 export interface IEmployee {
   realName: string
   id: string
+  loginName: string
 }
 
 interface Props extends Partial<SelectProps> {

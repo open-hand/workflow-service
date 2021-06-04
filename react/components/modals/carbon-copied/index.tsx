@@ -85,11 +85,9 @@ const CarbonCopiedModal: React.FC<CarbonCopiedModalProps> = (props) => {
           title: '审核历史',
           key: 'history',
           component: () => (
-            <div style={{ padding: '0 20px' }}>
-              <History
-                historyList={state.historyList}
-              />
-            </div>
+            <History
+              historyList={state.historyList}
+            />
           ),
         },
         {
@@ -100,7 +98,7 @@ const CarbonCopiedModal: React.FC<CarbonCopiedModalProps> = (props) => {
       footer={() => (
         <Button
           onClick={handleClose}
-          color={'blue' as ButtonColor}
+          color={'primary' as ButtonColor}
           funcType={'raised' as FuncType}
         >
           关闭

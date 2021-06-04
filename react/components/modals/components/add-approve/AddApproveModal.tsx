@@ -88,21 +88,27 @@ const AddApproveModal:React.FC<Props> = ({ modal, onClose, taskId }) => {
   const handleSubmit = useCallback(async () => {
     const validate = await addApproveDataSet.validate();
     if (validate) {
-      const addApproverPerson = (employeesRef?.current || []).filter((item) => includes((addApproveDataSet?.current?.get('approver') || []), item.id));
-      const data: AddApproveData = {
-        addApproverPerson,
-        addApproverType: addApproveDataSet?.current?.get('type'),
-        remark: addApproveDataSet?.current?.get('remark'),
-        toPersonList: addApproverPerson.map((item) => ({
-          name: item.realName,
-          value: item.id,
-        })),
-        approveComment: addApproveDataSet?.current?.get('suggestion'),
-        currentAction: addApproveDataSet?.current?.get('type') === 'AFTER_ADD_TASK_APPROVER' ? 'APPROVED' : undefined,
-      };
-      await approveApi.addApprove(taskId, data);
-      onClose();
-      return true;
+      try {
+        const addApproverPerson = (employeesRef?.current || []).filter((item) => includes((addApproveDataSet?.current?.get('approver') || []), item.id));
+        const data: AddApproveData = {
+          addApproverPerson,
+          addApproverType: addApproveDataSet?.current?.get('type'),
+          remark: addApproveDataSet?.current?.get('remark'),
+          toPersonList: addApproverPerson.map((item) => ({
+            name: item.realName,
+            value: item.id,
+            loginName: item.loginName,
+          })),
+          approveComment: addApproveDataSet?.current?.get('suggestion'),
+          currentAction: addApproveDataSet?.current?.get('type') === 'AFTER_ADD_TASK_APPROVER' ? 'APPROVED' : undefined,
+        };
+        await approveApi.addApprove(taskId, data);
+        onClose();
+        return true;
+      } catch (e) {
+        console.log(e);
+        return false;
+      }
     }
     return false;
   }, [addApproveDataSet, onClose, taskId]);
@@ -151,11 +157,6 @@ const openAddApproveModal = (props: Props) => {
       width: 520,
     },
     children: <ObserverAddApprovModal {...props} />,
-    cancelProps: {
-      style: {
-        color: '#000',
-      },
-    },
     border: false,
   });
 };

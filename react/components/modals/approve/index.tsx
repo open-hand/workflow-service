@@ -84,16 +84,16 @@ const ApproveModal: React.FC<ApproveModalProps> = (props) => {
             onClick: handleClose,
             style: {
               marginLeft: 10,
-              backgroundColor: '#3f51b5',
+              backgroundColor: 'var(--primary-color)',
               color: '#FFF',
             },
             className: `${prefix}-container-footer-closeBtn`,
           }]}
           outLoading={store.loading}
-          buttonStyle={{
-            backgroundColor: '#FFF',
-            color: '#3f51b5',
-          }}
+          // buttonStyle={{
+          //   backgroundColor: '#FFF',
+          //   color: 'var(--primary-color)',
+          // }}
         />
       )}
     />

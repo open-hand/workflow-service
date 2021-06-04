@@ -129,9 +129,11 @@ const NextApproveModal:React.FC<Props> = ({
         toPersonList: source === 'DEFAULT_APPROVER' ? (forecastNextNode.nextNodeApprover || []).filter((item) => includes(nextApproveDataSet?.current?.get('defaultApprover') || [], item.code)).map(((item) => ({
           value: item.code,
           name: item.name,
+          loginName: item.employee,
         }))) : (employeesRef.current || []).filter((item) => includes(nextApproveDataSet?.current?.get('approver') || [], item.id)).map((item) => ({
           value: item.id,
           name: item.realName,
+          loginName: item.loginName,
         })),
         approveComment: nextApproveDataSet?.current?.get('comment'),
       };
@@ -190,11 +192,7 @@ const openNextApproveModal = (props: Props) => {
       width: 520,
     },
     children: <ObserverNextApproveModal {...props} />,
-    cancelProps: {
-      style: {
-        color: '#000',
-      },
-    },
+
     border: false,
   });
 };

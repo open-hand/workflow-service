@@ -52,7 +52,7 @@ class GatewayNode extends React.Component {
             y: 2,
             fontSize: 12,
             textAlign: 'left',
-            fill: 'rgba(0,0,0,0.65)',
+            fill: 'var(--text-color3)',
             text: optimizeMultilineText(label, 50, 3, 55),
             textBaseline: 'middle',
           },

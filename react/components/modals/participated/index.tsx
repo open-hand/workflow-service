@@ -89,7 +89,7 @@ const ParticipatedModal: React.FC<ParticipatedModalProps> = (props) => {
       footer={() => (
         <Button
           onClick={handleClose}
-          color={'blue' as ButtonColor}
+          color={'primary' as ButtonColor}
           funcType={'raised' as FuncType}
         >
           关闭

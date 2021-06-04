@@ -52,11 +52,11 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
       buttons={(
         <>
           <Upload customRequest={handleFileUpload} showUploadList={false}>
-            <Button icon="file_upload" color={'blue' as ButtonColor} />
+            <Button icon="file_upload" color={'primary' as ButtonColor} />
           </Upload>
           <Button
-            icon="settings"
-            color={'blue' as ButtonColor}
+            icon="settings-o"
+            color={'primary' as ButtonColor}
             style={{ marginLeft: 7, marginRight: 5 }}
             onClick={onManageClick}
           />
@@ -78,7 +78,7 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
         <TextArea name="commentContent" resize={'vertical' as ResizeType} rows={1} />
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button
-            color={'blue' as ButtonColor}
+            color={'primary' as ButtonColor}
             funcType={'raised' as FuncType}
             onClick={onSaveCommentTemplateClick}
           >

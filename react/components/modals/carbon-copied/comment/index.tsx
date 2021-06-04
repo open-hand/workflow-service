@@ -36,7 +36,7 @@ const Comment: React.FC<CommentProps> = ({ taskHistoryId, onSubmit }) => {
           <div>
             <Button
               onClick={handleSubmit}
-              color={'blue' as ButtonColor}
+              color={'primary' as ButtonColor}
               funcType={'raised' as FuncType}
             >
               评论

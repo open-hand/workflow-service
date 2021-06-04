@@ -34,7 +34,7 @@ const CommonNode = () => {
           y: 2,
           fontSize: 12,
           textAlign: 'left',
-          fill: 'rgba(0,0,0,0.65)',
+          fill: 'var(--text-color3)',
           text: optimizeMultilineText(label, 50, 2, 90),
           textBaseline: 'middle',
         },

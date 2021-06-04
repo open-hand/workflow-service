@@ -60,11 +60,7 @@ const openDelegateModal = (props: Props) => {
       width: 520,
     },
     children: <ObserverDelegateModal {...props} />,
-    cancelProps: {
-      style: {
-        color: '#000',
-      },
-    },
+    
     border: false,
   });
 };

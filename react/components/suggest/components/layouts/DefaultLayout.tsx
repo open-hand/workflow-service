@@ -72,7 +72,7 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
   }, [ModalProps]);
   return (
     <Form dataSet={dataSet} className={styles.form} style={{ width: '100%' }}>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <div style={{ flex: 1 }}>
           <Select name="commentTemplates" style={{ width: '100%' }}>
             {data.map((t) => (
@@ -83,27 +83,18 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
           </Select>
         </div>
         <Button
-          icon="save"
-          color={'blue' as ButtonColor}
+          icon="save-o"
+          color={'primary' as ButtonColor}
           onClick={onSaveCommentTemplateClick}
           style={{
             marginLeft: 14,
-            border: '1px solid #3f51b5',
-            borderRadius: '4px',
-            background: 'white',
           }}
         >
           保留审批意见
         </Button>
         <Button
-          icon="settings"
-          color={'blue' as ButtonColor}
-          style={{
-            marginLeft: 10,
-            border: '1px solid #3f51b5',
-            borderRadius: '4px',
-            background: 'white',
-          }}
+          icon="settings-o"
+          color={'primary' as ButtonColor}
           onClick={handleManageClick}
         >
           审批意见管理
