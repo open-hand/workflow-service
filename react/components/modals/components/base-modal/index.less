@@ -4,9 +4,8 @@
   }
 
   .c7n-pro-modal-body {
-    height: calc(~"100% - 55px");
-    max-height: unset;
-    padding: 0;
+    height: calc(~"100% - 69px");
+    padding-bottom: 0 !important;
     overflow-y: hidden;
 
     .c7n-backlogApprove-modal-container {
@@ -14,20 +13,23 @@
       flex-direction: column;
       align-content: space-between;
       height: 100%;
+      margin-left: -20px;
+      width: calc(100% + 40px);
 
       &-title {
         &-summary {
-          padding: 10px 24px 0;
+          padding: 0 20px;
         }
 
         &-tab {
-          margin-top: 10px;
 
           .c7n-tabs-bar {
             margin-bottom: 0;
 
             .c7n-tabs-nav-container {
-              margin: 0 10px;
+              .c7n-tabs-nav-wrap {
+                padding-left: 20px;
+              }
             }
           }
 
@@ -37,11 +39,12 @@
       &-content {
         flex: 1;
         overflow-y: auto;
+        padding-left: 20px;
       }
 
       &-footer {
         border-top: 1px solid #D9E6F2;
-        padding: 17px 24px 7px;
+        padding: 20px 20px 10px;
         min-height: 67px;
         &-closeBtn:hover, &-closeBtn:focus {
           background-color: #2b378f !important;

@@ -101,7 +101,7 @@ const AddApproverModal = (props) => {
         if (name === 'addSignPerson' && value) {
           const toPersonList = [];
           forEach(value || [], (item) => {
-            toPersonList.push({ value: item.id, name: item.realName });
+            toPersonList.push({ value: item.id, name: item.realName, loginName: item.loginName });
           });
           record.set('toPersonList', toPersonList);
         }
@@ -112,11 +112,15 @@ const AddApproverModal = (props) => {
     dataSet.create({});
   }, [dataSet]);
   const handleSubmit = useCallback(async () => {
-    if (await dataSet.submit()) {
-      onSuccess(); // 加签成功后表示这条待办在这个节点处理完了，需要跳转到列表页
-      return true;
+    try {
+      const res = await dataSet.submit();
+      if (res) {
+        onSuccess(); // 加签成功后表示这条待办在这个节点处理完了，需要跳转到列表页
+        return true;
+      }
+    } catch (e) {
+      return false;
     }
-    return false;
   }, [dataSet, onSuccess]);
   useEffect(() => {
     modal?.handleOk(handleSubmit);

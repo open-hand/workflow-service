@@ -127,8 +127,6 @@ const Buttons: React.FC<ButtonsProps> = ({
                 className={classNames((item as ICustomBtn).className, 'c7n-approve-btn')}
                 key={item.value}
                 onClick={() => handleClickBtn(item)}
-                // color={'blue' as ButtonColor}
-                funcType={'raised' as FuncType}
               >
                 {item.meaning}
               </Button>

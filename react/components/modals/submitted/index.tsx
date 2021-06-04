@@ -93,7 +93,7 @@ const SubmittedModal: React.FC<SubmittedModalProps> = (props) => {
         <>
           <Button
             onClick={handleClose}
-            color={'blue' as ButtonColor}
+            color={'primary' as ButtonColor}
             funcType={'raised' as FuncType}
           >
             关闭
@@ -101,7 +101,7 @@ const SubmittedModal: React.FC<SubmittedModalProps> = (props) => {
           {state.data.submittedDetail.urgeEnableFlag ? (
             <Button
               onClick={handleClickUrge}
-              color={'blue' as ButtonColor}
+              color={'primary' as ButtonColor}
               funcType={'raised' as FuncType}
             >
               催办

@@ -38,7 +38,7 @@ const NoticeNode = () => {
         attrs: {
           fontSize: 12,
           textAlign: 'left',
-          fill: 'rgba(0,0,0,0.65)',
+          fill: 'var(--text-color3)',
           x: startX + 14 + 12,
           y: startY + 14 + 8,
           type: 'text',

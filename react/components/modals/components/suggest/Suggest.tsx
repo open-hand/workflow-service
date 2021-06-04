@@ -12,10 +12,7 @@ const ApprovalSuggest: React.FC<{
   const data = store.process;
   const props = useApproval({ type: 'org', process: data });
   return (
-    <div style={{
-      padding: '0 24px',
-    }}
-    >
+    <div>
       <ProcessDetail />
       <Part
         title="审批意见"

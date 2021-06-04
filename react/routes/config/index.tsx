@@ -51,7 +51,7 @@ const Config = () => {
         </Header>
       )}
       <Breadcrumb />
-      <Content style={{ borderTop: '1px solid #d8d8d8' }}>
+      <Content style={{ borderTop: '1px solid var(--divider)' }}>
 
         <Empty
           style={{ paddingTop: '15vh' }}
