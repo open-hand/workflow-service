@@ -5,14 +5,24 @@ import {
   ICommentTemplate, ICommentTemplateCreate, IFlowData, IProcessAttachment,
 } from '@/common/types';
 
+export interface INextNodeApprover {
+  code: string,
+  employee: {
+    realName: string,
+    employeeCode: string,
+    id: string,
+  }
+  name: string,
+}
 export interface NextNodeApproveData {
   approveComment?: string
   approverSourceType: 'ANY_APPROVER' | 'DEFAULT_APPROVER'
   nextNodeCode: string
-  toPersonList: {
+  toPersonList: ({
     value: string
     name: string
-  }[]
+    loginName: string
+  } | INextNodeApprover)[]
 }
 
 export interface AddApproveData {

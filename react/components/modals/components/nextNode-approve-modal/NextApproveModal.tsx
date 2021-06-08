@@ -7,7 +7,9 @@ import {
 } from 'choerodon-ui/pro';
 import { IModalProps } from '@choerodon/agile/lib/common/types';
 import './NextApproveModal.less';
-import { approveApi, approveApiConfig, NextNodeApproveData } from '@/api';
+import {
+  approveApi, approveApiConfig, INextNodeApprover, NextNodeApproveData,
+} from '@/api';
 import SelectEmployee, { IEmployee } from '@/components/select/select-employee';
 import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
 import { includes } from 'lodash';
@@ -15,16 +17,6 @@ import store from '../../store';
 
 const { Option } = Select;
 const prefix = 'c7n-backlogApprove-nextApproveModal';
-
-interface INextNodeApprover {
-  code: string,
-  employee: {
-    realName: string,
-    employeeCode: string,
-    id: string,
-  }
-  name: string,
-}
 interface IForecastNextNode {
   nextNodeCode: string,
   nextNodeName: string,
@@ -126,11 +118,7 @@ const NextApproveModal:React.FC<Props> = ({
       const data: NextNodeApproveData = {
         nextNodeCode: forecastNextNode.nextNodeCode,
         approverSourceType: source,
-        toPersonList: source === 'DEFAULT_APPROVER' ? (forecastNextNode.nextNodeApprover || []).filter((item) => includes(nextApproveDataSet?.current?.get('defaultApprover') || [], item.code)).map(((item) => ({
-          value: item.code,
-          name: item.name,
-          loginName: item.employee,
-        }))) : (employeesRef.current || []).filter((item) => includes(nextApproveDataSet?.current?.get('approver') || [], item.id)).map((item) => ({
+        toPersonList: source === 'DEFAULT_APPROVER' ? (forecastNextNode.nextNodeApprover || []).filter((item) => includes(nextApproveDataSet?.current?.get('defaultApprover') || [], item.code)) : (employeesRef.current || []).filter((item) => includes(nextApproveDataSet?.current?.get('approver') || [], item.id)).map((item) => ({
           value: item.id,
           name: item.realName,
           loginName: item.loginName,
