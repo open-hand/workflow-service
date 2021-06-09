@@ -32,7 +32,8 @@ const ApproveModal: React.FC<ApproveModalProps> = (props) => {
   }, [instanceId, taskId]);
   const handleClose = useCallback(() => {
     modal?.close();
-  }, [modal]);
+    onClose();
+  }, [modal, onClose]);
   const handleRefresh = useCallback(() => {
     onClose && onClose();
     handleClose();
