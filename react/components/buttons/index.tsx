@@ -117,11 +117,11 @@ const Buttons: React.FC<ButtonsProps> = ({
     }
   }, [getComment, handleOk, onClick, taskId]);
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', marginLeft: -10 }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
       {
         outLoading || loading ? null : (
           <>
-            {[...extraBtns, ...btns].filter((item) => item.checked).map((item) => (
+            {[...btns, ...extraBtns].filter((item) => item.checked).map((item) => (
               <Button
                 style={{ ...buttonStyle, ...((item as ICustomBtn).style || {}) }}
                 className={classNames((item as ICustomBtn).className, 'c7n-approve-btn')}

@@ -44,7 +44,7 @@ const Suggest: React.ForwardRefRenderFunction<SuggestRef, SuggestProps> = (props
     }, {
       name: 'commentContent',
       required: true,
-      label: '点击添加审批意见',
+      label: '添加审批意见',
     }],
     events: {
       update: handleUpdate,

@@ -77,7 +77,7 @@ const SubmittedModal: React.FC<SubmittedModalProps> = (props) => {
           title: '审核历史',
           key: 'history',
           component: () => (
-            <div style={{ padding: '0 20px' }}>
+            <div style={{ paddingTop: 11.5 }}>
               <History
                 historyList={state.historyList}
               />
@@ -90,10 +90,9 @@ const SubmittedModal: React.FC<SubmittedModalProps> = (props) => {
           component: () => state.flowData && <FlowChart flowData={state.flowData} />,
         }]}
       footer={() => (
-        <>
+        <div style={{ textAlign: 'right' }}>
           <Button
             onClick={handleClose}
-            color={'primary' as ButtonColor}
             funcType={'raised' as FuncType}
           >
             关闭
@@ -107,7 +106,7 @@ const SubmittedModal: React.FC<SubmittedModalProps> = (props) => {
               催办
             </Button>
           ) : null}
-        </>
+        </div>
       )}
     />
   );

@@ -78,7 +78,6 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
         <TextArea name="commentContent" resize={'vertical' as ResizeType} rows={1} />
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button
-            color={'primary' as ButtonColor}
             funcType={'raised' as FuncType}
             onClick={onSaveCommentTemplateClick}
           >
