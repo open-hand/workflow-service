@@ -58,9 +58,9 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
       style: {
         width: MODAL_WIDTH.small,
       },
-      cancelText: '关闭',
+      okText: '关闭',
       // @ts-ignore
-      footer: (_, cancelButton) => cancelButton,
+      footer: (okBtn, cancelButton) => okBtn,
       onCancel: () => {
         modalRef.current = undefined;
       },
@@ -84,7 +84,6 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
         </div>
         <Button
           icon="save-o"
-          color={'primary' as ButtonColor}
           onClick={onSaveCommentTemplateClick}
           style={{
             marginLeft: 14,
@@ -94,7 +93,6 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
         </Button>
         <Button
           icon="settings-o"
-          color={'primary' as ButtonColor}
           onClick={handleManageClick}
         >
           审批意见管理

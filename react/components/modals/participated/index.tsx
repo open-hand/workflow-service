@@ -74,7 +74,7 @@ const ParticipatedModal: React.FC<ParticipatedModalProps> = (props) => {
           title: '审核历史',
           key: 'history',
           component: () => (
-            <div style={{ padding: '0 20px' }}>
+            <div style={{ paddingTop: 11.5 }}>
               <History
                 historyList={state.historyList}
               />
@@ -87,13 +87,15 @@ const ParticipatedModal: React.FC<ParticipatedModalProps> = (props) => {
           component: () => state.flowData && <FlowChart flowData={state.flowData} />,
         }]}
       footer={() => (
-        <Button
-          onClick={handleClose}
-          color={'primary' as ButtonColor}
-          funcType={'raised' as FuncType}
-        >
-          关闭
-        </Button>
+        <div style={{ textAlign: 'right' }}>
+          <Button
+            onClick={handleClose}
+            color={'primary' as ButtonColor}
+            funcType={'raised' as FuncType}
+          >
+            关闭
+          </Button>
+        </div>
       )}
     />
   );
