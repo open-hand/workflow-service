@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import { Button, Modal } from 'choerodon-ui/pro';
 import {
-  Page, Content, Breadcrumb, Choerodon, Header, HeaderButtons
+  Page, Content, Breadcrumb, Choerodon, Header, HeaderButtons,
 } from '@choerodon/master';
 import { getCookie } from '@choerodon/master/lib/utils';
 import Empty from '@choerodon/agile/lib/components/Empty';
@@ -19,7 +19,7 @@ const Config = () => {
     window.open(`${HZERO_FRONT}/hwkf#access_token=${accessToken}&token_type=${tokenType}`);
   }, []);
   const {
-    data: inited, refresh,
+    data: inited = true, refresh,
   } = useRequest(() => workFlowApi.checkInit());
   const handleInitClick = useCallback(() => {
     Modal.open({
