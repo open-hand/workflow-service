@@ -160,7 +160,7 @@ eureka:
     leaseExpirationDurationInSeconds: 3
     # 服务的一些元数据信息
     metadata-map:
-      VERSION: 1.0.0
+      VERSION: 1.1.0
   client:
     serviceUrl:
       defaultZone: http://localhost:8000/eureka/
