@@ -48,7 +48,7 @@ const ProcessAttachment: React.FC<ProcessAttachmentProps> = ({
   return (
     <div>
       <Upload customRequest={handleFileUpload} showUploadList={false}>
-        <Button icon="backup-o" color={'primary' as ButtonColor}>上传附件</Button>
+        <Button icon="backup-o">上传附件</Button>
       </Upload>
       {
         fileList && fileList.length > 0 && (

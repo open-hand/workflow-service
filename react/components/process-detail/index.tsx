@@ -36,7 +36,6 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
   return (
     <Part
       title="流程信息"
-      style={{ padding: '0 20px' }}
       border
     >
       <Form
