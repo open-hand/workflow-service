@@ -253,14 +253,23 @@ public class DevopsPipelineBpmnHandler {
                         subProcess.addFlowElement(serviceTask);
                         devopsPipelineTaskVO.setTaskName(serviceTask.getName());
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_HOST.value())) {
+
                         String taskName = JobTypeEnum.CD_HOST.value() + pipelineInfo;
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdHostDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
-                        SequenceFlow sequenceFlow = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
-                        subProcess.addFlowElement(sequenceFlow);
+
+                        UserTask userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId(), DEFAULT_AUDIT_USER);
+
+                        SequenceFlow sequenceFlow1 = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
+                        subProcess.addFlowElement(sequenceFlow1);
                         subProcess.addFlowElement(serviceTask);
-                        devopsPipelineTaskVO.setTaskName(serviceTask.getName());
+
+                        SequenceFlow sequenceFlow2 = dynamicWorkflowUtil.createSequenceFlow(serviceTask.getId(), userTask.getId());
+                        subProcess.addFlowElement(sequenceFlow2);
+                        subProcess.addFlowElement(userTask);
+                        params.put(userTask.getName(), DEFAULT_AUDIT_USER);
+
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_API_TEST.value())) {
                         String deployJobName = devopsPipelineTaskVO.getDeployJobName() != null ? devopsPipelineTaskVO.getDeployJobName() : PipelineConstants.NOT_WAIT_DEPLOY_JOB;
                         String taskName = JobTypeEnum.CD_API_TEST.value() + pipelineInfo + "." + deployJobName;

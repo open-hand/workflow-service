@@ -39,53 +39,6 @@ public class DevopsCdHostDelegate implements JavaDelegate {
         // 2.
         devopsServiceRepository.cdHostDeploy(pipelineRecordId, stageRecordId, taskRecordId);
 
-
-        // 3.
-        //自动部署失败或者执行3min以上没反应也重置为失败
-        int[] count = {0};
-        Boolean[] status = {false};
-        Runnable runnable = () -> {
-            while (!Thread.currentThread().isInterrupted()) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    logger.warn("error.thread.sleep");
-                }
-                count[0] = count[0] + 1;
-
-                String deployResult = devopsServiceRepository.getJobStatus(pipelineRecordId, stageRecordId, taskRecordId);
-                logger.info(deployResult);
-                if (deployResult.equals(JobStatusEnum.SUCCESS.value()) ||
-                        deployResult.equals(JobStatusEnum.SKIPPED.value())) {
-                    status[0] = true;
-                    // 4.
-                    devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, status[0]);
-                    logger.info(String.format("cd ServiceTask:%s  结束,任务执行状态为%s", delegateExecution.getCurrentActivityId(), status[0]));
-                    Thread.currentThread().interrupt();
-                }
-
-                if (JobStatusEnum.FAILED.value().equals(deployResult) || count[0] == 60) {
-                    status[0] = false;
-                    // 4.
-                    devopsServiceRepository.setAppDeployStatus(pipelineRecordId, stageRecordId, taskRecordId, status[0]);
-                    logger.info(String.format("cd ServiceTask:%s  结束,任务执行状态为%s", delegateExecution.getCurrentActivityId(), status[0]));
-                    Thread.currentThread().interrupt();
-                }
-            }
-        };
-
-        Thread thread = new Thread(runnable);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            logger.info(e.getMessage());
-        }
-        // 解决停止实例问题
-        if (!status[0]) {
-            throw new CommonException("error.execute.service.task");
-        }
-
     }
 }
 
