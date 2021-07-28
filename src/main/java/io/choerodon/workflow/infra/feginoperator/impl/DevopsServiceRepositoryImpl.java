@@ -137,6 +137,15 @@ public class DevopsServiceRepositoryImpl implements DevopsServiceRepository {
         }
     }
 
+    @Override
+    public void hzeroDeploy(Long detailsId) {
+        try {
+            devopsServiceClient.hzeroDeploy(detailsId);
+        } catch (FeignException e) {
+            throw new CommonException(e);
+        }
+    }
+
 //    @Override
 //    public void setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut) {
 //        try {

@@ -78,5 +78,8 @@ public interface DevopsServiceClient {
     ResponseEntity<Void> executeExternalApprovalTask(@RequestParam(value = "pipeline_record_id") Long cdPipelineRecordId,
                                                         @RequestParam(value = "stage_record_id") Long cdStageRecordId,
                                                         @RequestParam(value = "job_record_id") Long cdJobRecordId);
-//    ResponseEntity<Void> setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut);
+
+    @ApiOperation(value = "hzero部署接口")
+    @PostMapping("/v1/cd_pipeline/hzero_deploy")
+    ResponseEntity<String> hzeroDeploy( @RequestParam(value = "details_record_id") Long detailsRecordId);
 }

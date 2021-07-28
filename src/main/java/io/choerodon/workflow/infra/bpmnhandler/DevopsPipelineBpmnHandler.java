@@ -6,9 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import io.choerodon.core.exception.CommonException;
-import io.choerodon.workflow.api.vo.DevopsPipelineVO;
-import io.choerodon.workflow.api.vo.DevopsPipelineStageVO;
-import io.choerodon.workflow.api.vo.DevopsPipelineTaskVO;
+import io.choerodon.workflow.api.vo.*;
 import io.choerodon.workflow.infra.constant.PipelineConstants;
 import io.choerodon.workflow.infra.enums.JobTypeEnum;
 import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
@@ -404,5 +402,54 @@ public class DevopsPipelineBpmnHandler {
             a++;
         }
         return null;
+    }
+
+    public static BpmnModel initHzeroDeployPipelineBpmn(HzeroDeployPipelineVO hzeroDeployPipelineVO, Map<String, Object> params) {
+        // 实例化BpmnModel对象
+        BpmnModel model = new BpmnModel();
+
+        DynamicWorkflowUtil dynamicWorkflowUtil = new DynamicWorkflowUtil();
+        //生成主流程节点
+        StartEvent startProcess = dynamicWorkflowUtil.createStartEvent(START_PROCESS);
+        EndEvent endProcess = dynamicWorkflowUtil.createEndEvent(END_PROCESS);
+        Process process = new Process();
+        process.setId(PROCESS);
+        process.setName(PROCESS);
+        process.addFlowElement(startProcess);
+        process.addFlowElement(endProcess);
+
+        SubProcess subProcess = new SubProcess();
+        subProcess.setId(ADHOC_SUB_PROCESS);
+        subProcess.setName(ADHOC_SUB_PROCESS);
+        StartEvent subProcessStart = dynamicWorkflowUtil.createStartEvent(SUB_START_PROCESS);
+        EndEvent subProcessEnd = dynamicWorkflowUtil.createEndEvent(END_START_PROCESS);
+        process.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(startProcess.getId(), subProcessStart.getId()));
+        subProcess.addFlowElement(subProcessStart);
+        for (int i = 0; i < hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().size(); i++) {
+            DevopsHzeroDeployDetailsDTO devopsHzeroDeployDetailsDTO = hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().get(i);
+            String instanceInfo = "." + devopsHzeroDeployDetailsDTO.getId();
+            String taskName = JobTypeEnum.HZERO_DEPLOY.value() + instanceInfo;
+            ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
+            serviceTask.setImplementation("${devopsHzeroDeployDelegate}");
+            serviceTask.setImplementationType(DELEGATE_EXPRESSION);
+
+            UserTask userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + i, USER_TASK + instanceInfo, DEFAULT_AUDIT_USER);
+
+            SequenceFlow sequenceFlow1 = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
+            subProcess.addFlowElement(sequenceFlow1);
+            subProcess.addFlowElement(serviceTask);
+
+            SequenceFlow sequenceFlow2 = dynamicWorkflowUtil.createSequenceFlow(serviceTask.getId(), userTask.getId());
+            subProcess.addFlowElement(sequenceFlow2);
+            subProcess.addFlowElement(userTask);
+            params.put(userTask.getName(), DEFAULT_AUDIT_USER);
+
+        }
+        subProcess.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), subProcessEnd.getId()));
+        subProcess.addFlowElement(subProcessEnd);
+        process.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(subProcessEnd.getId(), endProcess.getId()));
+        //自动布局
+        new BpmnAutoLayout(model).execute();
+        return model;
     }
 }
