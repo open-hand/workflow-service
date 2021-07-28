@@ -4,7 +4,11 @@ import com.google.gson.Gson;
 import io.choerodon.asgard.saga.SagaDefinition;
 import io.choerodon.asgard.saga.annotation.SagaTask;
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
+import io.choerodon.workflow.api.vo.HzeroDeployPipelineVO;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
+import io.choerodon.workflow.infra.constant.SagaConstants;
+import io.choerodon.workflow.infra.constant.SagaTaskConstants;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,6 +55,20 @@ public class WorkFlowSagaHandler {
         return data;
     }
 
+    /**
+     * hzero部署
+     */
+    @SagaTask(code = SagaTaskConstants.HZERO_DEPLOY_PIPELINE,
+            description = "cicd工作流启动cd",
+            sagaCode = SagaConstants.HZERO_DEPLOY_PIPELINE,
+            maxRetryCount = 0,
+            concurrentLimitPolicy = SagaDefinition.ConcurrentLimitPolicy.TYPE_AND_ID,
+            seq = 1)
+    public String createHzeroDeployPipeline(String data) {
+        HzeroDeployPipelineVO hzeroDeployPipelineVO = gson.fromJson(data, HzeroDeployPipelineVO.class);
+        processInstanceService.createHzeroDeployPipeline(hzeroDeployPipelineVO);
+        return data;
+    }
 
 
 }

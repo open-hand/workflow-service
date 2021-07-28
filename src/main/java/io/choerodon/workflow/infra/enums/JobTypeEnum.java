@@ -31,7 +31,11 @@ public enum JobTypeEnum {
     /**
      * cd API测试任务
      */
-    CD_API_TEST("cdApiTest");
+    CD_API_TEST("cdApiTest"),
+    /**
+     * hzero部署
+     */
+    HZERO_DEPLOY("hzeroDeploy");
 
 
     private final String value;

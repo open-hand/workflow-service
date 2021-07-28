@@ -7,8 +7,10 @@ import io.choerodon.asgard.saga.producer.StartSagaBuilder;
 import io.choerodon.asgard.saga.producer.TransactionalProducer;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
+import io.choerodon.workflow.api.vo.HzeroDeployPipelineVO;
 import io.choerodon.workflow.app.service.PipelineService;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
+import io.choerodon.workflow.infra.constant.SagaConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +58,21 @@ public class PipelineServiceImpl implements PipelineService {
                         .withSagaCode("cicd-workflow-pipeline"),
                 builder -> builder
                         .withPayloadAndSerialize(devopsPipelineVO)
+                        .withRefId("1"));
+    }
+
+    @Override
+    @Saga(code = SagaConstants.HZERO_DEPLOY_PIPELINE,
+            description = "创建hzero部署流水线", inputSchema = "{}")
+    public void createHzeroPipeline(HzeroDeployPipelineVO hzeroDeployPipelineVO) {
+        producer.apply(
+                StartSagaBuilder
+                        .newBuilder()
+                        .withLevel(ResourceLevel.SITE)
+                        .withRefType("workflow")
+                        .withSagaCode(SagaConstants.HZERO_DEPLOY_PIPELINE),
+                builder -> builder
+                        .withPayloadAndSerialize(hzeroDeployPipelineVO)
                         .withRefId("1"));
     }
 

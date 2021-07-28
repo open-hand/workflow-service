@@ -1,6 +1,7 @@
 package io.choerodon.workflow.app.service;
 
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
+import io.choerodon.workflow.api.vo.HzeroDeployPipelineVO;
 
 /**
  * Created by Sheep on 2019/4/2.
@@ -33,4 +34,7 @@ public interface ProcessInstanceService {
      * @return
      */
     void stopInstance(String businessKey);
+
+    void createHzeroDeployPipeline(HzeroDeployPipelineVO hzeroDeployPipelineVO);
+
 }
