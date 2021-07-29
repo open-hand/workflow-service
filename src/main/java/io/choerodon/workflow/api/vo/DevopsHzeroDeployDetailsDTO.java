@@ -19,10 +19,7 @@ import io.choerodon.mybatis.domain.AuditDomain;
  * @author wanghao
  * @since 2021/7/28 1:37
  */
-@Table(name = "devops_hzero_deploy_details")
-@ModifyAudit
-@VersionAudit
-public class DevopsHzeroDeployDetailsDTO extends AuditDomain {
+public class DevopsHzeroDeployDetailsDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
