@@ -415,15 +415,18 @@ public class DevopsPipelineBpmnHandler {
         Process process = new Process();
         process.setId(PROCESS);
         process.setName(PROCESS);
-        process.addFlowElement(startProcess);
-        process.addFlowElement(endProcess);
+
+
 
         SubProcess subProcess = new SubProcess();
         subProcess.setId(ADHOC_SUB_PROCESS);
         subProcess.setName(ADHOC_SUB_PROCESS);
+
         StartEvent subProcessStart = dynamicWorkflowUtil.createStartEvent(SUB_START_PROCESS);
         EndEvent subProcessEnd = dynamicWorkflowUtil.createEndEvent(END_START_PROCESS);
-        process.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(startProcess.getId(), subProcessStart.getId()));
+
+
+
         subProcess.addFlowElement(subProcessStart);
         for (int i = 0; i < hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().size(); i++) {
             DevopsHzeroDeployDetailsDTO devopsHzeroDeployDetailsDTO = hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().get(i);
@@ -447,7 +450,14 @@ public class DevopsPipelineBpmnHandler {
         }
         subProcess.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), subProcessEnd.getId()));
         subProcess.addFlowElement(subProcessEnd);
-        process.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(subProcessEnd.getId(), endProcess.getId()));
+
+        process.addFlowElement(startProcess);
+        process.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(startProcess.getId(), subProcess.getId()));
+        process.addFlowElement(subProcess);
+        process.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(subProcess.getId(), endProcess.getId()));
+        process.addFlowElement(endProcess);
+
+        model.addProcess(process);
         //自动布局
         new BpmnAutoLayout(model).execute();
         return model;
