@@ -2,8 +2,11 @@ package io.choerodon.workflow.infra.bpmnhandler;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.workflow.api.vo.*;
@@ -428,8 +431,15 @@ public class DevopsPipelineBpmnHandler {
 
 
         subProcess.addFlowElement(subProcessStart);
-        for (int i = 0; i < hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().size(); i++) {
-            DevopsHzeroDeployDetailsDTO devopsHzeroDeployDetailsDTO = hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().get(i);
+        // 排序
+        List<DevopsHzeroDeployDetailsDTO> sortedDetailList = hzeroDeployPipelineVO
+                .getDevopsHzeroDeployDetailsDTOList()
+                .stream()
+                .sorted(Comparator.comparingLong(DevopsHzeroDeployDetailsDTO::getSequence))
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < sortedDetailList.size(); i++) {
+            DevopsHzeroDeployDetailsDTO devopsHzeroDeployDetailsDTO = sortedDetailList.get(i);
             String instanceInfo = "." + devopsHzeroDeployDetailsDTO.getId();
             String taskName = JobTypeEnum.HZERO_DEPLOY.value() + instanceInfo;
             ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
