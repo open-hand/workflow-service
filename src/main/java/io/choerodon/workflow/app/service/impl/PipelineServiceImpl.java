@@ -1,6 +1,8 @@
 package io.choerodon.workflow.app.service.impl;
 
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import io.choerodon.asgard.saga.annotation.Saga;
 import io.choerodon.asgard.saga.producer.StartSagaBuilder;
@@ -48,6 +50,7 @@ public class PipelineServiceImpl implements PipelineService {
     @Saga(code = "cicd-workflow-pipeline",
             description = "创建cicd流水线创建流程实例", inputSchema = "{}")
     public void beginDevopsPipelineSagaCiCd(DevopsPipelineVO devopsPipelineVO) {
+        String refId = devopsPipelineVO.getPipelineId() == null ? "1" : devopsPipelineVO.getPipelineId().toString();
         producer.apply(
                 StartSagaBuilder
                         .newBuilder()
