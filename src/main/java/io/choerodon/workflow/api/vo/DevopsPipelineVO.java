@@ -9,6 +9,7 @@ import java.util.List;
 public class DevopsPipelineVO {
 
     private Long pipelineRecordId;
+    private Long pipelineId;
     private String pipelineName;
     private String businessKey;
     private List<String> userNames;
@@ -62,5 +63,13 @@ public class DevopsPipelineVO {
 
     public void setMultiAssign(Boolean multiAssign) {
         this.multiAssign = multiAssign;
+    }
+
+    public Long getPipelineId() {
+        return pipelineId;
+    }
+
+    public void setPipelineId(Long pipelineId) {
+        this.pipelineId = pipelineId;
     }
 }

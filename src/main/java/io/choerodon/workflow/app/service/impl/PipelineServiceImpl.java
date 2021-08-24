@@ -1,6 +1,8 @@
 package io.choerodon.workflow.app.service.impl;
 
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import io.choerodon.asgard.saga.annotation.Saga;
 import io.choerodon.asgard.saga.producer.StartSagaBuilder;
@@ -11,9 +13,6 @@ import io.choerodon.workflow.api.vo.HzeroDeployPipelineVO;
 import io.choerodon.workflow.app.service.PipelineService;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
 import io.choerodon.workflow.infra.constant.SagaConstants;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * Created by Sheep on 2019/5/16.
@@ -50,6 +49,7 @@ public class PipelineServiceImpl implements PipelineService {
     @Saga(code = "cicd-workflow-pipeline",
             description = "创建cicd流水线创建流程实例", inputSchema = "{}")
     public void beginDevopsPipelineSagaCiCd(DevopsPipelineVO devopsPipelineVO) {
+        String refId = devopsPipelineVO.getPipelineId() == null ? "1" : devopsPipelineVO.getPipelineId().toString();
         producer.apply(
                 StartSagaBuilder
                         .newBuilder()
@@ -58,7 +58,7 @@ public class PipelineServiceImpl implements PipelineService {
                         .withSagaCode("cicd-workflow-pipeline"),
                 builder -> builder
                         .withPayloadAndSerialize(devopsPipelineVO)
-                        .withRefId("1"));
+                        .withRefId(refId));
     }
 
     @Override
