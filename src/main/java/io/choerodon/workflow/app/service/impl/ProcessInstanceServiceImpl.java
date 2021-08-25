@@ -103,10 +103,13 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         String deploymentName = UUID.randomUUID().toString();
         String filePath = "bmpn/" + deploymentName + ".bpmn";
         //        DevopsPipelineBpmnHandler.saveDataToFile("temp", "test.bpmn", DynamicWorkflowUtil.converterBpmnToXML(model));
-        Deployment deployment = repositoryService.createDeployment().addBpmnModel(filePath, model).name(deploymentName).deploy();
+        Deployment deployment = repositoryService.createDeployment()
+                .addBpmnModel(filePath, model)
+                .name(deploymentName)
+                .tenantId(devopsPipelineVO.getPipelineId().toString())
+                .deploy();
 
         org.activiti.engine.repository.ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionKey(devopsPipelineVO.getPipelineId().toString())
                 .deploymentId(deployment.getId()).singleResult();
 
         logger.info(String.format("%s:%s 流程开始执行！", devopsPipelineVO.getPipelineName(), devopsPipelineVO.getPipelineRecordId()));
