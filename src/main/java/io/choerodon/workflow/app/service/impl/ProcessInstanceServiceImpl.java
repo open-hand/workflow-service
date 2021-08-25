@@ -106,6 +106,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         Deployment deployment = repositoryService.createDeployment().addBpmnModel(filePath, model).name(deploymentName).deploy();
 
         org.activiti.engine.repository.ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionKey(devopsPipelineVO.getPipelineId().toString())
                 .deploymentId(deployment.getId()).singleResult();
 
         logger.info(String.format("%s:%s 流程开始执行！", devopsPipelineVO.getPipelineName(), devopsPipelineVO.getPipelineRecordId()));
