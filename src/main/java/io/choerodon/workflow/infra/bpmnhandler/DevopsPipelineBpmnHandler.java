@@ -244,8 +244,9 @@ public class DevopsPipelineBpmnHandler {
                         subProcess.addFlowElement(userTask);
                         params.put(userTask.getName(), devopsPipelineTaskVO.getUsernames());
                         devopsPipelineTaskVO.setTaskName(userTask.getName());
-                    } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_DEPLOY.value())) {
-                        String taskName = JobTypeEnum.CD_DEPLOY.value() + pipelineInfo;
+                    } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_DEPLOY.value()) ||
+                            devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_DEPLOYMENT.value())) {
+                        String taskName = devopsPipelineTaskVO.getTaskType() + pipelineInfo;
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdDeployDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);

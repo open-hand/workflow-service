@@ -24,6 +24,11 @@ public enum JobTypeEnum {
     CD_HOST("cdHost"),
 
     /**
+     * cd 部署组部署
+     */
+    CD_DEPLOYMENT("cdDeployment"),
+
+    /**
      * cd 外部卡点任务
      */
     CD_EXTERNAL_APPROVAL("cdExternalApproval"),
