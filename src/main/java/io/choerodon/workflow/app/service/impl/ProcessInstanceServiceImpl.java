@@ -100,14 +100,9 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         if (!DynamicWorkflowUtil.checkValidate(model)) {
             throw new CommonException("invalid.workflow.module.ci.cd");
         }
-        String deploymentName = UUID.randomUUID().toString();
-        String filePath = "bmpn/" + deploymentName + ".bpmn";
-        //        DevopsPipelineBpmnHandler.saveDataToFile("temp", "test.bpmn", DynamicWorkflowUtil.converterBpmnToXML(model));
-        Deployment deployment = repositoryService.createDeployment()
-                .addBpmnModel(filePath, model)
-                .name(deploymentName)
-                .tenantId(devopsPipelineVO.getPipelineId().toString())
-                .deploy();
+        String filePath = "bmpn/" + UUID.randomUUID().toString() + ".bpmn";
+//        DevopsPipelineBpmnHandler.saveDataToFile("temp", "test.bpmn", DynamicWorkflowUtil.converterBpmnToXML(model));
+        Deployment deployment = repositoryService.createDeployment().addBpmnModel(filePath, model).name("hzeroDeploy").deploy();
 
         org.activiti.engine.repository.ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .deploymentId(deployment.getId()).singleResult();
