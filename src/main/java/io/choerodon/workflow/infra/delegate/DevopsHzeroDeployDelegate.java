@@ -25,7 +25,7 @@ public class DevopsHzeroDeployDelegate implements JavaDelegate {
     @Autowired
     ProcessRuntime processRuntime;
 
-    private Logger logger = LoggerFactory.getLogger(DevopsCdHostDelegate.class);
+    private Logger logger = LoggerFactory.getLogger(DevopsHzeroDeployDelegate.class);
 
     @Override
     public void execute(DelegateExecution delegateExecution) {
