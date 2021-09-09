@@ -250,6 +250,7 @@ public class DevopsPipelineBpmnHandler {
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdDeployDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
+                        serviceTask.setAsynchronous(true);
                         SequenceFlow sequenceFlow = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
                         subProcess.addFlowElement(sequenceFlow);
                         subProcess.addFlowElement(serviceTask);
@@ -260,6 +261,7 @@ public class DevopsPipelineBpmnHandler {
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdHostDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
+                        serviceTask.setAsynchronous(true);
 
                         UserTask userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId(), DEFAULT_AUDIT_USER);
 
@@ -279,6 +281,7 @@ public class DevopsPipelineBpmnHandler {
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdApiTestDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
+                        serviceTask.setAsynchronous(true);
 
                         UserTask userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId(), DEFAULT_AUDIT_USER);
 
@@ -298,6 +301,7 @@ public class DevopsPipelineBpmnHandler {
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + externalApprovalTaskName, externalApprovalTaskName);
                         serviceTask.setImplementation("${devopsCdExternalApprovalDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
+                        serviceTask.setAsynchronous(true);
 
                         UserTask userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId(), DEFAULT_AUDIT_USER);
 
@@ -446,6 +450,7 @@ public class DevopsPipelineBpmnHandler {
             ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
             serviceTask.setImplementation("${devopsHzeroDeployDelegate}");
             serviceTask.setImplementationType(DELEGATE_EXPRESSION);
+            serviceTask.setAsynchronous(true);
 
             UserTask userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + i, USER_TASK + instanceInfo, DEFAULT_AUDIT_USER);
 
