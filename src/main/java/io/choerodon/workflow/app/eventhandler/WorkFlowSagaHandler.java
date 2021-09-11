@@ -10,7 +10,11 @@ import io.choerodon.workflow.infra.constant.SagaConstants;
 import io.choerodon.workflow.infra.constant.SagaTaskConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * Created by Sheep on 2019/5/16.
@@ -51,6 +55,8 @@ public class WorkFlowSagaHandler {
             seq = 1)
     public String workflowCreatePipelineCiCd(String data) {
         DevopsPipelineVO devopsPipelineDTO = gson.fromJson(data, DevopsPipelineVO.class);
+        // hzero注入的Executor需要设置这个，否则会报错
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
         processInstanceService.beginDevopsPipelineCiCd(devopsPipelineDTO);
         return data;
     }
