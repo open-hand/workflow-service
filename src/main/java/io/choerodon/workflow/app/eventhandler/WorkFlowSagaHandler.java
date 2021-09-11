@@ -55,8 +55,6 @@ public class WorkFlowSagaHandler {
             seq = 1)
     public String workflowCreatePipelineCiCd(String data) {
         DevopsPipelineVO devopsPipelineDTO = gson.fromJson(data, DevopsPipelineVO.class);
-        // hzero注入的Executor需要设置这个，否则会报错
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
         processInstanceService.beginDevopsPipelineCiCd(devopsPipelineDTO);
         return data;
     }
