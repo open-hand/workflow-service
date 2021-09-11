@@ -87,11 +87,6 @@ choerodon:
       enabled: true # 启用任务调度消费端
       thread-num: 1 # 任务调度消费线程数
       poll-interval-ms: 1000 # 拉取间隔，默认1000毫秒
-  executor:
-    core-pool-size: ${CHOERODON_EXECUTOR_CORE_POOL_SIZE:8}
-    max-pool-size: ${CHOERODON_EXECUTOR_MAX_POOL_SIZE:20}
-    queue-capacity: ${CHOERODON_EXECUTOR_QUEUE_CAPACITY:50}
-    keep-alive-seconds: ${CHOERODON_EXECUTOR_KEEP_ALIVE_SECONDS:60}
 hzero:
   service:
     platform:
