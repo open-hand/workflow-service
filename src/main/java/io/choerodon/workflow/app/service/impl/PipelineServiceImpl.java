@@ -49,17 +49,16 @@ public class PipelineServiceImpl implements PipelineService {
     @Saga(code = "cicd-workflow-pipeline",
             description = "创建cicd流水线创建流程实例", inputSchema = "{}")
     public void beginDevopsPipelineSagaCiCd(DevopsPipelineVO devopsPipelineVO) {
-//        String refId = devopsPipelineVO.getPipelineId() == null ? "1" : devopsPipelineVO.getPipelineId().toString();
-        processInstanceService.beginDevopsPipelineCiCd(devopsPipelineVO);
-//        producer.apply(
-//                StartSagaBuilder
-//                        .newBuilder()
-//                        .withLevel(ResourceLevel.SITE)
-//                        .withRefType("workflow")
-//                        .withSagaCode("cicd-workflow-pipeline"),
-//                builder -> builder
-//                        .withPayloadAndSerialize(devopsPipelineVO)
-//                        .withRefId(refId));
+        String refId = devopsPipelineVO.getPipelineId() == null ? "1" : devopsPipelineVO.getPipelineId().toString();
+        producer.apply(
+                StartSagaBuilder
+                        .newBuilder()
+                        .withLevel(ResourceLevel.SITE)
+                        .withRefType("workflow")
+                        .withSagaCode("cicd-workflow-pipeline"),
+                builder -> builder
+                        .withPayloadAndSerialize(devopsPipelineVO)
+                        .withRefId(refId));
     }
 
     @Override
