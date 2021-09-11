@@ -46,11 +46,12 @@ public abstract class AbstractProcessEngineAutoConfiguration extends AbstractPro
     @Bean
     public SpringAsyncExecutor springAsyncExecutor(SpringRejectedJobsHandler springRejectedJobsHandler) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setThreadNamePrefix("c7n-pipeline-");
+        executor.initialize();
         executor.setCorePoolSize(this.corePoolSize);
         executor.setMaxPoolSize(this.maxPoolSize);
         executor.setQueueCapacity(this.queueCapacity);
         executor.setKeepAliveSeconds(this.keepAliveSeconds);
-        executor.setThreadNamePrefix("c7n-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
         return new SpringAsyncExecutor(executor, springRejectedJobsHandler);
     }
