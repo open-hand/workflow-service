@@ -25,14 +25,6 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 public class ActivitiInitBeanConfig {
 
-    @Value("${choerodon.executor.core-pool-size}")
-    private int corePoolSize;
-    @Value("${choerodon.executor.max-pool-size}")
-    private int maxPoolSize;
-    @Value("${choerodon.executor.queue-capacity}")
-    private int queueCapacity;
-    @Value("${choerodon.executor.keep-alive-seconds}")
-    private int keepAliveSeconds;
 
     private Logger logger = LoggerFactory.getLogger(ActivitiInitBeanConfig.class);
 
@@ -65,17 +57,5 @@ public class ActivitiInitBeanConfig {
                 logger.info(taskCompleted.getEntity().getAssignee() + " 审批:" + taskCompleted.getEntity().getName() + ":完成");
     }
 
-    @Bean
-    @Primary
-    public SpringAsyncExecutor springAsyncExecutor(SpringRejectedJobsHandler springRejectedJobsHandler) {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(this.corePoolSize);
-        executor.setMaxPoolSize(this.maxPoolSize);
-        executor.setQueueCapacity(this.queueCapacity);
-        executor.setKeepAliveSeconds(this.keepAliveSeconds);
-        executor.setThreadNamePrefix("c7n-");
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        return new SpringAsyncExecutor(executor, springRejectedJobsHandler);
-    }
 
 }
