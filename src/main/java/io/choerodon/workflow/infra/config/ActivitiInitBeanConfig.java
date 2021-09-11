@@ -5,10 +5,15 @@ import org.activiti.api.process.runtime.events.listener.ProcessRuntimeEventListe
 import org.activiti.api.task.runtime.events.TaskAssignedEvent;
 import org.activiti.api.task.runtime.events.TaskCompletedEvent;
 import org.activiti.api.task.runtime.events.listener.TaskRuntimeEventListener;
+import org.activiti.spring.SpringAsyncExecutor;
+import org.activiti.spring.SpringRejectedJobsHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +24,15 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
  */
 @Configuration
 public class ActivitiInitBeanConfig {
+
+    @Value("${choerodon.executor.core-pool-size}")
+    private int corePoolSize;
+    @Value("${choerodon.executor.max-pool-size}")
+    private int maxPoolSize;
+    @Value("${choerodon.executor.queue-capacity}")
+    private int queueCapacity;
+    @Value("${choerodon.executor.keep-alive-seconds}")
+    private int keepAliveSeconds;
 
     private Logger logger = LoggerFactory.getLogger(ActivitiInitBeanConfig.class);
 
@@ -50,4 +64,18 @@ public class ActivitiInitBeanConfig {
         return taskCompleted ->
                 logger.info(taskCompleted.getEntity().getAssignee() + " 审批:" + taskCompleted.getEntity().getName() + ":完成");
     }
+
+    @Bean
+    @Primary
+    public SpringAsyncExecutor springAsyncExecutor(SpringRejectedJobsHandler springRejectedJobsHandler) {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(this.corePoolSize);
+        executor.setMaxPoolSize(this.maxPoolSize);
+        executor.setQueueCapacity(this.queueCapacity);
+        executor.setKeepAliveSeconds(this.keepAliveSeconds);
+        executor.setThreadNamePrefix("c7n-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        return new SpringAsyncExecutor(executor, springRejectedJobsHandler);
+    }
+
 }
