@@ -1,5 +1,7 @@
 package io.choerodon.workflow.infra.config;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 import org.activiti.api.process.runtime.events.ProcessCompletedEvent;
 import org.activiti.api.process.runtime.events.listener.ProcessRuntimeEventListener;
 import org.activiti.api.task.runtime.events.TaskAssignedEvent;
@@ -72,6 +74,7 @@ public class ActivitiInitBeanConfig {
         executor.setKeepAliveSeconds(this.keepAliveSeconds);
         executor.setThreadNamePrefix("c7n-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;
     }
