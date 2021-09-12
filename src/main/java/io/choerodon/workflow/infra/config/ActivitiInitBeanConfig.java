@@ -65,8 +65,8 @@ public class ActivitiInitBeanConfig {
                 logger.info(taskCompleted.getEntity().getAssignee() + " 审批:" + taskCompleted.getEntity().getName() + ":完成");
     }
 
-    @Bean(name = "activityExecutor")
-    public TaskExecutor activityExecutor() {
+    @Bean(name = "applicationTaskExecutor")
+    public TaskExecutor applicationTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(this.corePoolSize);
         executor.setMaxPoolSize(this.maxPoolSize);
