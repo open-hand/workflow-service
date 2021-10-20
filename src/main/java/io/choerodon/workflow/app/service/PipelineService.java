@@ -23,5 +23,5 @@ public interface PipelineService {
      */
     void beginDevopsPipelineSagaCiCd(DevopsPipelineVO devopsPipelineVO);
 
-    void createHzeroPipeline(HzeroDeployPipelineVO hzeroDeployPipelineVO);
+    void createHzeroPipeline(Long projectId, HzeroDeployPipelineVO hzeroDeployPipelineVO);
 }
