@@ -352,6 +352,7 @@ public class DevopsPipelineBpmnHandler {
             devopsPipelineStageVO.setStageName(subProcess.getName());
         }
         process.addFlowElement(lastStageToEndProcess);
+        process.setName(devopsPipelineDTO.getPipelineName() + "-" + devopsPipelineDTO.getPipelineRecordId());
         model.addProcess(process);
 
         //自动布局
