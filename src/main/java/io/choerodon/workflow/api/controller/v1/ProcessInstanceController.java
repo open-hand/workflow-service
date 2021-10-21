@@ -123,7 +123,7 @@ public class ProcessInstanceController {
             @PathVariable(value = "project_id") Long projectId,
             @ApiParam(value = "应用信息", required = true)
             @RequestBody HzeroDeployPipelineVO hzeroDeployPipelineVO) {
-        pipelineService.createHzeroPipeline(hzeroDeployPipelineVO);
+        pipelineService.createHzeroPipeline(projectId, hzeroDeployPipelineVO);
         return ResponseEntity.noContent().build();
     }
 }

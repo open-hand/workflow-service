@@ -64,16 +64,16 @@ public class PipelineServiceImpl implements PipelineService {
     @Override
     @Saga(code = SagaConstants.HZERO_DEPLOY_PIPELINE,
             description = "创建hzero部署流水线", inputSchema = "{}")
-    public void createHzeroPipeline(HzeroDeployPipelineVO hzeroDeployPipelineVO) {
+    public void createHzeroPipeline(Long projectId, HzeroDeployPipelineVO hzeroDeployPipelineVO) {
         producer.apply(
                 StartSagaBuilder
                         .newBuilder()
-                        .withLevel(ResourceLevel.SITE)
+                        .withLevel(ResourceLevel.PROJECT)
                         .withRefType("workflow")
                         .withSagaCode(SagaConstants.HZERO_DEPLOY_PIPELINE),
                 builder -> builder
                         .withPayloadAndSerialize(hzeroDeployPipelineVO)
-                        .withRefId("1"));
+                        .withRefId(String.valueOf(projectId)));
     }
 
 }
