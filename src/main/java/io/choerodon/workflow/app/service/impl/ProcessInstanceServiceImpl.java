@@ -106,7 +106,6 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
                 .createDeployment()
                 .addBpmnModel(filePath, model)
                 .name("cicdPipeline-" + devopsPipelineVO.getPipelineName())
-                .key(devopsPipelineVO.getPipelineName() + "-" + devopsPipelineVO.getPipelineRecordId())
                 .deploy();
 
         org.activiti.engine.repository.ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
