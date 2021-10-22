@@ -207,8 +207,8 @@ public class DevopsPipelineBpmnHandler {
             process.addFlowElement(startProcessToFirstStage);
         }
 
-        process.setId(PROCESS);
-        process.setName(PROCESS);
+        process.setId(devopsPipelineDTO.getPipelineName() + "-" + devopsPipelineDTO.getPipelineRecordId());
+        process.setName(devopsPipelineDTO.getPipelineName() + "-" + devopsPipelineDTO.getPipelineRecordId());
         process.addFlowElement(startProcess);
         process.addFlowElement(endProcess);
 
@@ -352,7 +352,6 @@ public class DevopsPipelineBpmnHandler {
             devopsPipelineStageVO.setStageName(subProcess.getName());
         }
         process.addFlowElement(lastStageToEndProcess);
-        process.setName(devopsPipelineDTO.getPipelineName() + "-" + devopsPipelineDTO.getPipelineRecordId());
         model.addProcess(process);
 
         //自动布局
@@ -418,8 +417,8 @@ public class DevopsPipelineBpmnHandler {
         StartEvent startProcess = dynamicWorkflowUtil.createStartEvent(START_PROCESS);
         EndEvent endProcess = dynamicWorkflowUtil.createEndEvent(END_PROCESS);
         Process process = new Process();
-        process.setId(PROCESS);
-        process.setName(PROCESS);
+        process.setId("hzero-deploy-" + hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().get(0).getDeployRecordId());
+        process.setName("hzero-deploy-" + hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().get(0).getDeployRecordId());
 
 
 
@@ -468,7 +467,7 @@ public class DevopsPipelineBpmnHandler {
         process.addFlowElement(subProcess);
         process.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(subProcess.getId(), endProcess.getId()));
         process.addFlowElement(endProcess);
-        process.setName("hzero-deploy-" + hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().get(0).getDeployRecordId());
+
         model.addProcess(process);
         //自动布局
         new BpmnAutoLayout(model).execute();
