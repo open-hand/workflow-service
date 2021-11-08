@@ -207,8 +207,8 @@ public class DevopsPipelineBpmnHandler {
             process.addFlowElement(startProcessToFirstStage);
         }
 
-        process.setId(devopsPipelineDTO.getPipelineName() + "-" + devopsPipelineDTO.getPipelineRecordId());
-        process.setName(devopsPipelineDTO.getPipelineName() + "-" + devopsPipelineDTO.getPipelineRecordId());
+        process.setId(PROCESS + "-" + devopsPipelineDTO.getPipelineRecordId());
+        process.setName(PROCESS + "-" + devopsPipelineDTO.getPipelineRecordId());
         process.addFlowElement(startProcess);
         process.addFlowElement(endProcess);
 
