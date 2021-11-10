@@ -8,37 +8,34 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import io.choerodon.core.exception.CommonException;
-import io.choerodon.workflow.infra.enums.JobStatusEnum;
 import io.choerodon.workflow.infra.feginoperator.DevopsServiceRepository;
 
 /**
- * @author scp
- * @date 2020/7/3
- * @description
+ * 〈功能简述〉
+ * 〈〉
+ *
+ * @author wanghao
+ * @since 2021/7/28 14:59
  */
 @Component
-public class DevopsCdHostDelegate implements JavaDelegate {
+public class DevopsHzeroDeployDelegate implements JavaDelegate {
 
     @Autowired
     DevopsServiceRepository devopsServiceRepository;
     @Autowired
     ProcessRuntime processRuntime;
 
-    private Logger logger = LoggerFactory.getLogger(DevopsCdHostDelegate.class);
+    private Logger logger = LoggerFactory.getLogger(DevopsHzeroDeployDelegate.class);
 
     @Override
     public void execute(DelegateExecution delegateExecution) {
         // 1.
         String[] ids = delegateExecution.getCurrentActivityId().split("\\.");
-        Long pipelineRecordId = Long.parseLong(ids[1]);
-        Long stageRecordId = Long.parseLong(ids[2]);
-        Long taskRecordId = Long.parseLong(ids[3]);
+        Long detailsRecordId = Long.parseLong(ids[1]);
         logger.info(String.format("ServiceTask:%s 开始", delegateExecution.getCurrentActivityId()));
 
         // 2.
-        devopsServiceRepository.cdHostDeploy(pipelineRecordId, stageRecordId, taskRecordId);
+        devopsServiceRepository.hzeroDeploy(detailsRecordId);
 
     }
 }
-

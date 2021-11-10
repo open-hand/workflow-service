@@ -2,13 +2,14 @@ package io.choerodon.workflow.infra.bpmnhandler;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.choerodon.core.exception.CommonException;
-import io.choerodon.workflow.api.vo.DevopsPipelineVO;
-import io.choerodon.workflow.api.vo.DevopsPipelineStageVO;
-import io.choerodon.workflow.api.vo.DevopsPipelineTaskVO;
+import io.choerodon.workflow.api.vo.*;
 import io.choerodon.workflow.infra.constant.PipelineConstants;
 import io.choerodon.workflow.infra.enums.JobTypeEnum;
 import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
@@ -206,8 +207,8 @@ public class DevopsPipelineBpmnHandler {
             process.addFlowElement(startProcessToFirstStage);
         }
 
-        process.setId(PROCESS);
-        process.setName(PROCESS);
+        process.setId(PROCESS + "-" + devopsPipelineDTO.getPipelineRecordId());
+        process.setName(PROCESS + "-" + devopsPipelineDTO.getPipelineRecordId());
         process.addFlowElement(startProcess);
         process.addFlowElement(endProcess);
 
@@ -243,8 +244,9 @@ public class DevopsPipelineBpmnHandler {
                         subProcess.addFlowElement(userTask);
                         params.put(userTask.getName(), devopsPipelineTaskVO.getUsernames());
                         devopsPipelineTaskVO.setTaskName(userTask.getName());
-                    } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_DEPLOY.value())) {
-                        String taskName = JobTypeEnum.CD_DEPLOY.value() + pipelineInfo;
+                    } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_DEPLOY.value()) ||
+                            devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_DEPLOYMENT.value())) {
+                        String taskName = devopsPipelineTaskVO.getTaskType() + pipelineInfo;
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdDeployDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
@@ -253,14 +255,23 @@ public class DevopsPipelineBpmnHandler {
                         subProcess.addFlowElement(serviceTask);
                         devopsPipelineTaskVO.setTaskName(serviceTask.getName());
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_HOST.value())) {
+
                         String taskName = JobTypeEnum.CD_HOST.value() + pipelineInfo;
                         ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
                         serviceTask.setImplementation("${devopsCdHostDelegate}");
                         serviceTask.setImplementationType(DELEGATE_EXPRESSION);
-                        SequenceFlow sequenceFlow = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
-                        subProcess.addFlowElement(sequenceFlow);
+
+                        UserTask userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + j, USER_TASK + "." + devopsPipelineStageVO.getStageRecordId() + "." + devopsPipelineTaskVO.getTaskRecordId(), DEFAULT_AUDIT_USER);
+
+                        SequenceFlow sequenceFlow1 = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
+                        subProcess.addFlowElement(sequenceFlow1);
                         subProcess.addFlowElement(serviceTask);
-                        devopsPipelineTaskVO.setTaskName(serviceTask.getName());
+
+                        SequenceFlow sequenceFlow2 = dynamicWorkflowUtil.createSequenceFlow(serviceTask.getId(), userTask.getId());
+                        subProcess.addFlowElement(sequenceFlow2);
+                        subProcess.addFlowElement(userTask);
+                        params.put(userTask.getName(), DEFAULT_AUDIT_USER);
+
                     } else if (devopsPipelineTaskVO.getTaskType().equals(JobTypeEnum.CD_API_TEST.value())) {
                         String deployJobName = devopsPipelineTaskVO.getDeployJobName() != null ? devopsPipelineTaskVO.getDeployJobName() : PipelineConstants.NOT_WAIT_DEPLOY_JOB;
                         String taskName = JobTypeEnum.CD_API_TEST.value() + pipelineInfo + "." + deployJobName;
@@ -395,5 +406,71 @@ public class DevopsPipelineBpmnHandler {
             a++;
         }
         return null;
+    }
+
+    public static BpmnModel initHzeroDeployPipelineBpmn(HzeroDeployPipelineVO hzeroDeployPipelineVO, Map<String, Object> params) {
+        // 实例化BpmnModel对象
+        BpmnModel model = new BpmnModel();
+
+        DynamicWorkflowUtil dynamicWorkflowUtil = new DynamicWorkflowUtil();
+        //生成主流程节点
+        StartEvent startProcess = dynamicWorkflowUtil.createStartEvent(START_PROCESS);
+        EndEvent endProcess = dynamicWorkflowUtil.createEndEvent(END_PROCESS);
+        Process process = new Process();
+        process.setId("hzero-deploy-" + hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().get(0).getDeployRecordId());
+        process.setName("hzero-deploy-" + hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().get(0).getDeployRecordId());
+
+
+
+        SubProcess subProcess = new SubProcess();
+        subProcess.setId(ADHOC_SUB_PROCESS);
+        subProcess.setName(ADHOC_SUB_PROCESS);
+
+        StartEvent subProcessStart = dynamicWorkflowUtil.createStartEvent(SUB_START_PROCESS);
+        EndEvent subProcessEnd = dynamicWorkflowUtil.createEndEvent(END_START_PROCESS);
+
+
+
+        subProcess.addFlowElement(subProcessStart);
+        // 排序
+        List<DevopsHzeroDeployDetailsDTO> sortedDetailList = hzeroDeployPipelineVO
+                .getDevopsHzeroDeployDetailsDTOList()
+                .stream()
+                .sorted(Comparator.comparingLong(DevopsHzeroDeployDetailsDTO::getSequence))
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < sortedDetailList.size(); i++) {
+            DevopsHzeroDeployDetailsDTO devopsHzeroDeployDetailsDTO = sortedDetailList.get(i);
+            String instanceInfo = "." + devopsHzeroDeployDetailsDTO.getId();
+            String taskName = JobTypeEnum.HZERO_DEPLOY.value() + instanceInfo;
+            ServiceTask serviceTask = dynamicWorkflowUtil.createServiceTask(subProcess.getId() + "-" + taskName, taskName);
+            serviceTask.setImplementation("${devopsHzeroDeployDelegate}");
+            serviceTask.setImplementationType(DELEGATE_EXPRESSION);
+
+            UserTask userTask = dynamicWorkflowUtil.createUserTask(subProcess.getId() + "-" + USER_TASK + i, USER_TASK + instanceInfo, DEFAULT_AUDIT_USER);
+
+            SequenceFlow sequenceFlow1 = dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), serviceTask.getId());
+            subProcess.addFlowElement(sequenceFlow1);
+            subProcess.addFlowElement(serviceTask);
+
+            SequenceFlow sequenceFlow2 = dynamicWorkflowUtil.createSequenceFlow(serviceTask.getId(), userTask.getId());
+            subProcess.addFlowElement(sequenceFlow2);
+            subProcess.addFlowElement(userTask);
+            params.put(userTask.getName(), DEFAULT_AUDIT_USER);
+
+        }
+        subProcess.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(getLastFlowElement(subProcess).getId(), subProcessEnd.getId()));
+        subProcess.addFlowElement(subProcessEnd);
+
+        process.addFlowElement(startProcess);
+        process.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(startProcess.getId(), subProcess.getId()));
+        process.addFlowElement(subProcess);
+        process.addFlowElement(dynamicWorkflowUtil.createSequenceFlow(subProcess.getId(), endProcess.getId()));
+        process.addFlowElement(endProcess);
+
+        model.addProcess(process);
+        //自动布局
+        new BpmnAutoLayout(model).execute();
+        return model;
     }
 }

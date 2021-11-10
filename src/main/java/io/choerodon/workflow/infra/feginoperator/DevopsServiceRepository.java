@@ -27,5 +27,7 @@ public interface DevopsServiceRepository {
 
     void executeExternalApproval(Long cdPipelineRecordId, Long cdStageRecordId, Long cdJobRecordId);
 
+    void hzeroDeploy(Long detailsId);
+
 //    void setExternalApprovalTaskStatus(Long pipelineRecordId, Long stageRecordId, Long taskRecordId, boolean execReslut);
 }

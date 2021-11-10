@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.swagger.annotation.Permission;
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
+import io.choerodon.workflow.api.vo.HzeroDeployPipelineVO;
 import io.choerodon.workflow.app.service.PipelineService;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
 
@@ -105,6 +106,24 @@ public class ProcessInstanceController {
             @ApiParam(value = "应用信息", required = true)
             @RequestBody DevopsPipelineVO devopsPipelineVO) {
         pipelineService.beginDevopsPipelineSagaCiCd(devopsPipelineVO);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * hzero部署流水线
+     * @param projectId
+     * @param hzeroDeployPipelineVO
+     * @return
+     */
+    @Permission(permissionWithin = true)
+    @ApiOperation(value = "hzero部署流水线")
+    @PostMapping("/hzero_pipeline")
+    public ResponseEntity<Void> createHzeroPipeline(
+            @ApiParam(value = "项目id", required = true)
+            @PathVariable(value = "project_id") Long projectId,
+            @ApiParam(value = "应用信息", required = true)
+            @RequestBody HzeroDeployPipelineVO hzeroDeployPipelineVO) {
+        pipelineService.createHzeroPipeline(projectId, hzeroDeployPipelineVO);
         return ResponseEntity.noContent().build();
     }
 }

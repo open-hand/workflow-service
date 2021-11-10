@@ -1,7 +1,7 @@
 {
   "name": "@choerodon/workflow",
   "routeName": "workflow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": " ",
   "main": "./lib/index.js",
   "files": [
@@ -12,10 +12,10 @@
     "file-saver": "^2.0.2"
   },
   "devDependencies": {
-    "@choerodon/agile": "1.0.0",
-    "@choerodon/boot": "0.23.2",
+    "@choerodon/agile": "1.1.0",
+    "@choerodon/boot": "0.23.3",
     "@choerodon/compiler": "^0.0.1",
-    "@choerodon/master": "1.0.0",
+    "@choerodon/master": "1.1.0",
     "@types/classnames": "^2.2.10",
     "@types/lodash": "^4.14.165",
     "@types/react": "^16.9.35",

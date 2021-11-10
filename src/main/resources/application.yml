@@ -87,6 +87,12 @@ choerodon:
       enabled: true # 启用任务调度消费端
       thread-num: 1 # 任务调度消费线程数
       poll-interval-ms: 1000 # 拉取间隔，默认1000毫秒
+  # 工作流线程池配置
+  executor:
+    core-pool-size: ${CHOERODON_EXECUTOR_CORE_POOL_SIZE:8}
+    max-pool-size: ${CHOERODON_EXECUTOR_MAX_POOL_SIZE:20}
+    queue-capacity: ${CHOERODON_EXECUTOR_QUEUE_CAPACITY:50}
+    keep-alive-seconds: ${CHOERODON_EXECUTOR_KEEP_ALIVE_SECONDS:60}
 hzero:
   service:
     platform:
@@ -160,7 +166,7 @@ eureka:
     leaseExpirationDurationInSeconds: 3
     # 服务的一些元数据信息
     metadata-map:
-      VERSION: 1.0.0
+      VERSION: 1.1.0
   client:
     serviceUrl:
       defaultZone: http://localhost:8000/eureka/
@@ -200,8 +206,8 @@ ribbon:
   MaxAutoRetriesNextServer: 1
 logging:
   level:
-    io.choerodon.event.consumer: debug
-    com.zaxxer: debug
-    org.apache.ibatis: debug
-    io.choerodon: debug
-    org.hzero: debug
+    io.choerodon.event.consumer: ${LOG_LEVEL:info}
+    com.zaxxer: ${LOG_LEVEL:info}
+    org.apache.ibatis: ${LOG_LEVEL:info}
+    io.choerodon: ${LOG_LEVEL:info}
+    org.hzero: ${LOG_LEVEL:info}
