@@ -64,8 +64,9 @@ public class C7nProcessEngineAutoConfiguration extends AbstractProcessEngineAuto
         if (springAsyncExecutor != null) {
             conf.setAsyncExecutor(springAsyncExecutor);
         }
-        // 设置缓存数为2， 避免OOM
-        conf.setProcessDefinitionCacheLimit(2);
+        // 设置缓存数为5， 避免OOM
+        conf.setProcessDefinitionCacheLimit(5);
+        conf.setKnowledgeBaseCacheLimit(5);
 
         conf.setDeploymentName(activitiProperties.getDeploymentName());
         conf.setDatabaseSchema(activitiProperties.getDatabaseSchema());
