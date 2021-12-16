@@ -1,7 +1,7 @@
 {
   "name": "@choerodon/workflow",
   "routeName": "workflow",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": " ",
   "main": "./lib/index.js",
   "files": [
@@ -9,8 +9,9 @@
   ],
   "dependencies": {
     "gg-editor2": "^2.0.42",
-    "file-saver": "^2.0.2"
-  },
+    "file-saver": "^2.0.2",
+    "@antv/g6": "^2.2.6"
+ },
   "devDependencies": {
     "@choerodon/agile": "1.1.0",
     "@choerodon/boot": "0.0.0-webpack5",
