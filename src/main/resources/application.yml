@@ -95,6 +95,7 @@ choerodon:
     keep-alive-seconds: ${CHOERODON_EXECUTOR_KEEP_ALIVE_SECONDS:60}
 hzero:
   service:
+    bucket-name: iam-service
     platform:
       name: choerodon-platform
     oauth:
