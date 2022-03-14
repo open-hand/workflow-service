@@ -29,6 +29,7 @@ import io.choerodon.asgard.saga.producer.TransactionalProducer;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 import io.choerodon.workflow.api.vo.HzeroDeployPipelineVO;
+import io.choerodon.workflow.app.eventhandler.WorkFlowSagaHandler;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
 import io.choerodon.workflow.infra.bpmnhandler.DevopsPipelineBpmnHandler;
 import io.choerodon.workflow.infra.feginoperator.DevopsServiceRepository;
@@ -41,8 +42,7 @@ import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
 @Service
 public class ProcessInstanceServiceImpl implements ProcessInstanceService {
 
-
-    private Gson gson = new Gson();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProcessInstanceServiceImpl.class);
 
     @Autowired
     DevopsServiceRepository devopsServiceRepository;
@@ -112,13 +112,18 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
                 .deploymentId(deployment.getId()).singleResult();
 
         logger.info(String.format("%s:%s 流程开始执行！", devopsPipelineVO.getPipelineName(), devopsPipelineVO.getPipelineRecordId()));
-        processRuntime.start(ProcessPayloadBuilder
-                .start()
-                .withProcessDefinitionKey(processDefinition.getKey())
-                .withName(devopsPipelineVO.getPipelineName())
-                .withBusinessKey(devopsPipelineVO.getBusinessKey())
-                .withVariables(params)
-                .build());
+        try {
+            processRuntime.start(ProcessPayloadBuilder
+                    .start()
+                    .withProcessDefinitionKey(processDefinition.getKey())
+                    .withName(devopsPipelineVO.getPipelineName())
+                    .withBusinessKey(devopsPipelineVO.getBusinessKey())
+                    .withVariables(params)
+                    .build());
+        } catch (Exception e) {
+            LOGGER.error("start process failed.", e);
+        }
+
     }
 
 
