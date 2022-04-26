@@ -48,6 +48,7 @@ spec:
           -Dinstaller.datasources.message.username={{ .Values.preJob.preInitDB.datasources.message.username }}
           -Dinstaller.datasources.message.password={{ .Values.preJob.preInitDB.datasources.message.password }}
           -Dinstaller.datasources.message.driver-class-name={{ .Values.preJob.preInitDB.datasources.message.driver }}
+          -Dinstaller.exclusion={{ .Values.preJob.preInitDB.exclusion }}
           -Dinstaller.jarPath=/choerodon/{{ .Chart.Name }}.jar
           -Dinstaller.skipFile={{ .Values.preJob.preInitDB.skipFile | default "" }}
           -Dlogging.level.root=info
