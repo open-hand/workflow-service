@@ -1,6 +1,6 @@
 # workflow-service
 
-Gateway of Choerodon.
+Workflow service of Choerodon.
 
 ## Installing the Chart
 

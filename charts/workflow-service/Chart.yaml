@@ -6,13 +6,13 @@ dependencies:
   - name: common
     repository: https://openchart.choerodon.com.cn/choerodon/c7n
     version: 1.x.x
-description: Gateway of Choerodon.
+description: Workflow service of Choerodon.
 engine: gotpl
 home: https://github.com/open-hand/workflow-service/tree/master/chart/workflow-service
 icon: https://ui-avatars.com/api/?name=workflow-service
 keywords:
   - choerodon
-  - gateway
+  - workflow
 maintainers:
   - email: zhuchiyu@vip.hand-china.com
     name: choerodon
