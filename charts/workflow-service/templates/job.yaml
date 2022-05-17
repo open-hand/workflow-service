@@ -82,7 +82,7 @@ spec:
               -Dinstaller.datasources.message.driver-class-name={{ .Values.initDatabases.datasources.message.driver }}
               -Dinstaller.skipFile={{ .Values.initDatabases.skipFile | default "" }}
               -Dinstaller.jarPath=/opt/choerodon/{{ .Chart.Name }}.jar
-              -Dinstaller.jarPath.init=false \
+              -Dinstaller.jarPath.init=false
               -Dinstaller.mapping=script/db/service-mapping.xml
               -jar /opt/choerodon/choerodon-tool-liquibase.jar;
           volumeMounts:
