@@ -252,4 +252,13 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
             @PathVariable("organization_id") Long tenantId){
         return Results.success(organizationWorkflowC7NService.checkInit(tenantId));
     }
+
+    @ApiOperation("增量导入新定义的审批人规则流程变量等")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping({"/def_workflow/reimport"})
+    public ResponseEntity<Boolean> reimportWorkflow(@PathVariable("organization_id") Long tenantId) {
+        organizationWorkflowC7NService.reimportWorkflow(tenantId);
+        return Results.success();
+    }
+
 }
