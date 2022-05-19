@@ -20,12 +20,12 @@ const Config = () => {
     window.open(`${HZERO_FRONT}/hwkf#access_token=${accessToken}&token_type=${tokenType}`);
   }, []);
   const {
-    data: inited = true, refresh,
+    data: inited = true, refresh, loading,
   } = useRequest(() => workFlowApi.checkInit());
   const handleInitClick = useCallback(() => {
     const modalConfig = inited ? {
       title: '更新预置需求审核流程模板',
-      children: '确认更新预置需求审核流程模板？系统将把最新的系统预置需求审核模板增量更新到您已导入的需求审核工作流模板，以便于您获取最新的字体预置审核变量和审批人规则。',
+      children: '确认更新预置需求审核工作流模板？系统将把最新的系统预置需求审核模板增量更新到您已导入的需求审核工作流模板，以便于您获取最新的预置审核变量和审批人规则。',
       prompt: '更新成功',
       request: () => workFlowApi.updateInit(),
     } : {
@@ -54,6 +54,7 @@ const Config = () => {
               name: `${inited ? '更新' : '导入'}预置流程模板`,
               icon: inited ? 'published_with_changes' : 'archive',
               display: true,
+              loading,
               handler: handleInitClick,
             },
           ]}
