@@ -7,8 +7,9 @@ import {
 import { getCookie } from '@choerodon/master/lib/utils';
 import Empty from '@choerodon/agile/lib/components/Empty';
 import { ButtonColor, FuncType } from 'choerodon-ui/pro/lib/button/enum';
-import { workFlowApi } from '@/api';
 import { useRequest } from 'ahooks';
+import { pick } from 'lodash';
+import { workFlowApi } from '@/api';
 import pic from './hzero.svg';
 
 const Config = () => {
@@ -22,34 +23,42 @@ const Config = () => {
     data: inited = true, refresh,
   } = useRequest(() => workFlowApi.checkInit());
   const handleInitClick = useCallback(() => {
-    Modal.open({
+    const modalConfig = inited ? {
+      title: '更新预置需求审核流程模板',
+      children: '确认更新预置需求审核流程模板？系统将把最新的系统预置需求审核模板增量更新到您已导入的需求审核工作流模板，以便于您获取最新的字体预置审核变量和审批人规则。',
+      prompt: '更新成功',
+      request: () => workFlowApi.updateInit(),
+    } : {
       title: '导入预置需求审核流程',
       children: '确认导入预置需求审核流程？导入后，系统将在组织预置一套需求审核流程分类和需求审核流程，您可以按需配置好审批人规则，并且发布流程后即可使用。',
+      prompt: '导入成功',
+      request: () => workFlowApi.init(),
+    };
+    Modal.open({
+      ...pick(modalConfig, ['title', 'children']),
       onOk: async () => {
-        await workFlowApi.init();
+        await modalConfig.request();
         await refresh();
-        Choerodon.prompt('导入成功');
+        Choerodon.prompt(modalConfig.prompt);
       },
     });
-  }, [refresh]);
+  }, [inited, refresh]);
 
   return (
     <Page>
-      {!inited && (
-        <Header>
-          <HeaderButtons
-            showClassName={false}
-            items={[
-              {
-                name: '导入预置流程模板',
-                icon: 'archive',
-                display: true,
-                handler: handleInitClick,
-              },
-            ]}
-          />
-        </Header>
-      )}
+      <Header>
+        <HeaderButtons
+          showClassName={false}
+          items={[
+            {
+              name: `${inited ? '更新' : '导入'}预置流程模板`,
+              icon: inited ? 'published_with_changes' : 'archive',
+              display: true,
+              handler: handleInitClick,
+            },
+          ]}
+        />
+      </Header>
       <Breadcrumb />
       <Content style={{ borderTop: '1px solid var(--divider)' }}>
 
