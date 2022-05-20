@@ -2,9 +2,9 @@ import React, { useEffect, useCallback, useMemo } from 'react';
 import {
   DataSet, Modal, Form, Select, TextArea, SelectBox,
 } from 'choerodon-ui/pro';
-import SelectEmployee from '@/components/select/select-employee';
 import { forEach } from 'lodash';
 import { observer } from 'mobx-react-lite';
+import SelectEmployee from '@/components/select/select-employee';
 import store from '../../store';
 import './index.less';
 
@@ -156,6 +156,7 @@ const openAddApproverModal = (props) => {
     title: '加签',
     children: <ObserverAddApproverModal {...props} />,
     border: false,
+    bodyStyle: { maxHeight: '60vh' },
   });
 };
 export default openAddApproverModal;
