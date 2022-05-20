@@ -42,7 +42,6 @@ const ProcessDetail:React.FC = () => {
         dataSet={dataSet}
         labelLayout={'horizontal' as LabelLayout}
         labelWidth={102}
-        useColon
         labelAlign={'left' as LabelAlignType}
       >
         <Output name="flowName" />

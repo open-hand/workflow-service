@@ -44,7 +44,6 @@ const Detail: React.FC<DetailProps> = ({ data }) => {
         dataSet={dataSet}
         labelLayout={'horizontal' as LabelLayout}
         labelWidth={102}
-        useColon
         labelAlign={'left' as LabelAlignType}
       >
         <Output name="flowName" />
