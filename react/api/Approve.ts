@@ -272,7 +272,7 @@ class ApproveApi extends Api<ApproveApi> {
         page,
         size,
         selfUserId,
-        employeeName: empName,
+        realName: empName,
       },
     });
   }
