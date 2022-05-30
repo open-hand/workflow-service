@@ -13,6 +13,13 @@ class WorkFlowApi extends Api<WorkFlowApi> {
     });
   }
 
+  updateInit() {
+    return this.request({
+      method: 'get',
+      url: `${this.prefix}/def_workflow/reimport`,
+    });
+  }
+
   checkInit(): Promise<boolean> {
     return axios({
       method: 'get',

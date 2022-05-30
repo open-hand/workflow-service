@@ -18,4 +18,11 @@ public interface OrganizationWorkflowC7nService {
      * @return 是否初始化组织层流程定义
      */
     Boolean checkInit(Long tenantId);
+
+    /**
+     * 兼容已初始化的工作流，重新导入新的审批人规则流程变量等
+     *
+     * @param tenantId
+     */
+    void reimportWorkflow(Long tenantId);
 }
