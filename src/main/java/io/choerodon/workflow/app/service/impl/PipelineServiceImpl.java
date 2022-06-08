@@ -12,9 +12,6 @@ import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 import io.choerodon.workflow.app.service.PipelineService;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 /**
  * Created by Sheep on 2019/5/16.
  */
@@ -59,7 +56,7 @@ public class PipelineServiceImpl implements PipelineService {
                         .withSagaCode("cicd-workflow-pipeline"),
                 builder -> builder
                         .withPayloadAndSerialize(devopsPipelineVO)
-                        .withRefId("1"));
+                        .withRefId(refId));
     }
 
 }
