@@ -94,7 +94,6 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
 
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void beginDevopsPipelineCiCd(DevopsPipelineVO devopsPipelineVO) {
 
         Map<String, Object> params = new HashMap<>();

@@ -55,11 +55,7 @@ public class WorkFlowSagaHandler {
             seq = 1)
     public String workflowCreatePipelineCiCd(String data) {
         DevopsPipelineVO devopsPipelineDTO = gson.fromJson(data, DevopsPipelineVO.class);
-        try {
-            processInstanceService.beginDevopsPipelineCiCd(devopsPipelineDTO);
-        } catch (Exception e) {
-            LOGGER.error("begin devops pipeline failed", e);
-        }
+        processInstanceService.beginDevopsPipelineCiCd(devopsPipelineDTO);
         return data;
     }
 
