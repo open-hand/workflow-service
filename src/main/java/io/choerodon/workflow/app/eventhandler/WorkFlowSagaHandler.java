@@ -1,6 +1,11 @@
 package io.choerodon.workflow.app.eventhandler;
 
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import io.choerodon.asgard.saga.SagaDefinition;
 import io.choerodon.asgard.saga.annotation.SagaTask;
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
@@ -9,19 +14,14 @@ import io.choerodon.workflow.app.service.ProcessInstanceService;
 import io.choerodon.workflow.infra.constant.SagaConstants;
 import io.choerodon.workflow.infra.constant.SagaTaskConstants;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 /**
  * Created by Sheep on 2019/5/16.
  */
 
 @Component
 public class WorkFlowSagaHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkFlowSagaHandler.class);
 
     private Gson gson = new Gson();
 
@@ -55,7 +55,11 @@ public class WorkFlowSagaHandler {
             seq = 1)
     public String workflowCreatePipelineCiCd(String data) {
         DevopsPipelineVO devopsPipelineDTO = gson.fromJson(data, DevopsPipelineVO.class);
-        processInstanceService.beginDevopsPipelineCiCd(devopsPipelineDTO);
+        try {
+            processInstanceService.beginDevopsPipelineCiCd(devopsPipelineDTO);
+        } catch (Exception e) {
+            LOGGER.error("begin devops pipeline failed", e);
+        }
         return data;
     }
 

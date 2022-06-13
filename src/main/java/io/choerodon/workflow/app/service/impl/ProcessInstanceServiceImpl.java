@@ -115,17 +115,13 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
                 .deploymentId(deployment.getId()).singleResult();
 
         logger.info(String.format("%s:%s 流程开始执行！", devopsPipelineVO.getPipelineName(), devopsPipelineVO.getPipelineRecordId()));
-        try {
-            processRuntime.start(ProcessPayloadBuilder
-                    .start()
-                    .withProcessDefinitionKey(processDefinition.getKey())
-                    .withName(devopsPipelineVO.getPipelineName())
-                    .withBusinessKey(devopsPipelineVO.getBusinessKey())
-                    .withVariables(params)
-                    .build());
-        } catch (Exception e) {
-            LOGGER.error("start process failed.", e);
-        }
+        processRuntime.start(ProcessPayloadBuilder
+                .start()
+                .withProcessDefinitionKey(processDefinition.getKey())
+                .withName(devopsPipelineVO.getPipelineName())
+                .withBusinessKey(devopsPipelineVO.getBusinessKey())
+                .withVariables(params)
+                .build());
 
     }
 
