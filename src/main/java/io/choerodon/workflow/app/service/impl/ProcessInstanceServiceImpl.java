@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.google.gson.Gson;
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.model.payloads.DeleteProcessPayload;
@@ -23,15 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import io.choerodon.asgard.saga.feign.SagaClient;
-import io.choerodon.asgard.saga.producer.TransactionalProducer;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.workflow.api.vo.DevopsPipelineVO;
 import io.choerodon.workflow.api.vo.HzeroDeployPipelineVO;
-import io.choerodon.workflow.app.eventhandler.WorkFlowSagaHandler;
 import io.choerodon.workflow.app.service.ProcessInstanceService;
 import io.choerodon.workflow.infra.bpmnhandler.DevopsPipelineBpmnHandler;
 import io.choerodon.workflow.infra.feginoperator.DevopsServiceRepository;
@@ -44,11 +38,10 @@ import io.choerodon.workflow.infra.util.DynamicWorkflowUtil;
 @Service
 public class ProcessInstanceServiceImpl implements ProcessInstanceService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProcessInstanceServiceImpl.class);
+    private Logger LOGGER = LoggerFactory.getLogger(ProcessInstanceServiceImpl.class);
 
     @Autowired
     DevopsServiceRepository devopsServiceRepository;
-
     @Autowired
     ActivitiUserLoginUtil activitiUserLoginUtil;
     @Autowired
@@ -57,14 +50,6 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
     ProcessRuntime processRuntime;
     @Autowired
     TaskRuntime taskRuntime;
-    @Autowired
-    SagaClient sagaClient;
-    @Autowired
-    private TransactionalProducer producer;
-
-
-    private Logger logger = LoggerFactory.getLogger(ProcessInstanceServiceImpl.class);
-
 
     @Override
     public void beginDevopsPipeline(DevopsPipelineVO devopsPipelineVO) {
@@ -82,7 +67,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
                 .deploymentId(deployment.getId()).singleResult();
         String name = "部署CD流程";
 
-        logger.info(String.format("部署CD流程:%s  开始", devopsPipelineVO.getPipelineRecordId()));
+        LOGGER.info(String.format("部署CD流程:%s  开始", devopsPipelineVO.getPipelineRecordId()));
         processRuntime.start(ProcessPayloadBuilder
                 .start()
                 .withProcessDefinitionKey(processDefinition.getKey())
@@ -113,7 +98,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         org.activiti.engine.repository.ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .deploymentId(deployment.getId()).singleResult();
 
-        logger.info(String.format("%s:%s 流程开始执行！", devopsPipelineVO.getPipelineName(), devopsPipelineVO.getPipelineRecordId()));
+        LOGGER.info(String.format("%s:%s 流程开始执行！", devopsPipelineVO.getPipelineName(), devopsPipelineVO.getPipelineRecordId()));
         processRuntime.start(ProcessPayloadBuilder
                 .start()
                 .withProcessDefinitionKey(processDefinition.getKey())
@@ -168,7 +153,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         org.activiti.engine.repository.ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .deploymentId(deployment.getId()).singleResult();
 
-        logger.info(String.format("Hzero部署流程开始执行！recordId: {}!", hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().get(0).getDeployRecordId()));
+        LOGGER.info(String.format("Hzero部署流程开始执行！recordId: {}!", hzeroDeployPipelineVO.getDevopsHzeroDeployDetailsDTOList().get(0).getDeployRecordId()));
         processRuntime.start(ProcessPayloadBuilder
                 .start()
                 .withProcessDefinitionKey(processDefinition.getKey())
