@@ -49,7 +49,7 @@ public class C7nProcessEngineAutoConfiguration extends AbstractProcessEngineAuto
     private void configureProcessDefinitionResources(ProcessDefinitionResourceFinder processDefinitionResourceFinder, SpringProcessEngineConfiguration conf) throws IOException {
         List<Resource> procDefResources = processDefinitionResourceFinder.discoverProcessDefinitionResources();
         if (!procDefResources.isEmpty()) {
-            conf.setDeploymentResources((Resource[])procDefResources.toArray(new Resource[0]));
+            conf.setDeploymentResources(procDefResources.toArray(new Resource[0]));
         }
 
     }
@@ -105,11 +105,11 @@ public class C7nProcessEngineAutoConfiguration extends AbstractProcessEngineAuto
         }
 
         if (activitiProperties.getCustomMybatisXMLMappers() != null) {
-            conf.setCustomMybatisXMLMappers(new HashSet(activitiProperties.getCustomMybatisXMLMappers()));
+            conf.setCustomMybatisXMLMappers(new HashSet<>(activitiProperties.getCustomMybatisXMLMappers()));
         }
 
         if (activitiProperties.getCustomMybatisXMLMappers() != null) {
-            conf.setCustomMybatisXMLMappers(new HashSet(activitiProperties.getCustomMybatisXMLMappers()));
+            conf.setCustomMybatisXMLMappers(new HashSet<>(activitiProperties.getCustomMybatisXMLMappers()));
         }
 
         if (activitiProperties.isUseStrongUuids()) {

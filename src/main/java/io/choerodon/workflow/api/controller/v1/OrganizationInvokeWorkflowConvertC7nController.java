@@ -1,18 +1,29 @@
 package io.choerodon.workflow.api.controller.v1;
 
+import java.util.List;
+import java.util.Map;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.*;
+
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.choerodon.workflow.app.service.OrganizationWorkflowC7nService;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.starter.keyencrypt.core.Encrypt;
+import org.hzero.workflow.engine.model.node.FlowApproverValue;
 import org.hzero.workflow.engine.run.action.AppointNextNodeApproverActionHandler;
-import org.hzero.workflow.engine.run.dto.ProcessRebutNodeDTO;
+import org.hzero.workflow.engine.run.dto.ProcessJumpNodeDTO;
+import org.hzero.workflow.engine.util.EngineConstants;
 import org.hzero.workflow.monitor.api.dto.ProcessInstanceDTO;
 import org.hzero.workflow.monitor.app.service.MonitorProcessService;
 import org.hzero.workflow.personal.api.dto.DetailDTO;
@@ -22,17 +33,9 @@ import org.hzero.workflow.personal.app.service.RunCommentTemplateService;
 import org.hzero.workflow.personal.domain.entity.RunAttachment;
 import org.hzero.workflow.personal.domain.entity.RunCommentTemplate;
 import org.hzero.workflow.personal.domain.repository.RunCommentTemplateRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.List;
-import java.util.Map;
 
 /**
- * @author zhaotianxin
- * @date 2021-03-16 10:01
+ * @author zhaotianxin 2021-03-16 10:01
  */
 @RestController
 @RequestMapping(value = "/choerodon/v1/organizations/{organization_id}/organization_invoke_workflow")
@@ -58,20 +61,18 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @GetMapping("/run_comment_templates")
     public ResponseEntity<List<RunCommentTemplate>> commentTemplateList(@PathVariable("organization_id") Long organizationId,
                                                                         @ApiParam(name = "审批意见",value = "commentContent")
-                                                                        @RequestParam(required = false) String commentContent,
-                                                                        @ApiIgnore @RequestParam(value = "self",required = false) String self) {
-        return Results.success(this.runCommentTemplateService.commentTemplateList(organizationId, commentContent, self));
+                                                                        @RequestParam(required = false) String commentContent) {
+        return Results.success(this.runCommentTemplateService.commentTemplateList(organizationId, commentContent));
     }
 
     @ApiOperation("保存自定义审批意见")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping("/run_comment_templates")
     public ResponseEntity<List<RunCommentTemplate>> saveCommentTemplate(@PathVariable("organization_id") Long organizationId,
-                                                                        @RequestBody List<RunCommentTemplate> runCommentTemplates,
-                                                                        @ApiIgnore @RequestParam(value = "self",required = false) String self) {
-        this.validList(runCommentTemplates, new Class[0]);
+                                                                        @RequestBody List<RunCommentTemplate> runCommentTemplates) {
+        this.validList(runCommentTemplates);
         SecurityTokenHelper.validTokenIgnoreInsert(runCommentTemplates);
-        List<RunCommentTemplate> result = this.runCommentTemplateService.saveCommentTemplate(organizationId, runCommentTemplates, self);
+        List<RunCommentTemplate> result = this.runCommentTemplateService.saveCommentTemplate(organizationId, runCommentTemplates);
         return Results.success(result);
     }
 
@@ -82,7 +83,8 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
                                                                     @RequestBody RunCommentTemplate runCommentTemplate,
                                                                     @ApiParam(name = "启用1/禁用0",required = true)
                                                                     @RequestParam Integer enabledFlag) {
-        validObject(runCommentTemplate, new Class[0]);
+        Assert.notNull(organizationId, BaseConstants.ErrorCode.NOT_NULL);
+        validObject(runCommentTemplate);
         RunCommentTemplate result = this.runCommentTemplateService.enableCommentTemplate(organizationId, runCommentTemplate, enabledFlag);
         return Results.success(result);
     }
@@ -92,6 +94,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @DeleteMapping("/run_comment_templates")
     public ResponseEntity<Void> removeCommentTemplate(@PathVariable("organization_id") Long organizationId,
                                                       @RequestBody RunCommentTemplate runCommentTemplate) {
+        Assert.notNull(organizationId, BaseConstants.ErrorCode.NOT_NULL);
         SecurityTokenHelper.validToken(runCommentTemplate);
         runCommentTemplateRepository.deleteByPrimaryKey(runCommentTemplate);
         return Results.success();
@@ -103,7 +106,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @GetMapping({"/monitor_process/{instanceId}/diagram"})
     public ResponseEntity<ProcessInstanceDTO.ProcessInstanceDiagramDTO> getProcessInstanceDiagram(@PathVariable("organization_id") Long organizationId,
                                                                                                   @PathVariable("instanceId") @Encrypt Long instanceId) {
-        ProcessInstanceDTO.ProcessInstanceDiagramDTO diagramDTO = monitorProcessService.getProcessInstanceDiagram(organizationId, instanceId);
+        ProcessInstanceDTO.ProcessInstanceDiagramDTO diagramDTO = monitorProcessService.getProcessInstanceDiagram(organizationId, instanceId, null);
         return Results.success(diagramDTO);
     }
 
@@ -111,10 +114,9 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/approve"})
     public ResponseEntity<Void> flowApprove(@PathVariable("organization_id") Long organizationId,
-                                            @RequestParam("taskIds") @Encrypt List<Long> taskIds,
-                                            @RequestParam("comment") String comment,
-                                            @RequestParam(name = "assignee",required = false) String assignee) {
-        personalActionService.approve(organizationId, taskIds, comment, assignee);
+                                            @Encrypt @RequestParam(value = "taskIds", required = false) List<Long> taskIds,
+                                            @RequestBody(required = false) Map<String, Object> paramMap) {
+        personalActionService.batchProcess(organizationId, taskIds, EngineConstants.ApproveAction.APPROVED,false,null, paramMap);
         return Results.success();
     }
 
@@ -122,10 +124,10 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/reject"})
     public ResponseEntity<Void> flowReject(@PathVariable("organization_id") Long organizationId,
-                                           @RequestParam("taskIds") @Encrypt List<Long> taskIds,
-                                           @RequestParam("comment") String comment,
-                                           @RequestParam(name = "assignee",required = false) String assignee) {
-        personalActionService.reject(organizationId, taskIds, comment, assignee);
+                                           @Encrypt @RequestParam(value = "taskIds", required = false) List<Long> taskIds,
+                                           @RequestParam(required = false) Integer reApproveFlag,
+                                           @RequestBody(required = false) Map<String, Object> paramMap) {
+        personalActionService.batchProcess(organizationId, taskIds, EngineConstants.ApproveAction.REJECTED, false, reApproveFlag, paramMap);
         return Results.success();
     }
 
@@ -135,7 +137,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     public ResponseEntity<Void> attachmentUpload(@PathVariable("organization_id") Long organizationId,
                                                  @RequestBody RunAttachment runAttachment) {
         runAttachment.setTenantId(organizationId);
-        validObject(runAttachment, new Class[0]);
+        validObject(runAttachment);
         personalProcessService.attachmentUpload(runAttachment);
         return Results.success();
     }
@@ -145,14 +147,15 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @GetMapping({"/personal_process/{taskId}/forecastNextNode"})
     public ResponseEntity<Map<String, Object>> forecastNextNode(@PathVariable("organization_id") Long organizationId,
                                                                 @PathVariable("taskId") @Encrypt Long taskId) {
+        Assert.notNull(organizationId, BaseConstants.ErrorCode.NOT_NULL);
         return Results.success(appointNextNodeApproverActionHandler.forecastNextNode(taskId));
     }
 
     @ApiOperation("我的待办-查询可驳回列表")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @GetMapping({"/personal_process/{taskId}/rebutNodeList"})
-    public ResponseEntity<ProcessRebutNodeDTO> getRebutNodes(@PathVariable("organization_id") Long organizationId,
-                                                             @PathVariable("taskId") @Encrypt Long taskId) {
+    public ResponseEntity<List<ProcessJumpNodeDTO>> getRebutNodes(@PathVariable("organization_id") Long organizationId,
+                                                            @PathVariable("taskId") @Encrypt Long taskId) {
         return Results.success(personalActionService.getRebutNodes(organizationId, taskId));
     }
     @ApiOperation("我的待办-根据taskId处理审批动作")
@@ -161,9 +164,8 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     public ResponseEntity<Void> executeTaskById(@PathVariable("organization_id") Long organizationId,
                                                 @PathVariable("taskId") @Encrypt Long taskId,
                                                 @RequestParam String approveAction,
-                                                @RequestBody Map<String, Object> paramMap,
-                                                @RequestParam(name = "assignee",required = false) String assignee) {
-        personalActionService.executeTaskById(organizationId, taskId, approveAction, paramMap, assignee);
+                                                @RequestBody Map<String, Object> paramMap) {
+        personalActionService.executeTaskById(organizationId, taskId, approveAction, paramMap);
         return Results.success();
     }
 
@@ -171,10 +173,9 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/carbon-copy"})
     public ResponseEntity<Void> flowCarbonCopy(@PathVariable("organization_id") Long organizationId,
-                                               @RequestParam("taskId") @Encrypt Long taskId,
-                                               @RequestParam("toPerson") String toPerson,
-                                               @RequestParam(name = "assignee",required = false) String assignee) {
-        personalActionService.carbonCopy(organizationId, taskId, toPerson, assignee);
+                                               @Encrypt @RequestParam("taskId") Long taskId,
+                                               @RequestBody List<FlowApproverValue> toPersonList) {
+        personalActionService.carbonCopy(organizationId, taskId, toPersonList);
         return Results.success();
     }
 
@@ -184,7 +185,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @ProcessLovValue(targetField = {"body.taskDetail", "body.historyList"})
     public ResponseEntity<DetailDTO.TaskDetailDTO> taskDetail(@PathVariable("organization_id") Long organizationId,
                                                               @PathVariable("taskId") @Encrypt Long taskId) {
-        return Results.success(this.personalProcessService.taskDetail(organizationId, taskId));
+        return Results.success(this.personalProcessService.taskDetail(organizationId, taskId, false));
     }
 
     @ApiOperation("我参与的流程详情")
@@ -193,7 +194,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @ProcessLovValue(targetField = {"body.instanceDetail", "body.historyList"})
     public ResponseEntity<DetailDTO.ParticipatedDetailDTO> participatedDetail(@PathVariable("organization_id") Long organizationId,
                                                                               @PathVariable("instanceId") @Encrypt Long instanceId) {
-        return Results.success(this.personalProcessService.participatedDetail(organizationId, instanceId));
+        return Results.success(this.personalProcessService.participatedDetail(organizationId, instanceId, false));
     }
 
     @ApiOperation("我发起的流程详情")
@@ -212,7 +213,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     public ResponseEntity<DetailDTO.CarbonCopiedDetailDTO> carbonCopiedDetail(@PathVariable("organization_id") Long organizationId,
                                                                               @PathVariable("taskHistoryId") @Encrypt Long taskHistoryId,
                                                                               @RequestParam(required = false) Integer carbonCopyTodoFlag) {
-        return Results.success(this.personalProcessService.carbonCopiedDetail(organizationId, taskHistoryId, carbonCopyTodoFlag));
+        return Results.success(this.personalProcessService.carbonCopiedDetail(organizationId, taskHistoryId, carbonCopyTodoFlag, false));
     }
 
     @ApiOperation("我的抄送流程-评论")
@@ -230,9 +231,8 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/urge"})
     public ResponseEntity<Void> flowUrge(@PathVariable("organization_id") Long organizationId,
-                                         @RequestParam("instanceIds") @Encrypt List<Long> instanceIds,
-                                         @RequestParam(name = "starter",required = false) String starter) {
-        this.personalActionService.urge(organizationId, instanceIds, starter);
+                                         @RequestParam("instanceIds") @Encrypt List<Long> instanceIds) {
+        this.personalActionService.urge(organizationId, instanceIds);
         return Results.success();
     }
 
