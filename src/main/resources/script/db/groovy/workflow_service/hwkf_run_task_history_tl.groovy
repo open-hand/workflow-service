@@ -21,4 +21,16 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_run_task_history_tl.groovy') 
 
         addUniqueConstraint(columnNames: "TASK_HISTORY_ID,LANG", tableName: "hwkf_run_task_history_tl", constraintName: "hwkf_run_task_history_tl_ul")
     }
+
+    changeSet(author: "like.zhang@hand-china.com", id: "2021-12-09-hwkf_run_task_history_tl") {
+        def weight = 1
+        if (helper.isSqlServer()) {
+            weight = 2
+        } else if (helper.isOracle()) {
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_run_task_history_tl') {
+            column(name: "REMARK", type: "varchar(" + 240 * weight + ")", remarks: "备注")
+        }
+    }
 }

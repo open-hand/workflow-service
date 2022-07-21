@@ -34,4 +34,34 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_def_type.groovy') {
 
         addUniqueConstraint(columnNames: "TYPE_CODE,TENANT_ID", tableName: "hwkf_def_type", constraintName: "hwkf_def_type_u1")
     }
+
+    changeSet(author: "hwkf@hand-china.com", id: "2021-10-18-hwkf_def_type") {
+        def weight = 1
+        if (helper.isSqlServer()) {
+            weight = 2
+        } else if (helper.isOracle()) {
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_type') {
+            column(name: "BUSINESS_OBJECT_ID", type: "bigint",  remarks: "业务对象ID")
+        }
+        addColumn(tableName: 'hwkf_def_type') {
+            column(name: "BUSINESS_OBJECT_CODE", type: "varchar(" + 30 * weight + ")",  remarks: "业务对象编码")
+        }
+    }
+
+    changeSet(author: "hwkf@hand-china.com", id: "2022-01-06-hwkf_def_type") {
+        def weight = 1
+        if (helper.isSqlServer()) {
+            weight = 2
+        } else if (helper.isOracle()) {
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_type') {
+            column(name: "SOURCE_MODE", type: "varchar(" + 30 * weight + ")",  remarks: "来源方式：新建、复制、分配、导入")
+        }
+        addColumn(tableName: 'hwkf_def_type') {
+            column(name: "SOURCE_TYPE_ID", type: "bigint",  remarks: "来源流程分类ID")
+        }
+    }
 }

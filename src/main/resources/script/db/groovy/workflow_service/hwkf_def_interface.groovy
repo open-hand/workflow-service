@@ -33,4 +33,63 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_def_interface.groovy') {
 
         addUniqueConstraint(columnNames: "INTERFACE_CODE,TENANT_ID", tableName: "hwkf_def_interface", constraintName: "hwkf_def_interface_u1")
     }
+    changeSet(author: "weisen.yang@hand-china.com", id: "2021-07-12-hwkf_def_interface") {
+        addColumn(tableName: 'hwkf_def_interface') {
+            column(name: "SYNC_PARAM", type: "tinyint", defaultValue: "0", remarks: "同步参数标识")
+        }
+    }
+    changeSet(author: "weisen.yang@hand-china.com", id: "2021-07-14-hwkf_def_interface") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_interface') {
+            column(name: "OUT_INTERFACE_ID", type: "bigint", remarks: "外部接口ID")
+        }
+        addColumn(tableName: 'hwkf_def_interface') {
+            column(name: "OUT_INTERFACE_FLAG", type: "tinyint",  defaultValue: "0",remarks: "0内部api接口，1外部接口，2内部bean,3脚本事件，4事务处理流")
+        }
+        addColumn(tableName: 'hwkf_def_interface') {
+            column(name: "NAMESPACE", type: "varchar(" + 30 * weight + ")",  remarks: "命名空间")
+        }
+        addColumn(tableName: 'hwkf_def_interface') {
+            column(name: "SERVER_CODE", type: "varchar(" + 80 * weight + ")",  remarks: "服务编码")
+        }
+        addColumn(tableName: 'hwkf_def_interface') {
+            column(name: "OUT_INTERFACE_CODE", type: "varchar(" + 80 * weight + ")",  remarks: "外部接口编码")
+        }
+        addColumn(tableName: 'hwkf_def_interface') {
+            column(name: "OUT_INTERFACE_NAME", type: "varchar(" + 240 * weight + ")",  remarks: "外部接口名称")
+        }
+        dropNotNullConstraint(tableName: "hwkf_def_interface", columnName: "SERVICE_NAME", columnDataType: "varchar(" + 90 * weight + ")")
+        dropNotNullConstraint(tableName: "hwkf_def_interface", columnName: "PERMISSION_CODE", columnDataType: "varchar(" + 128 * weight + ")")
+        dropNotNullConstraint(tableName: "hwkf_def_interface", columnName: "METHOD", columnDataType: "varchar(" + 10 * weight + ")")
+        dropNotNullConstraint(tableName: "hwkf_def_interface", columnName: "PERMISSION_LEVEL", columnDataType: "varchar(" + 30 * weight + ")")
+    }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-09-07-hwkf_def_interface") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_interface') {
+            column(name: "HANDLER_CODE", type: "varchar(" + 80 * weight + ")",  remarks: "自定义事件处理器编码")
+        }
+    }
+
+    changeSet(author: "like.zhang@hand-china.com", id: "2021-11-23-hwkf_def_interface") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_interface') {
+            column(name: "BODY_JSON", type: "longtext",  remarks: "接口body参数")
+        }
+    }
 }

@@ -56,4 +56,46 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_run_task_history.groovy') {
         }
 
     }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-05-08-hwkf_run_task_history") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_run_task_history') {
+            column(name: "READ_FLAG",  type: "tinyint", defaultValue: "0", remarks: "是否已读")
+        }
+        addColumn(tableName: 'hwkf_run_task_history') {
+            column(name: "DIMENSION", type: "varchar(" + 30 * weight + ")",  remarks: "维度：EMPLOYEE(员工) USER(用户)")
+        }
+    }
+
+    changeSet(author: "hzero@hand-china.com", id: "2021-10-15-hwkf_run_task_history-1") {
+        createIndex(tableName: "hwkf_run_task_history", indexName: "hwkf_run_task_history_N4") {
+            column(name: "NODE_TYPE")
+            column(name: "HISTORY_TYPE")
+            column(name: "ASSIGNEE")
+            column(name: "DIMENSION")
+        }
+    }
+
+    changeSet(author: "hzero@hand-china.com", id: "2021-10-27-hwkf_run_task_history") {
+        createIndex(tableName: "hwkf_run_task_history", indexName: "hwkf_run_task_history_N5") {
+            column(name: "PARENT_NODE_ID")
+        }
+    }
+
+    changeSet(author: "hzero@hand-china.com", id: "2021-11-09-hwkf_run_task_history") {
+        addColumn(tableName: 'hwkf_run_task_history') {
+            column(name: "SOURCE_TASK_HISTORY_ID",  type: "bigint", remarks: "来源审批动作的task_history_id")
+        }
+    }
+
+    changeSet(author: "hzero@hand-china.com", id: "2022-02-18-hwkf_run_task_history") {
+        createIndex(tableName: "hwkf_run_task_history", indexName: "hwkf_run_task_history_N6") {
+            column(name: "TENANT_ID")
+        }
+    }
 }

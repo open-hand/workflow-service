@@ -35,4 +35,15 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_def_flow_document.groovy') {
 
         addUniqueConstraint(columnNames: "RELATE_CODE,COMPANY_NUM,TENANT_ID", tableName: "hwkf_def_flow_document", constraintName: "hwkf_def_flow_document_u1")
     }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-04-13-hwkf_def_flow_document") {
+        addColumn(tableName: 'hwkf_def_flow_document') {
+            column(name: "TYPE_ID", type: "bigint",  remarks: "流程分类ID")
+        }
+        dropNotNullConstraint(tableName: 'hwkf_def_flow_document', columnName: 'FLOW_ID', columnDataType: 'bigint')
+        dropColumn(tableName: 'hwkf_def_flow_document') {
+            column(name: "FLOW_ID", type: "bigint", remarks: "流程定义ID、DEF_WORKFLOW") { constraints(nullable: "false") }
+        }
+    }
+
 }

@@ -30,4 +30,36 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_def_mail_template.groovy') {
 
 
     }
+
+    changeSet(author: "weisen.yang@hand-china.com", id: "2021-06-24-hwkf_def_mail_template") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_mail_template') {
+            column(name: "RECORD_SOURCE_TYPE", type: "varchar(" + 30 * weight + ")", defaultValue: "CUSTOMIZE", remarks: "记录来源：PREDEFINED(预定义)、CUSTOMIZE(自定义)")
+        }
+    }
+    changeSet(author: "like.zhang@hand-china.com", id: "2021-08-10-hwkf_def_mail_template") {
+        def weight = 1
+        if (helper.isSqlServer()) {
+            weight = 2
+        } else if (helper.isOracle()) {
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_mail_template') {
+            column(name: "CONTENT_SOURCE", type: "varchar(" + 30 * weight + ")",  remarks: "邮件内容来源")
+        }
+        addColumn(tableName: 'hwkf_def_mail_template') {
+            column(name: "CUSTOMIZE_STRUCT_TEMPLATE", type: "varchar(" + 60 * weight + ")",  remarks: "自定义邮件结构模板")
+        }
+        addColumn(tableName: 'hwkf_def_mail_template') {
+            column(name: "REPORT_EXPORT_TYPE", type: "varchar(" + 30 * weight + ")",  remarks: "报表输出类型")
+        }
+        addColumn(tableName: 'hwkf_def_mail_template') {
+            column(name: "REPORT_ID", type: "bigint",  remarks: "关联的报表ID")
+        }
+    }
 }

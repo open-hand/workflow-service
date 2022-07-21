@@ -37,4 +37,15 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_run_comment.groovy') {
         }
 
     }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-06-08-hwkf_run_comment") {
+        addColumn(tableName: 'hwkf_run_comment') {
+            column(name: "TASK_HISTORY_ID", type: "bigint",  remarks: "流程节点历史ID，hwkf_run_task_history主键")
+        }
+        dropIndex(tableName: 'hwkf_run_comment', indexName: 'hwkf_run_comment_N1')
+        dropNotNullConstraint(tableName: "hwkf_run_comment", columnName: "TASK_ID", columnDataType: "bigint")
+        createIndex(tableName: "hwkf_run_comment", indexName: "hwkf_run_comment_N1") {
+            column(name: "TASK_ID")
+        }
+    }
 }

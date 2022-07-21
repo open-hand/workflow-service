@@ -42,4 +42,16 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_def_parameter_value.groovy') 
         }
 
     }
+
+    changeSet(author: "hwkf@hand-china.com", id: "2021-10-18-hwkf_def_parameter_value") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_parameter_value') {
+            column(name: "BUSINESS_OBJECT_EXPR", type: "varchar(" + 240 * weight + ")", remarks: "业务对象钻取表达式")
+        }
+    }
 }

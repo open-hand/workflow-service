@@ -28,4 +28,14 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_notice_node_line.groovy') {
 
         addUniqueConstraint(columnNames: "NODE_ID,NOTICE_TYPE,NOTICE_TEMPLATE_CODE", tableName: "hwkf_notice_node_line", constraintName: "hwkf_notice_node_line_u1")
     }
+
+    changeSet(author: "like.zhang@hand-china.com", id: "2021-11-23-hwkf_notice_node_line") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        modifyDataType(tableName: "hwkf_notice_node_line",  columnName: "NOTICE_TEMPLATE_CODE", newDataType:"varchar(" + 60 * weight + ")")
+    }
 }
