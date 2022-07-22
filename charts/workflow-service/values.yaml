@@ -147,7 +147,7 @@ commonAnnotations: {}
 ## extraEnv:
 ##   FOO: "bar"
 ##
-extraEnv: 
+extraEnv:
   # 是否启用配置中心
   SPRING_CLOUD_CONFIG_ENABLED: false
   # 配置中心地址
@@ -166,8 +166,14 @@ extraEnv:
   SPRING_DATASOURCE_USERNAME: choerodon
   # 数据库密码
   SPRING_DATASOURCE_PASSWORD: password
-  # 环境域名地址
-  HWKF_WEB_DOMAIN_NAME: http://example.com
+  # hzero前端地址
+  HWKF_WEB_DOMAIN_NAME: www.example.com
+  # 工作流是否对接aPaaS模型
+  HWKF_MODEL_ENABLE: false
+  # 是否允许工作流服务通过数据库跨schema查询组织架构信息
+  HWKF_HR_CROSS_SCHEMA_ENABLED: false
+  # 允许工作流服务通过数据库跨schema查询组织架构信息时, 组织架构所在schema名称
+  HWKF_HPFM_SCHEMA_NAME: hzero_platform
   # 百分比使用物理内存，预留一部分用于堆外内存以及外部程序
   # JAVA_OPTS: >-
   #   -XX:MaxRAMPercentage=90.0
@@ -195,15 +201,15 @@ args: []
 # -- Scheduler name
 ## https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
 ##
-schedulerName: 
+schedulerName:
 
-# -- EnableServiceLinks indicates whether information about services should be injected into pod's environment variables, 
+# -- EnableServiceLinks indicates whether information about services should be injected into pod's environment variables,
 # matching the syntax of Docker links. Optional: Defaults to false.
-## 
+##
 enableServiceLinks: false
 
 # -- AutomountServiceAccountToken indicates whether a service account token should be automatically mounted.
-## 
+##
 automountServiceAccountToken: false
 
 ## server deployment parameters
@@ -232,7 +238,7 @@ hostAliases: []
 
 ## server container ports to open
 ##
-containerPort: 
+containerPort:
   # -- server port
   serverPort: 8065
   # -- server management port
@@ -316,12 +322,12 @@ resources:
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 
   # -- The resources limits for the init container
-  limits: 
+  limits:
     # cpu: 2
     memory: 3Gi
 
   # -- The requested resources for the init container
-  requests: 
+  requests:
     # cpu: 500m
     memory: 2Gi
 
@@ -424,9 +430,9 @@ skywalking:
   ## Skywalking Agent Configuration
   ## ref: https://github.com/apache/skywalking/blob/master/docs/en/setup/service-agent/java-agent/README.md#table-of-agent-configuration-properties
 
-  # skywalking.serviceName -- The serviceName (Default .Chart.Name) to represent a logic group providing the same capabilities/logic. 
+  # skywalking.serviceName -- The serviceName (Default .Chart.Name) to represent a logic group providing the same capabilities/logic.
   # Suggestion: set a unique name for every logic service group, service instance nodes share the same code,Max length is 50(UTF-8 char).
-  serviceName: 
+  serviceName:
 
   # -- Negative or zero means off, by default. sampleNPer3Secs means sampling N TraceSegment in 3 seconds tops.
   sampleNPer3Secs: 9
@@ -435,7 +441,7 @@ skywalking:
   collectorService: oap.skywalking:11800
 
   # -- String to fully override Skywalking Agent Configuration template
-  commandOverride: 
+  commandOverride:
 
 # -- Add sidecars to the server pods.
 ## e.g:
@@ -460,7 +466,7 @@ service:
   type: ClusterIP
   # -- server Service port
   ##
-  port: 
+  port:
     server: 8065
     actuator: 8066
   # -- Specify the nodePort value for the LoadBalancer and NodePort service types.
@@ -595,7 +601,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: 
+  storageClass:
 
   # -- Data volume mount path
   ##
@@ -612,7 +618,7 @@ persistence:
   annotations: {}
   # -- Enable persistence using an existing PVC
   ##
-  existingClaim: 
+  existingClaim:
 
 # -- Change the owner and group of the persistent volume mountpoint to runAsUser:fsGroup values from the securityContext section.
 volumePermissionsEnabled: false
