@@ -29,4 +29,28 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_def_workflow.groovy') {
 
         addUniqueConstraint(columnNames: "FLOW_CODE,TENANT_ID", tableName: "hwkf_def_workflow", constraintName: "hwkf_def_workflow_u1")
     }
+
+    changeSet(author: 'xiuhong.chen@hand-china.com', id: '2021-08-17-hwkf_def_workflow') {
+        createIndex(tableName: "hwkf_def_workflow", indexName: "hwkf_def_workflow_n1") {
+            column(name: "TYPE_ID")
+        }
+    }
+
+    changeSet(author: 'hzero@hand-china.com', id: '2021-11-03-hwkf_def_workflow') {
+        addColumn(tableName: 'hwkf_def_workflow') {
+            column(name: "MSG_CONFIG_JSON", type: "longtext", remarks: "消息通知配置")
+        }
+    }
+
+    changeSet(author: 'hzero@hand-china.com', id: '2022-02-28-hwkf_def_workflow') {
+        def weight = 1
+        if (helper.isSqlServer()) {
+            weight = 2
+        } else if (helper.isOracle()) {
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_workflow') {
+            column(name: "FORM_CODE", type: "varchar(" + 240 * weight + ")", remarks: "表单编码")
+        }
+    }
 }

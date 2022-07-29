@@ -26,4 +26,27 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_run_comment_template.groovy')
 
 
     }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-05-08-hwkf_run_comment_template") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_run_comment_template') {
+            column(name: "USER_ID", type: "bigint",  remarks: "用户ID")
+        }
+        dropNotNullConstraint(tableName: "hwkf_run_comment_template", columnName: "EMPLOYEE_NUM", columnDataType: "varchar(" + 30 * weight + ")")
+    }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-06-18-hwkf_run_comment_template") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        modifyDataType(tableName: "hwkf_run_comment_template",  columnName: "COMMENT_CONTENT", newDataType:"varchar(" + 1000 * weight + ")")
+    }
 }

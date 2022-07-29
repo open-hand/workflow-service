@@ -35,4 +35,10 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_def_approve_chain.groovy') {
 
         addUniqueConstraint(columnNames: "TYPE_ID,CHAIN_CODE,VERSION", tableName: "hwkf_def_approve_chain", constraintName: "hwkf_def_approve_chain_u1")
     }
+
+    changeSet(author: 'hwkf@hand-china.com', id: '2021-10-20-hwkf_def_approve_chain') {
+        createIndex(tableName: "hwkf_def_approve_chain", indexName: "hwkf_def_approve_chain_n1") {
+            column(name: "SOURCE_CHAIN_ID")
+        }
+    }
 }

@@ -34,4 +34,14 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_run_mail_approve_his.groovy')
 
 
     }
+
+    changeSet(author: "like.zhang@hand-china.com", id: "2021-10-08-hwkf_run_mail_approve_his") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        modifyDataType(tableName: "hwkf_run_mail_approve_his",  columnName: "FROM_MAIL_ACCOUNT", newDataType:"varchar(" + 128 * weight + ")")
+    }
 }

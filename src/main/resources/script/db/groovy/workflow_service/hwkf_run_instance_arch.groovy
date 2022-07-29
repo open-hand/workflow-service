@@ -46,4 +46,31 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_run_instance_arch.groovy') {
 
         addUniqueConstraint(columnNames: "INSTANCE_ID", tableName: "hwkf_run_instance_arch", constraintName: "hwkf_run_instance_arch_u1")
     }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-05-08-hwkf_run_instance_arch") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_run_instance_arch') {
+            column(name: "APPROVE_RESULT", type: "varchar(" + 30 * weight + ")",  remarks: "审批结果")
+        }
+        addColumn(tableName: 'hwkf_run_instance_arch') {
+            column(name: "DIMENSION", type: "varchar(" + 30 * weight + ")",  remarks: "维度：EMPLOYEE(员工) USER(用户)")
+        }
+    }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-06-18-hwkf_run_instance_arch") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_run_instance_arch') {
+            column(name: "ATTACHMENT_UUID", type: "varchar(" + 50 * weight + ")", remarks: "附件集UUID")
+        }
+    }
 }

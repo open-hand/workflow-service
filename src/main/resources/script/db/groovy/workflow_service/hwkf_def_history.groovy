@@ -36,4 +36,21 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_def_history.groovy') {
         }
 
     }
+    changeSet(author: "hzero@hand-china.com", id: "2021-09-07-hwkf_def_history") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_history') {
+            column(name: "PRIMARY_NAME", type: "varchar(" + 255 * weight + ")",  remarks: "业务名称")
+        }
+        addColumn(tableName: 'hwkf_def_history') {
+            column(name: "ATTRIBUTE1", type: "varchar(" + 255 * weight + ")",  remarks: "ATTRIBUTE1")
+        }
+        addColumn(tableName: 'hwkf_def_history') {
+            column(name: "ATTRIBUTE2", type: "varchar(" + 255 * weight + ")",  remarks: "ATTRIBUTE2")
+        }
+    }
 }

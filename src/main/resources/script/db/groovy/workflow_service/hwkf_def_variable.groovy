@@ -43,4 +43,56 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_def_variable.groovy') {
 
         addUniqueConstraint(columnNames: "TYPE_ID,VARIABLE_CODE", tableName: "hwkf_def_variable", constraintName: "hwkf_def_variable_u1")
     }
+
+    changeSet(author: "hzero@hand-china.com", id: "2021-03-31-hwkf_def_variable") {
+        def weight = 1
+        if (helper.isSqlServer()) {
+            weight = 2
+        } else if (helper.isOracle()) {
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_variable') {
+            column(name: "INTERFACE_EXPRESSION", type: "varchar(" + 128 * weight + ")", remarks: "接口类型变量-取值表达式")
+        }
+    }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-06-18-hwkf_def_variable") {
+        addColumn(tableName: 'hwkf_def_variable') {
+            column(name: "USE_SPEL_FLAG", type: "tinyint",  defaultValue: "0",remarks: "是否使用表达式解析")
+        }
+    }
+    changeSet(author: "hzero@hand-china.com", id: "2021-09-07-hwkf_def_variable") {
+        addColumn(tableName: 'hwkf_def_variable') {
+            column(name: "FLOW_ID", type: "bigint", remarks: "hwkf_def_workflow表主键")
+        }
+        addColumn(tableName: 'hwkf_def_variable') {
+            column(name: "WORKFLOW_CUSTOM_FLAG", type: "tinyint", defaultValue: "0", remarks: "是否是流程自定义变量,1是/0不是")
+        }
+        dropUniqueConstraint(tableName: 'hwkf_def_variable', constraintName: 'hwkf_def_variable_u1')
+        addUniqueConstraint(columnNames: "TYPE_ID,VARIABLE_CODE,FLOW_ID", tableName: "hwkf_def_variable", constraintName: "hwkf_def_variable_u1")
+    }
+    changeSet(author: "hzero@hand-china.com", id: "2021-12-16-hwkf_def_variable") {
+        def weight = 1
+        if (helper.isSqlServer()) {
+            weight = 2
+        } else if (helper.isOracle()) {
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_variable') {
+            column(name: "RANGE_LOV_SOURCE", type: "varchar(" + 30 * weight + ")", remarks: "数据来源类型DEFAULT/自定义，SYSTEM/已有值集")
+        }
+    }
+
+    changeSet(author: "hzero@hand-china.com", id: "2022-01-24-hwkf_def_variable") {
+        def weight = 1
+        if (helper.isSqlServer()) {
+            weight = 2
+        } else if (helper.isOracle()) {
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_variable') {
+            column(name: "BATCH_NUM", type: "varchar(" + 30 * weight + ")", remarks: "变量批量创建时的批次号")
+        }
+    }
+
 }

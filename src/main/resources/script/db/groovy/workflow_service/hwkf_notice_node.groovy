@@ -29,4 +29,16 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_notice_node.groovy') {
 
         addUniqueConstraint(columnNames: "TYPE_ID,NODE_CODE,TENANT_ID", tableName: "hwkf_notice_node", constraintName: "hwkf_notice_node_u1")
     }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-05-25-hwkf_notice_node") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_notice_node') {
+            column(name: "NOTICE_TYPE", type: "varchar(" + 30 * weight + ")",   defaultValue: "NODE",remarks: "通知类型：EVENT通知事件、NODE通知节点")
+        }
+    }
 }

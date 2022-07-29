@@ -38,4 +38,9 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_run_variable.groovy') {
         }
 
     }
+    changeSet(author: "hzero@hand-china.com", id: "2022-02-18-hwkf_run_variable") {
+        createIndex(tableName: "hwkf_run_variable", indexName: "hwkf_run_variable_N4") {
+            column(name: "VARIABLE_CODE")
+        }
+    }
 }

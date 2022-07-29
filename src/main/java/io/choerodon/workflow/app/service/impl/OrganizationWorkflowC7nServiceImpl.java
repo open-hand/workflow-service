@@ -1,23 +1,5 @@
 package io.choerodon.workflow.app.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.io.IOUtils;
-import org.hzero.workflow.def.api.dto.DefTypeDTO;
-import org.hzero.workflow.def.app.service.DefModelService;
-import org.hzero.workflow.def.app.service.DefTypeService;
-import org.hzero.workflow.def.domain.entity.*;
-import org.hzero.workflow.def.domain.repository.*;
-import org.hzero.workflow.engine.util.JsonUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
-
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -25,11 +7,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
+
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.choerodon.workflow.app.service.OrganizationWorkflowC7nService;
 import io.choerodon.workflow.infra.feign.BaseFeignClient;
 import io.choerodon.workflow.infra.feign.vo.OrganizationInfoVO;
+
+import org.hzero.workflow.def.api.dto.DefTypeDTO;
+import org.hzero.workflow.def.app.service.DefModelService;
+import org.hzero.workflow.def.app.service.DefTypeService;
+import org.hzero.workflow.def.domain.entity.*;
+import org.hzero.workflow.def.domain.repository.*;
+import org.hzero.workflow.engine.util.JsonUtils;
 
 /**
  * @author chihao.ran@hand-china.com
@@ -93,7 +94,7 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
             defWorkflow.setTypeCode(newDefType.getTypeCode());
             defWorkflow.setTypeId(newDefType.getTypeId());
             defWorkflowRepository.insertSelective(defWorkflow);
-            defModelService.saveConfig(tenantId, defWorkflow.getFlowId(), defWorkflow.getModelConfigVO(), defWorkflow.getDiagramJson());
+            defModelService.saveAndReturnConfig(tenantId, defWorkflow.getFlowId(), defWorkflow.getModelConfigVO(), defWorkflow.getDiagramJson());
         });
     }
 

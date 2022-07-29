@@ -57,4 +57,25 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_run_task_hist_arch.groovy') {
 
         addUniqueConstraint(columnNames: "TASK_HISTORY_ID", tableName: "hwkf_run_task_hist_arch", constraintName: "hwkf_run_task_hist_arch_u1")
     }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-05-08-hwkf_run_task_hist_arch") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_run_task_hist_arch') {
+            column(name: "READ_FLAG",  type: "tinyint", defaultValue: "0", remarks: "是否已读")
+        }
+        addColumn(tableName: 'hwkf_run_task_hist_arch') {
+            column(name: "DIMENSION", type: "varchar(" + 30 * weight + ")",  remarks: "维度：EMPLOYEE(员工) USER(用户)")
+        }
+    }
+
+    changeSet(author: "hzero@hand-china.com", id: "2021-11-09-hwkf_run_task_hist_arch") {
+        addColumn(tableName: 'hwkf_run_task_hist_arch') {
+            column(name: "SOURCE_TASK_HISTORY_ID",  type: "bigint", remarks: "来源审批动作的task_history_id")
+        }
+    }
 }

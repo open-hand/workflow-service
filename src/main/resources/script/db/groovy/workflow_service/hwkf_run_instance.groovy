@@ -45,4 +45,47 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_run_instance.groovy') {
         }
 
     }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-05-08-hwkf_run_instance") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_run_instance') {
+            column(name: "APPROVE_RESULT", type: "varchar(" + 30 * weight + ")",  remarks: "审批结果")
+        }
+        addColumn(tableName: 'hwkf_run_instance') {
+            column(name: "DIMENSION", type: "varchar(" + 30 * weight + ")",  remarks: "维度：EMPLOYEE(员工) USER(用户)")
+        }
+    }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-06-18-hwkf_run_instance") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_run_instance') {
+            column(name: "ATTACHMENT_UUID", type: "varchar(" + 50 * weight + ")", remarks: "附件集UUID")
+        }
+    }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-09-02-hwkf_run_instance") {
+        dropIndex(tableName: 'hwkf_run_instance', indexName: 'hwkf_run_instance_N1')
+        createIndex(tableName: "hwkf_run_instance", indexName: "hwkf_run_instance_N1") {
+            column(name: "TENANT_ID")
+        }
+        createIndex(tableName: "hwkf_run_instance", indexName: "hwkf_run_instance_n4") {
+            column(name: "STATUS")
+        }
+    }
+    changeSet(author: "hzero@hand-china.com", id: "2021-10-15-hwkf_run_instance-1") {
+        createIndex(tableName: "hwkf_run_instance", indexName: "hwkf_run_instance_n5") {
+            column(name: "TENANT_ID")
+            column(name: "PARENT_INSTANCE_ID")
+        }
+    }
 }

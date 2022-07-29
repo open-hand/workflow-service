@@ -41,4 +41,43 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_run_task.groovy') {
         }
 
     }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-05-08-hwkf_run_task") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_run_task') {
+            column(name: "DIMENSION", type: "varchar(" + 30 * weight + ")",  remarks: "维度：EMPLOYEE(员工) USER(用户)")
+        }
+    }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-08-30-hwkf_run_task") {
+        addColumn(tableName: 'hwkf_run_task') {
+            column(name: "EXPIRATION_FLAG", type: "tinyint", defaultValue: "0", remarks: "超时标志")
+        }
+        addColumn(tableName: 'hwkf_run_task') {
+            column(name: "END_DATE", type: "datetime", remarks: "应完成日期")
+        }
+
+        createIndex(tableName: "hwkf_run_task", indexName: "hwkf_run_task_n2") {
+            column(name: "ASSIGNEE")
+            column(name: "DIMENSION")
+        }
+        createIndex(tableName: "hwkf_run_task", indexName: "hwkf_run_task_n3") {
+            column(name: "SUSPEND_FLAG")
+        }
+
+
+    }
+    changeSet(author: "hzero@hand-china.com", id: "2021-10-15-hwkf_run_task-1") {
+        createIndex(tableName: "hwkf_run_task", indexName: "hwkf_run_task_N4") {
+            column(name: "NODE_ID")
+        }
+        createIndex(tableName: "hwkf_run_task", indexName: "hwkf_run_task_N5") {
+            column(name: "START_DATE")
+        }
+    }
 }

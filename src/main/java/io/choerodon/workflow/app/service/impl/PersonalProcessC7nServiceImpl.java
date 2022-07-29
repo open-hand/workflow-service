@@ -1,22 +1,13 @@
 package io.choerodon.workflow.app.service.impl;
 
-import org.apache.commons.lang3.StringUtils;
-import org.hzero.core.base.BaseConstants;
-import org.hzero.workflow.def.infra.feign.PlatformFeignClient;
-import org.hzero.workflow.def.infra.feign.dto.UserDTO;
-import org.hzero.workflow.engine.dao.dto.EmployeeUserDTO;
-import org.hzero.workflow.engine.dao.entity.RunTaskHistory;
-import org.hzero.workflow.engine.exception.EmployeeNotFoundException;
-import org.hzero.workflow.personal.api.dto.PersonalTodoDTO.*;
-import org.hzero.workflow.personal.domain.repository.PersonalTodoRepository;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import org.springframework.util.ObjectUtils;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -25,7 +16,14 @@ import io.choerodon.workflow.api.vo.RunTaskHistoryVO;
 import io.choerodon.workflow.app.service.PersonalProcessC7nService;
 import io.choerodon.workflow.domain.repository.PersonalTodoC7nRepository;
 import io.choerodon.workflow.infra.feign.BaseFeignClient;
-import org.springframework.util.ObjectUtils;
+
+import org.hzero.core.base.BaseConstants;
+import org.hzero.workflow.def.infra.feign.PlatformFeignClient;
+import org.hzero.workflow.def.infra.feign.dto.UserDTO;
+import org.hzero.workflow.engine.dao.entity.RunTaskHistory;
+import org.hzero.workflow.engine.exception.EmployeeNotFoundException;
+import org.hzero.workflow.personal.api.dto.PersonalTodoDTO.*;
+import org.hzero.workflow.personal.domain.repository.PersonalTodoRepository;
 
 /**
  * @author huaxin.deng@hand-china.com 2021-03-12 14:21:57
@@ -54,7 +52,7 @@ public class PersonalProcessC7nServiceImpl implements PersonalProcessC7nService 
     }
 
     private void listApproveHistoryWithUserDTO(Long tenantId, Long instanceId, List<RunTaskHistoryVO> runTaskHistoryVOList) {
-        List<RunTaskHistory> runTaskHistories = personalTodoRepository.selectHistory(tenantId, instanceId);
+        List<RunTaskHistory> runTaskHistories = personalTodoRepository.selectHistory(tenantId, instanceId, Collections.singletonList(instanceId));
         if (CollectionUtils.isEmpty(runTaskHistories)) {
             return;
         }

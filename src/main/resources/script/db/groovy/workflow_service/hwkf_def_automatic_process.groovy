@@ -39,4 +39,42 @@ databaseChangeLog(logicalFilePath: 'script/db/hwkf_def_automatic_process.groovy'
 
         addUniqueConstraint(columnNames: "FLOW_CODE,USER_ID,TENANT_ID", tableName: "hwkf_def_automatic_process", constraintName: "hwkf_def_automatic_process_u1")
     }
+
+    changeSet(author: "xiuhong.chen@hand-china.com", id: "2021-05-08-hwkf_def_automatic_process") {
+        def weight = 1
+        if(helper.isSqlServer()){
+            weight = 2
+        } else if(helper.isOracle()){
+            weight = 3
+        }
+        addColumn(tableName: 'hwkf_def_automatic_process') {
+            column(name: "DIMENSION", type: "varchar(" + 30 * weight + ")",  remarks: "维度：EMPLOYEE(员工) USER(用户)")
+        }
+        addColumn(tableName: 'hwkf_def_automatic_process') {
+            column(name: "RULE_TYPE", type: "varchar(" + 30 * weight + ")",  remarks: "规则类型：GLOBAL(适用所有流程) SINGLE(适用特定流程)")
+        }
+        addColumn(tableName: 'hwkf_def_automatic_process') {
+            column(name: "RULE_CODE", type: "varchar(" + 30 * weight + ")",  remarks: "规则编码")
+        }
+        addColumn(tableName: 'hwkf_def_automatic_process') {
+            column(name: "RULE_NAME", type: "varchar(" + 80 * weight + ")",  remarks: "规则名称")
+        }
+
+        dropIndex(tableName: 'hwkf_def_automatic_process', indexName: 'HWKF_DEF_AUTOMATIC_PROCESS_N1')
+        dropUniqueConstraint(tableName: 'hwkf_def_automatic_process', constraintName: 'hwkf_def_automatic_process_u1')
+        dropNotNullConstraint(tableName: "hwkf_def_automatic_process", columnName: "FLOW_CODE", columnDataType: "varchar(" + 255 * weight + ")")
+        createIndex(tableName: "hwkf_def_automatic_process", indexName: "HWKF_DEF_AUTOMATIC_PROCESS_N1") {
+            column(name: "FLOW_CODE")
+        }
+
+        addColumn(tableName: 'hwkf_def_automatic_process') {
+            column(name: "ADMIN_FLAG", type: "tinyint",  defaultValue: "0", remarks: "管理员-是否是管理员功能页面配置数据")
+        }
+        addColumn(tableName: 'hwkf_def_automatic_process') {
+            column(name: "RELATION_AUTOMATIC_ID", type: "bigint",  remarks: "管理员-部分流程，关联配置Id")
+        }
+        addColumn(tableName: 'hwkf_def_automatic_process') {
+            column(name: "HEADER_FLAG", type: "tinyint",  defaultValue: "0", remarks: "管理员-是否是头数据，该条数据不参与后续运行中规则处理")
+        }
+    }
 }
