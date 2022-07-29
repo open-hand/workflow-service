@@ -232,7 +232,9 @@ logging:
   level:
     io.choerodon.event.consumer: ${LOG_LEVEL:info}
     com.zaxxer: ${LOG_LEVEL:info}
+    org.apache.ibatis.transaction.managed: error
     org.apache.ibatis: ${LOG_LEVEL:info}
     io.choerodon: ${LOG_LEVEL:info}
+    org.hzero.boot.platform.lov: info
     org.hzero: ${LOG_LEVEL:info}
     org.activiti: ${LOG_LEVEL:info}
