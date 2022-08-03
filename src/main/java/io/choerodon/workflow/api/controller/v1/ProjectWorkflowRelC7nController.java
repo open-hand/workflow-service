@@ -1,16 +1,18 @@
 package io.choerodon.workflow.api.controller.v1;
 
-import io.choerodon.workflow.api.vo.ProjectWorkflowRelVO;
-import io.choerodon.workflow.app.service.ProjectWorkflowRelService;
-import io.choerodon.workflow.infra.dto.ProjectWorkflowRelDTO;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.swagger.annotation.Permission;
+import io.choerodon.workflow.api.vo.ProjectWorkflowRelVO;
+import io.choerodon.workflow.app.service.ProjectWorkflowRelService;
+import io.choerodon.workflow.infra.dto.ProjectWorkflowRelDTO;
+
+import org.hzero.core.util.Results;
 
 /**
  * @author zhaotianxin
@@ -28,7 +30,7 @@ public class ProjectWorkflowRelC7nController {
     public ResponseEntity<ProjectWorkflowRelDTO> createOrUpdate(@ApiParam(value = "项目id", required = true)
                                                                 @PathVariable(name = "project_id") Long projectId,
                                                                 @RequestBody ProjectWorkflowRelDTO projectWorkflowRelDTO) {
-        return new ResponseEntity<>(projectWorkflowRelService.createOrUpdate(projectId, projectWorkflowRelDTO), HttpStatus.CREATED);
+        return Results.created(projectWorkflowRelService.createOrUpdate(projectId, projectWorkflowRelDTO));
     }
 
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -36,6 +38,6 @@ public class ProjectWorkflowRelC7nController {
     @GetMapping("/query")
     public ResponseEntity<ProjectWorkflowRelVO> queryWorkflow(@ApiParam(value = "项目id", required = true)
                                                               @PathVariable(name = "project_id") Long projectId) {
-        return new ResponseEntity<>(projectWorkflowRelService.queryProjectWorkflow(projectId), HttpStatus.OK);
+        return Results.success(projectWorkflowRelService.queryProjectWorkflow(projectId));
     }
 }
