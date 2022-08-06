@@ -114,7 +114,7 @@ export interface IApproveBtn {
 export interface TaskDetail {
   tenantId: string
   taskId: string
-  selfEmpNum: string
+  selfUserId: string
   instanceId: string
   businessKey: string
   nodeId: string

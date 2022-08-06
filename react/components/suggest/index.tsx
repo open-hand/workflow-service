@@ -1,9 +1,7 @@
 import { DataSet } from 'choerodon-ui/pro';
 import { find } from 'lodash';
 import { Choerodon } from '@choerodon/master';
-import React, {
-  useCallback, useMemo, forwardRef, useImperativeHandle,
-} from 'react';
+import React, { forwardRef, useCallback, useImperativeHandle, useMemo, } from 'react';
 import { usePersistFn } from 'ahooks';
 import { ICommentTemplate } from '@/common/types';
 import { ProcessAttachmentProps } from './components/process-attachment';
@@ -44,7 +42,7 @@ const Suggest: React.ForwardRefRenderFunction<SuggestRef, SuggestProps> = (props
     }, {
       name: 'commentContent',
       required: true,
-      label: '添加审批意见',
+      label: '添加签批意见',
     }],
     events: {
       update: handleUpdate,

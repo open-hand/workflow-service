@@ -1,58 +1,56 @@
-import React, { useMemo, forwardRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import { Select } from 'choerodon-ui/pro';
-import { useSelect, FlatSelect } from '@choerodon/components';
+import { FlatSelect, useSelect } from '@choerodon/components';
 import { SelectConfig } from '@choerodon/components/lib/hooks/useSelect';
-import { approveApi } from '@/api';
+import { approveApi, IWorkflowUser } from '@/api';
 import { SelectProps } from 'choerodon-ui/pro/lib/select/Select';
-
-export interface IEmployee {
-  realName: string
-  id: string
-  loginName: string
-}
 
 interface Props extends Partial<SelectProps> {
   flat?: boolean,
   request?: () => Promise<any>,
-  selfEmpNum: string
-  afterLoad?: (employees: IEmployee[]) => void,
+  selfUserId: number | string
+  afterLoad?: (employees: IWorkflowUser[]) => void,
   dataRef?: React.MutableRefObject<any>
 }
 
-const SelectEmployee: React.FC<Props> = forwardRef(({
-  request, flat, selfEmpNum, afterLoad, dataRef, ...otherProps
+const SelectWorkflowUser: React.FC<Props> = forwardRef(({
+  name, request, flat, selfUserId, afterLoad, dataRef, multiple=false, label, ...otherProps
 }, ref: React.Ref<Select>) => {
   const config = useMemo((): SelectConfig => ({
-    name: 'employee',
+    name,
     textField: 'realName',
     valueField: 'id',
     request: ({ page, filter }) => {
       if (!request) {
-        return approveApi.getEmployees(page, selfEmpNum, filter);
+        return approveApi.getEmployees(page, selfUserId, filter);
       }
       return request();
     },
     paging: true,
     middleWare: (data) => {
-      if (dataRef) {
-        Object.assign(dataRef, {
-          current: data,
-        });
-      }
       if (afterLoad) {
         // @ts-ignore
         afterLoad(data);
       }
       return data;
     },
-    optionRenderer: (item: IEmployee) => (
+    optionRenderer: (item: IWorkflowUser) => (
       <>
 
         <span>{`${item.realName}`}</span>
       </>
     ),
-  }), [request, selfEmpNum]);
-  const props = useSelect(config);
+  }), [request, selfUserId]);
+  const props = Object.assign(useSelect(config), {
+    onChange: (value : any, oldValue: any) : void => {
+      if(dataRef) {
+         Object.assign(dataRef, {current: value});
+      }
+    },
+    primitiveValue: false,
+    multiple,
+    label
+  });
   const Component = flat ? FlatSelect : Select;
   return (
     <Component
@@ -62,4 +60,4 @@ const SelectEmployee: React.FC<Props> = forwardRef(({
     />
   );
 });
-export default SelectEmployee;
+export default SelectWorkflowUser;
