@@ -1,11 +1,6 @@
-import {
-  DataSet, Form, TextArea, Select, Button, Modal,
-} from 'choerodon-ui/pro';
-import { ButtonColor, FuncType } from 'choerodon-ui/pro/lib/button/enum';
+import { Button, DataSet, Form, Modal, Select, TextArea, } from 'choerodon-ui/pro';
 import { ResizeType } from 'choerodon-ui/pro/lib/text-area/enum';
-import React, {
-  useCallback, useEffect, useMemo, useRef,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, } from 'react';
 import { observer } from 'mobx-react-lite';
 import MODAL_WIDTH from '@choerodon/agile/lib/constants/MODAL_WIDTH';
 import CommentTemplateManage from '../comment-template-manage';
@@ -89,7 +84,7 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
             marginLeft: 14,
           }}
         >
-          保留审批意见
+          收藏审批意见
         </Button>
         <Button
           icon="settings-o"

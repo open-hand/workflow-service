@@ -9,10 +9,10 @@ import openNextApproveModal from '@/components/modals/components/nextNode-approv
 import openRebutModal from '@/components/modals/components/rebut-modal';
 import openAddApproveModal from '@/components/modals/components/add-approve/AddApproveModal';
 import openAddApproverModal from '@/components/modals/components/addApprover';
-import { ButtonColor, FuncType } from 'choerodon-ui/pro/lib/button/enum';
 import { IApproveBtn } from '@/common/types';
 import './index.less';
 import classNames from 'classnames';
+import { isArray } from "lodash";
 
 export interface ICustomBtn {
   checked: boolean,
@@ -94,7 +94,7 @@ const Buttons: React.FC<ButtonsProps> = ({
         approveApi.rebutNodeList(taskId).then((res: any) => {
           if (res.failed) {
             Choerodon.prompt(res.message);
-          } else if (res.startNode || res.previousNode) {
+          } else if (isArray(res) && res.length > 0) {
             openRebutModal({
               rebutNodeList: res, onClose: handleOk, taskId,
             });

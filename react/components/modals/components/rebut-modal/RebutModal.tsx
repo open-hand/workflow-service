@@ -1,28 +1,30 @@
-import React, {
-  useCallback, useEffect, useMemo, useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, } from 'react';
 import { observer } from 'mobx-react-lite';
-import {
-  DataSet, Modal, Form, CheckBox,
-} from 'choerodon-ui/pro';
+import { DataSet, Form, Modal, Select, TextArea } from 'choerodon-ui/pro';
 import { IModalProps } from '@choerodon/agile/lib/common/types';
 import { Choerodon } from '@choerodon/boot';
 import './RebutModal.less';
 import { approveApi } from '@/api';
 import store from '../../store';
+import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
 
 const prefix = 'c7n-backlogApprove-rebutModal';
+const {Option} = Select
+
+interface IRebutNode {
+  approveComment: string,
+  code: string,
+  name: string,
+  remark: string,
+  sumPassParallelGateway: number,
+  topParallelGatewayCode?: string,
+  traverseMethod: string,
+  type: string,
+}
 
 interface Props {
   modal?: IModalProps
-  rebutNodeList: {
-    startNode: {
-      nodeId: string
-    }
-    previousNode: {
-      nodeId: string
-    }
-  }
+  rebutNodeList: IRebutNode[]
   onClose: () => void
   taskId: string
 }
@@ -31,63 +33,53 @@ const RebutModal:React.FC<Props> = ({
   rebutNodeList, modal, onClose, taskId,
 }) => {
   const { process: { taskDetail } } = store;
-  const [checkedValue, setCheckedValue] = useState<'startNode' | 'preNode' | undefined>();
+  const rebutDataSet = useMemo(() => new DataSet({
+    fields: [{
+      name: 'rebutNode',
+      type: FieldType.object,
+      // textField: 'name',
+      // valueField: 'code',
+      label: '驳回节点',
+      required: true,
+    }, {
+      name: 'approveComment',
+      type: FieldType.string,
+      label: '驳回原因',
+      required: true,
+    }],
+    data: [{}]
+  }), []);
   const handleSubmit = useCallback(async () => {
-    if (checkedValue) {
+    rebutDataSet.current?.set('__dirty', true);
+    const validate = await rebutDataSet.validate();
+    if (validate) {
       try {
-        await approveApi.rebut(taskId, checkedValue === 'startNode' ? rebutNodeList.startNode.nodeId : rebutNodeList.previousNode.nodeId);
+        const selectedRebutNode: IRebutNode = rebutDataSet.current?.toData()?.rebutNode?.value;
+        const approveComment: string = rebutDataSet.current?.toData()?.approveComment;
+        await approveApi.rebut(taskId, {...selectedRebutNode, approveComment});
         onClose();
         return true;
       } catch (e) {
         return false;
       }
     }
-    Choerodon.prompt('请选择驳回节点！');
+    Choerodon.prompt('请完成驳回信息填写！');
     return false;
-  }, [checkedValue, onClose, rebutNodeList?.previousNode?.nodeId, rebutNodeList?.startNode?.nodeId, taskId]);
+  }, [rebutDataSet, onClose, taskId]);
 
-  const handleStartNodeChange = useCallback((value, oldValue) => {
-    if (value) {
-      setCheckedValue(value);
-    } else if (oldValue === 'startNode' && rebutNodeList.previousNode) {
-      setCheckedValue('preNode');
-    } else if (oldValue === 'preNode' && rebutNodeList.startNode) {
-      setCheckedValue('startNode');
-    }
-  }, [rebutNodeList.previousNode, rebutNodeList.startNode]);
   useEffect(() => {
     modal?.handleOk(handleSubmit);
   }, [handleSubmit, modal]);
   return (
     <div className={`${prefix}-container`}>
-      {
-        rebutNodeList.startNode && (
-        <CheckBox
-          name="rebutNode"
-          value="startNode"
-          checked={checkedValue === 'startNode'}
-          onChange={handleStartNodeChange}
-        >
-          开始节点
-        </CheckBox>
-        )
-      }
-
-      {
-        rebutNodeList.previousNode && (
-        <CheckBox
-          style={{
-            marginLeft: 30,
-          }}
-          name="rebutNode"
-          value="preNode"
-          checked={checkedValue === 'preNode'}
-          onChange={handleStartNodeChange}
-        >
-          上一节点
-        </CheckBox>
-        )
-      }
+      <Form dataSet={rebutDataSet}>
+        <Select name="rebutNode">
+          {rebutNodeList.map((rebutNode) => (
+            <Option value={rebutNode}>{rebutNode.name}</Option>
+          ))}
+        </Select>
+        <TextArea name="approveComment" />
+      </Form>
     </div>
   );
 };
@@ -103,7 +95,7 @@ const OpenRebutModal = (props: Props) => {
       width: 520,
     },
     children: <ObserverRebutModal {...props} />,
-    
+
     border: false,
   });
 };

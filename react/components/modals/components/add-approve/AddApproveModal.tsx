@@ -1,17 +1,13 @@
-import React, {
-  useCallback, useEffect, useMemo, useRef,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, } from 'react';
 import { observer } from 'mobx-react-lite';
-import {
-  DataSet, Modal, Form, Select, TextArea, CheckBox,
-} from 'choerodon-ui/pro';
+import { DataSet, Form, Modal, Select, SelectBox, TextArea, } from 'choerodon-ui/pro';
 import { IModalProps } from '@choerodon/agile/lib/common/types';
 import './AddApproveModal.less';
-import { AddApproveData, approveApi, approveApiConfig } from '@/api';
-import SelectEmployee, { IEmployee } from '@/components/select/select-employee';
+import { AddApproveData, approveApi, approveApiConfig, IWorkflowUser } from '@/api';
+import SelectWorkflowUser from '@/components/select/select-employee';
 import { FieldType } from 'choerodon-ui/pro/lib/data-set/enum';
-import { includes } from 'lodash';
 import store from '../../store';
+import { Choerodon } from "@choerodon/boot";
 
 const prefix = 'c7n-backlogApprove-addApproveModal';
 
@@ -22,63 +18,61 @@ interface Props {
 }
 
 const AddApproveModal:React.FC<Props> = ({ modal, onClose, taskId }) => {
-  const employeesRef = useRef<IEmployee[]>();
+  const employeesRef = useRef<IWorkflowUser[]>();
 
   const { process: { taskDetail } } = store;
+  const workflowUserRef = useRef<IWorkflowUser[]>();
 
   const approveTypeDataSet = useMemo(() => new DataSet({
     autoQuery: true,
     fields: [{
       name: 'value',
-      type: 'string' as FieldType,
+      type: FieldType.string,
     }, {
       name: 'meaning',
-      type: 'string' as FieldType,
+      type: FieldType.string,
     }],
     transport: {
       read: approveApiConfig.getAddApproveType(),
     },
   }), []);
   const addApproveDataSet = useMemo(() => new DataSet({
-    autoCreate: true,
     fields: [{
-      name: 'type',
+      name: 'addApproverType',
       label: '加审类型',
       required: true,
       options: approveTypeDataSet,
       textField: 'meaning',
       valueField: 'value',
     }, {
-      name: 'approver',
-      label: '选择审批人',
+      name: 'parallelFlag',
+      label: '审批顺序',
+      type: FieldType.number,
+      defaultValue: 1,
+    }, {
+      name: 'toPersonList',
+      label: '加审人',
       required: true,
       multiple: true,
       textField: 'realName',
       valueField: 'id',
+      type: FieldType.object,
     }, {
       name: 'remark',
       label: '加审备注',
     }, {
-      name: 'currentTask',
-      label: '当前任务',
-      dynamicProps: {
-        required: ({ record }) => record.get('type') === 'AFTER_ADD_TASK_APPROVER',
-      },
-      required: true,
-      disabled: true,
-      defaultValue: 'approved',
-    }, {
-      name: 'suggestion',
+      name: 'approveComment',
       label: '处理意见',
     }],
+    data: [{}],
     events: {
       update: ({
       // @ts-ignore
         name, value, oldValue, record,
       }) => {
-        if (name === 'type') {
-          if (record.get('suggestion') && value === 'BEFORE_ADD_TASK_APPROVER') {
-            record.set('suggestion', undefined);
+        if (name === 'addApproverType') {
+          if (value === 'BEFORE_ADD_TASK_APPROVER') {
+            record.set('approveComment', undefined);
           }
         }
       },
@@ -86,59 +80,59 @@ const AddApproveModal:React.FC<Props> = ({ modal, onClose, taskId }) => {
   }), [approveTypeDataSet]);
 
   const handleSubmit = useCallback(async () => {
+    addApproveDataSet.current?.set('__dirty', true);
+    addApproveDataSet.current?.set('toPersonList', workflowUserRef.current)
     const validate = await addApproveDataSet.validate();
     if (validate) {
       try {
-        const addApproverPerson = (employeesRef?.current || []).filter((item) => includes((addApproveDataSet?.current?.get('approver') || []), item.id));
         const data: AddApproveData = {
-          addApproverPerson,
-          addApproverType: addApproveDataSet?.current?.get('type'),
+          addApproverType: addApproveDataSet?.current?.get('addApproverType'),
+          approveComment: addApproveDataSet?.current?.get('approveComment'),
+          currentAction: (addApproveDataSet?.current?.get('addApproverType') === 'AFTER_ADD_TASK_APPROVER') ? 'APPROVED' : undefined,
+          parallelFlag: addApproveDataSet?.current?.get('parallelFlag'),
           remark: addApproveDataSet?.current?.get('remark'),
-          toPersonList: addApproverPerson.map((item) => ({
-            name: item.realName,
-            value: item.id,
-            loginName: item.loginName,
-          })),
-          approveComment: addApproveDataSet?.current?.get('suggestion'),
-          currentAction: addApproveDataSet?.current?.get('type') === 'AFTER_ADD_TASK_APPROVER' ? 'APPROVED' : undefined,
+          toPersonList: addApproveDataSet.current?.get('toPersonList'),
         };
         await approveApi.addApprove(taskId, data);
         onClose();
         return true;
       } catch (e) {
-        console.log(e);
+        console.error(e);
         return false;
       }
     }
+    Choerodon.prompt('请完成加审信息填写！');
     return false;
   }, [addApproveDataSet, onClose, taskId]);
   useEffect(() => {
     modal?.handleOk(handleSubmit);
   }, [handleSubmit, modal]);
 
-  const isAfterApprove = addApproveDataSet?.current?.get('type') === 'AFTER_ADD_TASK_APPROVER';
   return (
     <div className={`${prefix}-container`}>
       <Form dataSet={addApproveDataSet}>
-        <Select name="type" />
-        <SelectEmployee
-          name="approver"
-          selfEmpNum={taskDetail.selfEmpNum}
-          dataRef={employeesRef}
+        <Select name="addApproverType" />
+        <SelectBox
+          name="parallelFlag"
+        >
+          <SelectBox.Option value={1}>
+            同时审批
+          </SelectBox.Option>
+          <SelectBox.Option value={0}>
+            指定顺序审批
+          </SelectBox.Option>
+        </SelectBox>
+        <SelectWorkflowUser
+          name="toPersonList"
+          selfUserId={taskDetail.selfUserId}
+          dataRef={workflowUserRef}
+          multiple={true}
+          label={'加审人'}
         />
         <TextArea name="remark" />
         {
-           isAfterApprove && (
-           <div className={`${prefix}-container-currentTask-field`}>
-             <span className={`${prefix}-container-currentTask-field-title`}>当前任务</span>
-             <CheckBox name="currentTask" checked>审批同意</CheckBox>
-             <CheckBox name="currentTask">暂不处理</CheckBox>
-           </div>
-           )
-         }
-        {
-           isAfterApprove && (
-           <TextArea name="suggestion" />
+          (addApproveDataSet?.current?.get('addApproverType') === 'AFTER_ADD_TASK_APPROVER') && (
+           <TextArea name="approveComment" />
            )
          }
       </Form>

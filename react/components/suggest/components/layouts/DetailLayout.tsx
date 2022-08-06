@@ -1,6 +1,4 @@
-import {
-  DataSet, Form, TextArea, Select, Button,
-} from 'choerodon-ui/pro';
+import { Button, DataSet, Form, Select, TextArea, } from 'choerodon-ui/pro';
 import { ButtonColor, FuncType } from 'choerodon-ui/pro/lib/button/enum';
 import { ResizeType } from 'choerodon-ui/pro/lib/text-area/enum';
 import React, { useCallback } from 'react';
@@ -81,7 +79,7 @@ const SuggestLayout: React.FC<SuggestLayoutProps> = (props) => {
             funcType={'raised' as FuncType}
             onClick={onSaveCommentTemplateClick}
           >
-            保留审批意见
+            收藏审批意见
           </Button>
         </div>
       </Form>

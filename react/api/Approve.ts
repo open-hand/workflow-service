@@ -1,9 +1,8 @@
 import { axios } from '@choerodon/boot';
 import Api from '@choerodon/agile/lib/api/Api';
 import { getOrganizationId } from '@choerodon/agile/lib/utils/common';
-import {
-  ICommentTemplate, ICommentTemplateCreate, IFlowData, IProcessAttachment,
-} from '@/common/types';
+import { ICommentTemplate, ICommentTemplateCreate, IFlowData, IProcessAttachment, } from '@/common/types';
+import { Dimension } from "@/api/WorkFlow";
 
 export interface INextNodeApprover {
   code: string,
@@ -26,18 +25,12 @@ export interface NextNodeApproveData {
 }
 
 export interface AddApproveData {
-  addApproverPerson: {
-    id: string
-    realName: string
-  }[],
   addApproverType: string
   remark: string
-  toPersonList: {
-    value: string
-    name: string
-  }[]
+  toPersonList: IWorkflowUser[]
   approveComment?: string
-  currentAction?: 'APPROVED'
+  currentAction?: 'APPROVED',
+  parallelFlag: number,
 }
 export interface IAttachUpload {
   attachmentUuid: string
@@ -82,6 +75,17 @@ export interface InstanceDetail {
   parentDescription?: any;
   urgeEnableFlag: 0 | 1
 }
+
+/**
+ * 需求转交人
+ */
+export interface IWorkflowUser {
+  id: number | string,
+  loginName: string,
+  realName: string,
+  dimension: Dimension,
+}
+
 class ApproveApi extends Api<ApproveApi> {
   get prefix() {
     return `/hwkf/v1/${this.orgId}`;
@@ -141,6 +145,10 @@ class ApproveApi extends Api<ApproveApi> {
     });
   }
 
+  /**
+   * 催办
+   * @param instanceIds
+   */
   urge(instanceIds: string) {
     return axios({
       method: 'post',
@@ -151,18 +159,27 @@ class ApproveApi extends Api<ApproveApi> {
     });
   }
 
-  approved(taskId: string, comment: string) {
+  /**
+   * 审批通过
+   * @param taskId
+   * @param approveComment
+   */
+  approved(taskId: string, approveComment: string) {
     return axios({
       method: 'post',
       url: `${this.ProcessPrefix}/personal_process/approve`,
       params: {
-        comment,
         taskIds: taskId,
       },
-      data: {},
+      data: {approveComment},
     });
   }
 
+  /**
+   * 审批拒绝
+   * @param taskId
+   * @param comment
+   */
   reject(taskId: string, comment: string) {
     return axios({
       method: 'post',
@@ -178,34 +195,65 @@ class ApproveApi extends Api<ApproveApi> {
   /**
    * 抄送
    * @param taskId
-   * @param toPersons
+   * @param toPersonList
+   * @param remark
    * @returns
    */
-  carbonCopy(taskId: string, toPersons: string[]) {
-    return axios({
-      method: 'post',
-      url: `${this.ProcessPrefix}/personal_process/carbon-copy`,
-      params: {
-        taskId,
-        toPerson: toPersons.join(','),
-      },
-      data: {},
-    });
-  }
-
-  delegateTo(taskId: string, delegateTo: string) {
+  carbonCopy(taskId: string, toPersonList: IWorkflowUser[], remark: string) {
     return axios({
       method: 'post',
       url: `${this.ProcessPrefix}/personal_process/${taskId}/executeTaskById`,
       params: {
-        approveAction: 'DELEGATE',
+        approveAction: 'CARBON_COPY',
+        taskId,
       },
       data: {
-        delegateTo,
+        toPersonList,
+        remark
       },
     });
   }
 
+  /**
+   * 转交
+   * @param taskId
+   * @param toPerson
+   */
+  delegateTo(taskId: string, toPerson: IWorkflowUser) {
+    return axios({
+      method: 'post',
+      url: `${this.ProcessPrefix}/personal_process/${taskId}/executeTaskById`,
+      params: {
+        taskId,
+        approveAction: 'DELEGATE'
+      },
+      data: {
+        toPersonList: [toPerson],
+      },
+    });
+  }
+
+  /**
+   * 加签
+   * @param taskId
+   * @param data
+   */
+  addSign(taskId: string, data: any) {
+    return axios({
+      method: 'post',
+      url: `${this.ProcessPrefix}/personal_process/${taskId}/executeTaskById`,
+      params: {
+        taskId,
+        approveAction: 'ADD_SIGN'
+      },
+      data,
+    });
+  }
+
+  /**
+   * 指定下一审批人
+   * @param taskId
+   */
   forecastNextNode(taskId: string) {
     return axios({
       method: 'get',
@@ -213,7 +261,7 @@ class ApproveApi extends Api<ApproveApi> {
     });
   }
 
-  getEmployees(page: number = 1, selfEmpNum: string, empName?: string, size: number = 20) {
+  getEmployees(page: number = 1, selfUserId: number | string, empName?: string, size: number = 20) {
     return axios({
       method: 'get',
       url: '/hpfm/v1/lovs/sql/data',
@@ -223,7 +271,7 @@ class ApproveApi extends Api<ApproveApi> {
         tenantId: getOrganizationId(),
         page,
         size,
-        selfEmpNum,
+        selfUserId,
         employeeName: empName,
       },
     });
@@ -335,16 +383,20 @@ class ApproveApi extends Api<ApproveApi> {
     });
   }
 
-  rebut(taskId: string, rebutTo: string) {
+  /**
+   * 驳回
+   * @param taskId
+   * @param rebutData
+   */
+  rebut(taskId: string, rebutData: any) {
     return axios({
       method: 'post',
-      url: `${this.ProcessPrefix}/personal_process/${taskId}/executeTaskById`,
+      url: `${this.ProcessPrefix}/personal_process/${taskId}/rebut`,
       params: {
-        approveAction: 'REBUT',
+        // approveAction: 'REBUT',
+        taskId
       },
-      data: {
-        rebutTo,
-      },
+      data: rebutData,
     });
   }
 
@@ -358,6 +410,11 @@ class ApproveApi extends Api<ApproveApi> {
     });
   }
 
+  /**
+   * 加审
+   * @param taskId
+   * @param data
+   */
   addApprove(taskId: string, data: AddApproveData) {
     return axios({
       method: 'post',
