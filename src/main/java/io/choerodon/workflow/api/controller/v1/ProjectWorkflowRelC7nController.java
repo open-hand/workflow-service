@@ -10,7 +10,7 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.choerodon.workflow.api.vo.ProjectWorkflowRelVO;
 import io.choerodon.workflow.app.service.ProjectWorkflowRelService;
-import io.choerodon.workflow.infra.dto.ProjectWorkflowRelDTO;
+import io.choerodon.workflow.domain.entity.ProjectWorkflowRel;
 
 import org.hzero.core.util.Results;
 
@@ -27,12 +27,18 @@ public class ProjectWorkflowRelC7nController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ApiOperation("建立项目和工作流的关系")
     @PostMapping
-    public ResponseEntity<ProjectWorkflowRelDTO> createOrUpdate(@ApiParam(value = "项目id", required = true)
+    public ResponseEntity<ProjectWorkflowRel> createOrUpdate(@ApiParam(value = "项目id", required = true)
                                                                 @PathVariable(name = "project_id") Long projectId,
-                                                                @RequestBody ProjectWorkflowRelDTO projectWorkflowRelDTO) {
-        return Results.created(projectWorkflowRelService.createOrUpdate(projectId, projectWorkflowRelDTO));
+                                                             @RequestBody ProjectWorkflowRel projectWorkflowRel) {
+        return Results.created(projectWorkflowRelService.createOrUpdate(projectId, projectWorkflowRel));
     }
 
+    /**
+     * 与io.choerodon.workflow.api.controller.v1.ProjectExternalWorkflowRelC7nController#queryWorkflow(java.lang.Long)重复<br/>
+     * 不知道哪个是多余的
+     * @param projectId 项目ID
+     * @return 查询结果
+     */
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ApiOperation("查询项目关联的流程")
     @GetMapping("/query")

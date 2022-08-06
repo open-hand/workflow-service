@@ -1,13 +1,15 @@
-package io.choerodon.workflow.infra.dto;
-
-import io.choerodon.mybatis.annotation.ModifyAudit;
-import io.choerodon.mybatis.annotation.VersionAudit;
-import io.choerodon.mybatis.domain.AuditDomain;
-import org.hzero.starter.keyencrypt.core.Encrypt;
+package io.choerodon.workflow.domain.entity;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.VersionAudit;
+import io.choerodon.mybatis.domain.AuditDomain;
+
+import org.hzero.mybatis.annotation.Unique;
+import org.hzero.starter.keyencrypt.core.Encrypt;
 
 /**
  * @author zhaotianxin
@@ -16,22 +18,31 @@ import javax.persistence.Table;
 @VersionAudit
 @ModifyAudit
 @Table(name = "cwkf_backlog_instance_rel")
-public class BacklogInstanceRelDTO extends AuditDomain {
+public class BacklogInstanceRel extends AuditDomain {
+
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_INSTANCE_ID = "instanceId";
+    public static final String FIELD_BACKLOG_ID = "backlogId";
+    public static final String FIELD_ORGANIZATION_ID = "organizationId";
+
     @Id
     @GeneratedValue
     @Encrypt
     private Long id;
 
+    @Unique
     private Long instanceId;
 
+    @Unique
     private Long backlogId;
 
+    @Unique
     private Long organizationId;
 
-    public BacklogInstanceRelDTO() {
+    public BacklogInstanceRel() {
     }
 
-    public BacklogInstanceRelDTO(Long instanceId, Long organizationId, Long backlogId) {
+    public BacklogInstanceRel(Long instanceId, Long organizationId, Long backlogId) {
         this.instanceId = instanceId;
         this.organizationId = organizationId;
         this.backlogId = backlogId;

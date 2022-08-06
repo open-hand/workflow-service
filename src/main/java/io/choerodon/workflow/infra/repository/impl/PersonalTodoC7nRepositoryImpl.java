@@ -1,4 +1,4 @@
-package io.choerodon.workflow.domain.repository.impl;
+package io.choerodon.workflow.infra.repository.impl;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import io.choerodon.core.oauth.CustomUserDetails;
+import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.workflow.domain.repository.PersonalTodoC7nRepository;
 import io.choerodon.workflow.infra.mapper.PersonalTodoC7nMapper;
 
@@ -64,6 +66,12 @@ public class PersonalTodoC7nRepositoryImpl implements PersonalTodoC7nRepository 
 
     @Override
     public List<PersonalTodoViewDTO> selectPersonalTodo(Long tenantId, PersonalTodoQueryDTO queryDTO, List<Long> backlogIds) {
+        final String userIdString = getUserIdString();
+        if(userIdString == null) {
+            return Collections.emptyList();
+        }
+        queryDTO.setSelfUserId(userIdString);
+        queryDTO.setDimension(EngineConstants.ApproveDimension.USER);
         queryDTO.setPageType(WorkflowConstants.PageType.TODO);
         queryDTO.setTodoCardFlag(Optional.ofNullable(queryDTO.getTodoCardFlag()).orElse(0));
         queryDTO.setTenantId(tenantId);
@@ -75,13 +83,23 @@ public class PersonalTodoC7nRepositoryImpl implements PersonalTodoC7nRepository 
 
     @Override
     public List<PersonalTodoViewDTO> selectMobilePersonalTask(PersonalTodoQueryDTO queryDTO, List<Long> backlogIds) {
-        List<PersonalTodoDTO.PersonalTodoViewDTO> result = personalTodoC7nMapper.selectPersonalTask(queryDTO, backlogIds);
+        final String userIdString = getUserIdString();
+        if(userIdString == null) {
+            return Collections.emptyList();
+        }
+        queryDTO.setSelfUserId(userIdString);
+        List<PersonalTodoDTO.PersonalTodoViewDTO> result = personalTodoC7nMapper.selectMobilePersonalTask(queryDTO, backlogIds);
         processExtraFields(result, queryDTO.getTenantId(), queryDTO.getSelfUserId(), queryDTO.getSelfEmployeeNum(), queryDTO.getSeparator());
         return result;
     }
 
     @Override
     public List<ParticipatedDTO> selectMineParticipated(Long tenantId, PersonalTodoQueryDTO queryDTO, List<Long> backlogIds) {
+        final String userIdString = getUserIdString();
+        if(userIdString == null) {
+            return Collections.emptyList();
+        }
+        queryDTO.setSelfUserId(userIdString);
         queryDTO.setPageType(WorkflowConstants.PageType.PARTICIPATED);
         queryDTO.setTenantId(tenantId);
         List<PersonalTodoDTO.ParticipatedDTO> result = personalTodoC7nMapper.selectMineParticipated(queryDTO, backlogIds);
@@ -92,7 +110,11 @@ public class PersonalTodoC7nRepositoryImpl implements PersonalTodoC7nRepository 
 
     @Override
     public List<SubmittedDTO> selectMineSubmitted(Long tenantId, PersonalTodoQueryDTO queryDTO, List<Long> backlogIds) {
-        queryDTO.setPageType(WorkflowConstants.PageType.SUBMITTED);
+        final String userIdString = getUserIdString();
+        if(userIdString == null) {
+            return Collections.emptyList();
+        }
+        queryDTO.setSelfUserId(userIdString);
         queryDTO.setTenantId(tenantId);
         List<PersonalTodoDTO.SubmittedDTO> result = personalTodoC7nMapper.selectMineSubmitted(queryDTO, backlogIds);
         processExtraFields(result, tenantId, queryDTO.getSelfUserId(), queryDTO.getSelfEmployeeNum(), queryDTO.getSeparator());
@@ -113,7 +135,12 @@ public class PersonalTodoC7nRepositoryImpl implements PersonalTodoC7nRepository 
 
     @Override
     public List<CarbonCopyDTO> selectMineCarbonCopied(Long tenantId, PersonalTodoQueryDTO queryDTO, List<Long> backlogIds) {
-        queryDTO.setPageType(queryDTO.getCarbonCopyTodoFlag()!=null && queryDTO.getCarbonCopyTodoFlag()==1?WorkflowConstants.PageType.RECEIVE_CARBON_COPY:WorkflowConstants.PageType.CARBON_COPIED);
+        final String userIdString = getUserIdString();
+        if(userIdString == null) {
+            return Collections.emptyList();
+        }
+        queryDTO.setSelfUserId(userIdString);
+        queryDTO.setCarbonCopyFlag("carbonCopyToMe");
         queryDTO.setTenantId(tenantId);
         List<PersonalTodoDTO.CarbonCopyDTO> result = personalTodoC7nMapper.selectMineCarbonCopied(queryDTO, backlogIds);
         processExtraFields(result, tenantId, queryDTO.getSelfUserId(), queryDTO.getSelfEmployeeNum(), queryDTO.getSeparator());
@@ -292,5 +319,13 @@ public class PersonalTodoC7nRepositoryImpl implements PersonalTodoC7nRepository 
             }
             baseViewDTO.setDefExtendFieldList(allFieldList);
         }
+    }
+
+    private static String getUserIdString() {
+        final String userIdString = Optional.ofNullable(DetailsHelper.getUserDetails())
+                .map(CustomUserDetails::getUserId)
+                .map(String::valueOf)
+                .orElse(null);
+        return userIdString;
     }
 }

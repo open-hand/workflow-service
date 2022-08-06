@@ -18,7 +18,6 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.starter.keyencrypt.core.Encrypt;
-import org.hzero.workflow.engine.model.node.FlowApproverValue;
 import org.hzero.workflow.engine.run.action.AppointNextNodeApproverActionHandler;
 import org.hzero.workflow.engine.run.dto.ProcessJumpNodeDTO;
 import org.hzero.workflow.engine.util.EngineConstants;
@@ -81,18 +80,6 @@ public class ProjectInvokeWorkflowC7nController extends BaseController {
                                                 @RequestBody Map<String, Object> paramMap) {
         Assert.notNull(projectId, BaseConstants.ErrorCode.NOT_NULL);
         personalActionService.executeTaskById(tenantId, taskId, approveAction, paramMap);
-        return Results.success();
-    }
-
-    @ApiOperation("项目层-我的待办-流程手动抄送")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping({"/personal-process/carbon-copy"})
-    public ResponseEntity<Void> flowCarbonCopy(@PathVariable("project_id") Long projectId,
-                                               @RequestParam("organizationId") Long tenantId,
-                                               @Encrypt @RequestParam("taskId") Long taskId,
-                                               @RequestBody List<FlowApproverValue> toPersonList) {
-        Assert.notNull(projectId, BaseConstants.ErrorCode.NOT_NULL);
-        personalActionService.carbonCopy(tenantId, taskId, toPersonList);
         return Results.success();
     }
 

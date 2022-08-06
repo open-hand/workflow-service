@@ -20,7 +20,6 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.starter.keyencrypt.core.Encrypt;
-import org.hzero.workflow.engine.model.node.FlowApproverValue;
 import org.hzero.workflow.engine.run.action.AppointNextNodeApproverActionHandler;
 import org.hzero.workflow.engine.run.dto.ProcessJumpNodeDTO;
 import org.hzero.workflow.engine.util.EngineConstants;
@@ -114,7 +113,7 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @PostMapping({"/personal_process/approve"})
     public ResponseEntity<Void> flowApprove(@PathVariable("organization_id") Long organizationId,
-                                            @Encrypt @RequestParam(value = "taskIds", required = false) List<Long> taskIds,
+                                            @Encrypt @RequestParam List<Long> taskIds,
                                             @RequestBody(required = false) Map<String, Object> paramMap) {
         personalActionService.batchProcess(organizationId, taskIds, EngineConstants.ApproveAction.APPROVED,false,null, paramMap);
         return Results.success();
@@ -169,13 +168,13 @@ public class OrganizationInvokeWorkflowConvertC7nController extends BaseControll
         return Results.success();
     }
 
-    @ApiOperation("我的待办-流程手动抄送")
+    @ApiOperation("我的待办-驳回")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
-    @PostMapping({"/personal_process/carbon-copy"})
-    public ResponseEntity<Void> flowCarbonCopy(@PathVariable("organization_id") Long organizationId,
-                                               @Encrypt @RequestParam("taskId") Long taskId,
-                                               @RequestBody List<FlowApproverValue> toPersonList) {
-        personalActionService.carbonCopy(organizationId, taskId, toPersonList);
+    @PostMapping({"/personal_process/{taskId}/rebut"})
+    public ResponseEntity<Void> flowRebut(@PathVariable("organization_id") Long tenantId,
+                                          @Encrypt @PathVariable("taskId") Long taskId,
+                                          @RequestBody ProcessJumpNodeDTO rebutNode) {
+        this.personalActionService.rebut(tenantId, taskId, rebutNode);
         return Results.success();
     }
 

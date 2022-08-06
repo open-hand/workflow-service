@@ -1,13 +1,14 @@
-package io.choerodon.workflow.infra.dto;
-
-import io.choerodon.mybatis.annotation.ModifyAudit;
-import io.choerodon.mybatis.annotation.VersionAudit;
-import io.choerodon.mybatis.domain.AuditDomain;
-import org.hzero.starter.keyencrypt.core.Encrypt;
+package io.choerodon.workflow.domain.entity;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.VersionAudit;
+import io.choerodon.mybatis.domain.AuditDomain;
+
+import org.hzero.starter.keyencrypt.core.Encrypt;
 
 /**
  * @author zhaotianxin
@@ -16,7 +17,13 @@ import javax.persistence.Table;
 @VersionAudit
 @ModifyAudit
 @Table(name = "cwkf_project_workflow_rel")
-public class ProjectWorkflowRelDTO extends AuditDomain {
+public class ProjectWorkflowRel extends AuditDomain {
+
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_PROJECT_ID = "projectId";
+    public static final String FIELD_ORGANIZATION_ID = "organizationId";
+    public static final String FIELD_FLOW_CODE = "flowCode";
+
     @Id
     @GeneratedValue
     @Encrypt

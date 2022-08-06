@@ -1,29 +1,31 @@
 package io.choerodon.workflow.api.controller.v1;
 
-import io.choerodon.core.domain.Page;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.swagger.annotation.CustomPageRequest;
-import io.choerodon.workflow.api.vo.RunTaskHistoryVO;
-import io.choerodon.workflow.app.service.PersonalProcessC7nService;
-import io.choerodon.core.exception.CommonException;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.swagger.annotation.Permission;
+import java.util.List;
+import java.util.Optional;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
-import org.hzero.core.util.Results;
-import org.hzero.starter.keyencrypt.core.Encrypt;
-import org.hzero.workflow.def.infra.annotation.ProcessUserDecrypt;
-import org.hzero.workflow.def.infra.annotation.UserDecrypt;
-import org.hzero.workflow.personal.api.dto.PersonalTodoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.List;
-import java.util.Optional;
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.swagger.annotation.CustomPageRequest;
+import io.choerodon.swagger.annotation.Permission;
+import io.choerodon.workflow.api.vo.RunTaskHistoryVO;
+import io.choerodon.workflow.app.service.PersonalProcessC7nService;
+
+import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
+import org.hzero.core.util.Results;
+import org.hzero.starter.keyencrypt.core.Encrypt;
+import org.hzero.workflow.def.infra.annotation.ProcessUserDecrypt;
+import org.hzero.workflow.def.infra.annotation.UserDecrypt;
+import org.hzero.workflow.personal.api.dto.PersonalTodoDTO;
 
 /**
  * @author huaxin.deng@hand-china.com 2021-03-12 14:20:24
@@ -64,9 +66,17 @@ public class PersonalProcessC7nController {
                                                                                             @UserDecrypt(targetField = {"starter"})
                                                                                             PersonalTodoDTO.PersonalTodoQueryDTO queryDTO,
                                                                                             @RequestParam(required = false) List<Long> backlogIds) {
-        return Results.success(this.personalProcessC7nService.pageByOptions(tenantId, pageRequest, queryDTO, backlogIds));
+        return Results.success(this.personalProcessC7nService.selectPersonalTodo(tenantId, pageRequest, queryDTO, backlogIds));
     }
 
+    /**
+     * 晓燕说没有这个功能, 不知道是干啥的
+     * @param tenantId tenantId
+     * @param pageRequest pageRequest
+     * @param queryDTO queryDTO
+     * @param backlogIds backlogIds
+     * @return result
+     */
     @ApiOperation("分页查询我的已办")
     @Permission(
             level = ResourceLevel.ORGANIZATION

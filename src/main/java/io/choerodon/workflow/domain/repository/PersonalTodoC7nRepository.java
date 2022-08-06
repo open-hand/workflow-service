@@ -1,8 +1,8 @@
 package io.choerodon.workflow.domain.repository;
 
-import org.hzero.workflow.personal.api.dto.PersonalTodoDTO.*;
-
 import java.util.List;
+
+import org.hzero.workflow.personal.api.dto.PersonalTodoDTO.*;
 
 /**
  * @author chihao.ran@hand-china.com
@@ -11,6 +11,12 @@ import java.util.List;
 public interface PersonalTodoC7nRepository {
     List<PersonalTodoViewDTO> selectPersonalTodo(Long tenantId, PersonalTodoQueryDTO queryDTO, List<Long> backlogIds);
 
+    /**
+     * 晓燕说没有这个功能, 不知道是干啥的
+     * @param doneParam queryDTO
+     * @param backlogIds backlogIds
+     * @return result
+     */
     List<PersonalTodoViewDTO> selectMobilePersonalTask(PersonalTodoQueryDTO doneParam, List<Long> backlogIds);
 
     List<ParticipatedDTO> selectMineParticipated(Long tenantId, PersonalTodoQueryDTO queryDTO, List<Long> backlogIds);

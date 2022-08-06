@@ -1,13 +1,17 @@
 package io.choerodon.workflow.app.service.impl;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -15,10 +19,10 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.workflow.api.vo.RunTaskHistoryVO;
 import io.choerodon.workflow.app.service.PersonalProcessC7nService;
 import io.choerodon.workflow.domain.repository.PersonalTodoC7nRepository;
-import io.choerodon.workflow.infra.feign.BaseFeignClient;
+import io.choerodon.workflow.infra.feign.IamFeignClient;
 
 import org.hzero.core.base.BaseConstants;
-import org.hzero.workflow.def.infra.feign.PlatformFeignClient;
+import org.hzero.core.util.ResponseUtils;
 import org.hzero.workflow.def.infra.feign.dto.UserDTO;
 import org.hzero.workflow.engine.dao.entity.RunTaskHistory;
 import org.hzero.workflow.engine.exception.EmployeeNotFoundException;
@@ -39,64 +43,52 @@ public class PersonalProcessC7nServiceImpl implements PersonalProcessC7nService 
     private PersonalTodoRepository personalTodoRepository;
 
     @Autowired
-    private BaseFeignClient baseFeignClient;
-
-    @Autowired
-    private PlatformFeignClient platformFeignClient;
+    private IamFeignClient iamFeignClient;
 
     @Override
     public List<RunTaskHistoryVO> listApproveHistoryByInstanceId(Long tenantId, Long instanceId) {
-        List<RunTaskHistoryVO> result = new ArrayList<>();
-        listApproveHistoryWithUserDTO(tenantId, instanceId, result);
-        return result;
+        return listApproveHistoryWithUserDTO(tenantId, instanceId);
     }
 
-    private void listApproveHistoryWithUserDTO(Long tenantId, Long instanceId, List<RunTaskHistoryVO> runTaskHistoryVOList) {
+    private List<RunTaskHistoryVO> listApproveHistoryWithUserDTO(Long tenantId, Long instanceId) {
         List<RunTaskHistory> runTaskHistories = personalTodoRepository.selectHistory(tenantId, instanceId, Collections.singletonList(instanceId));
-        if (CollectionUtils.isEmpty(runTaskHistories)) {
-            return;
+        if (CollectionUtils.isEmpty(runTaskHistories)){
+            return Collections.emptyList();
         }
         Collections.reverse(runTaskHistories);
-        List<String>  realNames = new ArrayList<>();
-        runTaskHistories.forEach(history -> {
-            String assignee = history.getAssignee();
-            RunTaskHistoryVO runTaskHistoryVO = new RunTaskHistoryVO();
-            runTaskHistoryVO.setRunTaskHistory(history);
-            if (!Objects.isNull(assignee)) {
-                String realName = assignee.substring(0,assignee.lastIndexOf("("));
-                if (!ObjectUtils.isEmpty(realName)) {
-                    realNames.add(realName);
-                }
-            }
-            runTaskHistoryVOList.add(runTaskHistoryVO);
-        });
-        if (!CollectionUtils.isEmpty(realNames)) {
-            fillUser(realNames, runTaskHistoryVOList);
-        }
+        List<RunTaskHistoryVO> runTaskHistoryVOList = runTaskHistories.stream()
+                .map(history -> new RunTaskHistoryVO().setRunTaskHistory(history))
+                .collect(Collectors.toList());
+        fillRunTaskHistoryUserInfo(runTaskHistoryVOList);
+        return runTaskHistoryVOList;
     }
 
-    private void fillUser(List<String> realNames, List<RunTaskHistoryVO> runTaskHistoryVOList) {
-        List<UserDTO> userDTOList = baseFeignClient.listUsersByRealNames(false,new HashSet<>(realNames)).getBody();
-        Map<String, List<UserDTO>> userDTOMap= userDTOList.stream().collect(Collectors.groupingBy(UserDTO::getRealName));
-        runTaskHistoryVOList.forEach(history -> {
-            String assignee = history.getRunTaskHistory().getAssignee();
-            if (!Objects.isNull(assignee)) {
-                String loginName = assignee.substring(assignee.lastIndexOf("(") + 1, assignee.lastIndexOf(")"));
-                String realName = assignee.substring(0, assignee.lastIndexOf("("));
-                List<UserDTO> userDTOS = userDTOMap.get(realName);
-                if(!CollectionUtils.isEmpty(userDTOS)){
-                    for (UserDTO userDTO : userDTOS) {
-                        if (Objects.equals(loginName, userDTO.getLoginName()) || Objects.equals(loginName, userDTO.getEmail())) {
-                            history.setUserDTO(userDTO);
-                        }
-                    }
-                }
+    private void fillRunTaskHistoryUserInfo(List<RunTaskHistoryVO> runTaskHistoryVOList) {
+        if(CollectionUtils.isEmpty(runTaskHistoryVOList)) {
+            return;
+        }
+        final Long[] assigneeUserIds = runTaskHistoryVOList.stream()
+                .map(RunTaskHistoryVO::getRunTaskHistory)
+                .map(RunTaskHistory::getTaskAssignee)
+                .filter(StringUtils::isNotBlank)
+                .map(Long::parseLong)
+                .collect(Collectors.toSet())
+                .toArray(new Long[0]);
+        List<UserDTO> userDTOList = ResponseUtils.getResponse(iamFeignClient.listUsersByIds(assigneeUserIds, false), new TypeReference<List<UserDTO>>() {});
+        if(CollectionUtils.isEmpty(userDTOList)) {
+            return;
+        }
+        Map<String, UserDTO> loginNameToUserMap = userDTOList.stream().collect(Collectors.toMap(UserDTO::getLoginName, Function.identity()));
+        for (RunTaskHistoryVO history : runTaskHistoryVOList) {
+            String loginName = history.getRunTaskHistory().getCode();
+            if (StringUtils.isNotBlank(loginName)) {
+                history.setUserDTO(loginNameToUserMap.get(loginName));
             }
-        });
+        }
     }
 
     @Override
-    public Page<PersonalTodoViewDTO> pageByOptions(Long tenantId, PageRequest pageRequest, PersonalTodoQueryDTO queryDTO, List<Long> backlogIds) {
+    public Page<PersonalTodoViewDTO> selectPersonalTodo(Long tenantId, PageRequest pageRequest, PersonalTodoQueryDTO queryDTO, List<Long> backlogIds) {
         try {
             return PageHelper.doPageAndSort(
                     pageRequest,
