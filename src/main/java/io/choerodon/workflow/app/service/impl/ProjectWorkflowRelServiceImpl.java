@@ -1,72 +1,77 @@
 package io.choerodon.workflow.app.service.impl;
 
-import io.choerodon.workflow.api.vo.ProjectWorkflowRelVO;
-import io.choerodon.workflow.app.service.ProjectWorkflowRelService;
-import io.choerodon.workflow.infra.dto.ProjectWorkflowRelDTO;
-import io.choerodon.workflow.infra.mapper.ProjectWorkflowRelMapper;
-import io.choerodon.core.exception.CommonException;
-import org.hzero.workflow.def.domain.entity.DefWorkflow;
-import org.hzero.workflow.def.infra.mapper.DefWorkflowMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
+import org.springframework.util.Assert;
+
+import io.choerodon.workflow.api.vo.ProjectWorkflowRelVO;
+import io.choerodon.workflow.app.service.ProjectWorkflowRelService;
+import io.choerodon.workflow.domain.entity.ProjectWorkflowRel;
+import io.choerodon.workflow.domain.repository.ProjectWorkflowRelRepository;
+
+import org.hzero.core.base.BaseConstants;
+import org.hzero.workflow.def.domain.entity.DefWorkflow;
+import org.hzero.workflow.def.domain.repository.DefWorkflowRepository;
 
 /**
  * @author zhaotianxin
  * @date 2021-03-08 19:16
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class ProjectWorkflowRelServiceImpl implements ProjectWorkflowRelService {
 
     @Autowired
-    private ProjectWorkflowRelMapper projectWorkflowRelMapper;
+    private ProjectWorkflowRelRepository projectWorkflowRelRepository;
 
     @Autowired
-    private DefWorkflowMapper defWorkflowMapper;
+    private DefWorkflowRepository defWorkflowRepository;
 
     @Override
-    public ProjectWorkflowRelDTO createOrUpdate(Long projectId, ProjectWorkflowRelDTO projectWorkflowRelDTO) {
-        ProjectWorkflowRelDTO workflowRelDTO = queryByProjectId(projectId);
-        if (!ObjectUtils.isEmpty(workflowRelDTO)) {
-            projectWorkflowRelMapper.deleteByPrimaryKey(workflowRelDTO.getId());
+    @Transactional(rollbackFor = Exception.class)
+    public ProjectWorkflowRel createOrUpdate(Long projectId, ProjectWorkflowRel projectWorkflowRel) {
+        Assert.notNull(projectId, BaseConstants.ErrorCode.NOT_NULL);
+        Assert.notNull(projectWorkflowRel, BaseConstants.ErrorCode.NOT_NULL);
+        Assert.notNull(projectWorkflowRel.getOrganizationId(), BaseConstants.ErrorCode.NOT_NULL);
+        final String flowCode = projectWorkflowRel.getFlowCode();
+        Assert.hasText(flowCode, BaseConstants.ErrorCode.NOT_NULL);
+        ProjectWorkflowRel projectWorkflowRelInDb = queryByProjectId(projectId);
+        if (projectWorkflowRelInDb != null) {
+            projectWorkflowRelInDb.setFlowCode(flowCode);
+            projectWorkflowRelRepository.updateOptional(projectWorkflowRelInDb, ProjectWorkflowRel.FIELD_FLOW_CODE);
+        } else {
+            projectWorkflowRel.setProjectId(projectId);
+            projectWorkflowRelRepository.insertSelective(projectWorkflowRel);
         }
-        if (!ObjectUtils.isEmpty(projectWorkflowRelDTO.getFlowCode())) {
-            projectWorkflowRelDTO.setProjectId(projectId);
-            projectWorkflowRelDTO.setOrganizationId(projectWorkflowRelDTO.getOrganizationId());
-            baseCreate(projectWorkflowRelDTO);
-        }
-        return projectWorkflowRelDTO;
+        return projectWorkflowRel;
     }
 
-    private void baseCreate(ProjectWorkflowRelDTO projectWorkflowRelDTO) {
-        if (projectWorkflowRelMapper.insertSelective(projectWorkflowRelDTO) != 1) {
-            throw new CommonException("error.insert.project.workflow.rel");
-        }
-    }
-
-    private ProjectWorkflowRelDTO queryByProjectId(Long projectId) {
-        ProjectWorkflowRelDTO queryDTO = new ProjectWorkflowRelDTO();
+    /**
+     * 根据项目ID查询关联关系
+     * @param projectId 项目ID
+     * @return 查询结果
+     */
+    private ProjectWorkflowRel queryByProjectId(Long projectId) {
+        ProjectWorkflowRel queryDTO = new ProjectWorkflowRel();
         queryDTO.setProjectId(projectId);
-        return projectWorkflowRelMapper.selectOne(queryDTO);
+        return projectWorkflowRelRepository.selectOne(queryDTO);
     }
 
     @Override
     public ProjectWorkflowRelVO queryProjectWorkflow(Long projectId) {
-        ProjectWorkflowRelDTO projectWorkflowRelDTO = queryByProjectId(projectId);
-        if (ObjectUtils.isEmpty(projectWorkflowRelDTO)) {
+        ProjectWorkflowRel projectWorkflowRel = queryByProjectId(projectId);
+        if (projectWorkflowRel == null) {
             return null;
         }
         ProjectWorkflowRelVO projectWorkflowRelVO = new ProjectWorkflowRelVO();
-        BeanUtils.copyProperties(projectWorkflowRelDTO, projectWorkflowRelVO);
+        BeanUtils.copyProperties(projectWorkflowRel, projectWorkflowRelVO);
         // 查询流程的信息
         DefWorkflow workflow = new DefWorkflow();
-        workflow.setFlowCode(projectWorkflowRelDTO.getFlowCode());
-        workflow.setTenantId(projectWorkflowRelDTO.getOrganizationId());
-        DefWorkflow defWorkflow = defWorkflowMapper.selectOne(workflow);
-        if (ObjectUtils.isEmpty(defWorkflow)) {
+        workflow.setFlowCode(projectWorkflowRel.getFlowCode());
+        workflow.setTenantId(projectWorkflowRel.getOrganizationId());
+        DefWorkflow defWorkflow = defWorkflowRepository.selectOne(workflow);
+        if (defWorkflow == null) {
             return null;
         }
         projectWorkflowRelVO.setDefWorkflow(defWorkflow);

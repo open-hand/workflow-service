@@ -1,15 +1,6 @@
 package io.choerodon.workflow.api.controller.v1;
 
-import io.choerodon.core.domain.Page;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.swagger.annotation.Permission;
-import io.choerodon.workflow.app.service.DefWorkflowC7nService;
 import io.swagger.annotations.ApiOperation;
-import org.hzero.core.base.BaseConstants;
-import org.hzero.core.util.Results;
-import org.hzero.workflow.def.api.dto.DefWorkflowDTO;
-import org.hzero.workflow.def.domain.entity.DefWorkflow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,6 +8,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.swagger.annotation.Permission;
+import io.choerodon.workflow.app.service.DefWorkflowC7nService;
+
+import org.hzero.core.base.BaseConstants;
+import org.hzero.core.util.Results;
+import org.hzero.workflow.def.api.dto.DefWorkflowDTO;
+import org.hzero.workflow.def.domain.entity.DefWorkflow;
 
 /**
  * @author huaxin.deng@hand-china.com 2021-04-01 17:07:50
@@ -36,7 +38,6 @@ public class DefWorkflowC7nController {
                                                                      PageRequest pageRequest,
                                                                      DefWorkflowDTO.DefWorkflowQueryDTO queryDTO) {
         queryDTO.setSiteFlag(BaseConstants.Flag.NO);
-        Page<DefWorkflow> page = defWorkflowC7nService.pageReleasedByOptions(tenantId, pageRequest, queryDTO);
-        return Results.success(page);
+        return Results.success(defWorkflowC7nService.pageReleasedByOptions(tenantId, pageRequest, queryDTO));
     }
 }

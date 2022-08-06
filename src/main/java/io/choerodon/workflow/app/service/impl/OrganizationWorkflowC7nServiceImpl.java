@@ -22,7 +22,7 @@ import org.springframework.util.ObjectUtils;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.choerodon.workflow.app.service.OrganizationWorkflowC7nService;
-import io.choerodon.workflow.infra.feign.BaseFeignClient;
+import io.choerodon.workflow.infra.feign.IamFeignClient;
 import io.choerodon.workflow.infra.feign.vo.OrganizationInfoVO;
 
 import org.hzero.workflow.def.api.dto.DefTypeDTO;
@@ -59,7 +59,7 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private BaseFeignClient baseFeignClient;
+    private IamFeignClient iamFeignClient;
     @Autowired
     private DefVariableRepository defVariableRepository;
     @Autowired
@@ -100,7 +100,7 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
 
     @Override
     public Boolean checkInit(Long tenantId) {
-        OrganizationInfoVO organizationInfoVO = baseFeignClient.queryOrganizationInfo(tenantId).getBody();
+        OrganizationInfoVO organizationInfoVO = iamFeignClient.queryOrganizationInfo(tenantId).getBody();
         if (ObjectUtils.isEmpty(organizationInfoVO)) {
             throw new CommonException(ERROR_ORG_NOT_EXIST);
         }
@@ -280,7 +280,7 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
     }
 
     private DefType copyDefaultType(DefType defType, Long tenantId) {
-        OrganizationInfoVO organizationInfoVO = baseFeignClient.queryOrganizationInfo(tenantId).getBody();
+        OrganizationInfoVO organizationInfoVO = iamFeignClient.queryOrganizationInfo(tenantId).getBody();
         if (ObjectUtils.isEmpty(organizationInfoVO)) {
             throw new CommonException(ERROR_ORG_NOT_EXIST);
         }
