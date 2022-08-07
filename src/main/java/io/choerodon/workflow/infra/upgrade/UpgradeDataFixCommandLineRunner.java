@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import org.hzero.core.base.BaseConstants;
+import org.hzero.core.redis.RedisHelper;
 import org.hzero.workflow.def.app.service.DataFixService;
 import org.hzero.workflow.engine.util.EngineConstants;
 
@@ -24,20 +24,31 @@ public class UpgradeDataFixCommandLineRunner implements CommandLineRunner {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
+    private RedisHelper redisHelper;
+    @Autowired
     private DataFixService dataFixService;
 
     private final Logger logger = LoggerFactory.getLogger(UpgradeDataFixCommandLineRunner.class);
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void run(String... args) throws Exception {
         try {
             this.fixHzeroWorkflow1_7();
         } catch (Exception ex) {
             this.logger.error(ex.getMessage(), ex);
         }
+        try {
+            this.fixHzeroWorkflow1_11();
+        }  catch (Exception ex) {
+            this.logger.error("failed to drop redis keys \"hwkf:def*\" and \"hwkf:approve-action*\", please retry or process them manually");
+            this.logger.error("cause:");
+            this.logger.error(ex.getMessage(), ex);
+        }
     }
 
+    /**
+     * 班翎工作流1.6 - 1.7升级程序
+     */
     private void fixHzeroWorkflow1_7() {
         final String changeSetId = "2022-08-07-cwkf-program-fix-update-hwkf-1.7-001";
         final String author = "gaokuo.dai@zknow.com";
@@ -51,6 +62,29 @@ public class UpgradeDataFixCommandLineRunner implements CommandLineRunner {
                 author,
                 fileName,
                 "execute org.hzero.workflow.def.app.service.DataFixService.dimensionDataFix(\"USER\")"
+        );
+    }
+
+    /**
+     * 班翎工作流1.10 - 1.11升级程序
+     */
+    private void fixHzeroWorkflow1_11() {
+        final String changeSetId = "2022-08-07-cwkf-program-fix-update-hwkf-1.11-001";
+        final String author = "gaokuo.dai@zknow.com";
+        final String fileName = "script/db/cwkf_data_fix.groovy";
+        if(!this.checkShouldRun(changeSetId, author, fileName)) {
+            return;
+        }
+
+        // 注意, cluster模式下会报错, 如报错请手工处理
+        this.redisHelper.deleteKeysWithPrefix("hwkf:def");
+        this.redisHelper.deleteKeysWithPrefix("hwkf:approve-action");
+
+        this.writeChangeLog(
+                changeSetId,
+                author,
+                fileName,
+                "drop redis keys \"hwkf:def*\" and \"hwkf:approve-action*\""
         );
     }
 
