@@ -4,7 +4,7 @@ package script.db.groovy.workflow_service
  * 班翎工作流升级sql
  * @author gaokuo.dai@zknow.com 2022-08-07
  **/
-databaseChangeLog(logicalFilePath: 'script/db/cwkf_data_fix.groovy') {
+databaseChangeLog(logicalFilePath: 'script/db/z001_cwkf_data_fix.groovy') {
 
     // ↓↓↓↓ hwkf 1.7 - 1.8 ↓↓↓↓
     changeSet(id: '2022-08-07-cwkf-data-fix-update-hwkf-1.8-001', author: 'gaokuo.dai@zknow.com') {

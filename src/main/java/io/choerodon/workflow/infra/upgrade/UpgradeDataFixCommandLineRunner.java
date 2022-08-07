@@ -52,7 +52,7 @@ public class UpgradeDataFixCommandLineRunner implements CommandLineRunner {
     private void fixHzeroWorkflow1_7() {
         final String changeSetId = "2022-08-07-cwkf-program-fix-update-hwkf-1.7-001";
         final String author = "gaokuo.dai@zknow.com";
-        final String fileName = "script/db/cwkf_data_fix.groovy";
+        final String fileName = "script/db/z001_cwkf_data_fix.groovy";
         if(!this.checkShouldRun(changeSetId, author, fileName)) {
             return;
         }
@@ -71,7 +71,7 @@ public class UpgradeDataFixCommandLineRunner implements CommandLineRunner {
     private void fixHzeroWorkflow1_11() {
         final String changeSetId = "2022-08-07-cwkf-program-fix-update-hwkf-1.11-001";
         final String author = "gaokuo.dai@zknow.com";
-        final String fileName = "script/db/cwkf_data_fix.groovy";
+        final String fileName = "script/db/z001_cwkf_data_fix.groovy";
         if(!this.checkShouldRun(changeSetId, author, fileName)) {
             return;
         }
