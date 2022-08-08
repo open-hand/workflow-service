@@ -174,6 +174,30 @@ extraEnv:
   HWKF_HR_CROSS_SCHEMA_ENABLED: false
   # 允许工作流服务通过数据库跨schema查询组织架构信息时, 组织架构所在schema名称
   HWKF_HPFM_SCHEMA_NAME: hzero_platform
+  # 工作流企业微信消息发送agentId
+  HWKF_WCO_AGENT_ID: 1
+  # 工作流钉钉消息发送agentId
+  HWKF_DT_AGENT_ID: 1
+  # 工作流文件桶名
+  HWKF_BUCKET_NAME: hwkf
+  # 工作流文件存储根目录
+  HWKF_ROOT_DIR: hwkf01
+  # 工作流催办消息发送配置
+  HWKF_URGE_MESSAGE_TEMPLATE:HWKF: HWKF.FLOW_URGE
+  # 工作流待办消息发送配置
+  HWKF_TODO_MESSAGE_TEMPLATE: HWKF.TODO
+  # 工作流拒绝后通知审批人消息发送配置
+  HWKF_REJECT_APPROVER_TEMPLATE: HWKF.REJECT_APPROVER
+  # 工作流通过后通知申请者消息发送配置
+  HWKF_APPROVED_APPLIER_TEMPLATE: HWKF.APPROVED_APPLIER
+  # 工作流抄送通知消息发送配置
+  HWKF_CARBON_COPY_TEMPLATE: HWKF.CARBON_COPY
+  # 工作流在海马汇系统中维护的系统ID
+  HWKF_HIPPIUS_SYSTEM_ID: HWKF
+  # 工作流数据归档批处理配置
+  HWKF_ARCHIVE_BATCH_PAGE_SIZE: 10000
+  # 流程定义信息立即生效：每次执行节点时获取最新的流程定义配置信息
+  HWKF_DEFCONFIG_EFFECTIVE_IMMEDIATE: false
   # 百分比使用物理内存，预留一部分用于堆外内存以及外部程序
   # JAVA_OPTS: >-
   #   -XX:MaxRAMPercentage=90.0
