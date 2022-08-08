@@ -183,7 +183,7 @@ extraEnv:
   # 工作流文件存储根目录
   HWKF_ROOT_DIR: hwkf01
   # 工作流催办消息发送配置
-  HWKF_URGE_MESSAGE_TEMPLATE:HWKF: HWKF.FLOW_URGE
+  HWKF_URGE_MESSAGE_TEMPLATE: HWKF.FLOW_URGE
   # 工作流待办消息发送配置
   HWKF_TODO_MESSAGE_TEMPLATE: HWKF.TODO
   # 工作流拒绝后通知审批人消息发送配置
