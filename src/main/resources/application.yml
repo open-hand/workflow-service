@@ -15,6 +15,7 @@ spring:
     host: ${SPRING_REDIS_HOST:localhost}
     port: ${SPRING_REDIS_PORT:6379}
     database:  ${SPRING_REDIS_DATABASE:1}
+    password: ${SPRING_REDIS_PASSWORD:}
     jedis:
       pool:
         # 资源池中最大连接数
@@ -122,6 +123,7 @@ hzero:
     single-server:
       address: ${spring.redis.host}
       port: ${spring.redis.port}
+      password: ${spring.redis.password}
   scheduler:
     executor-code: HWKF_EXECUTOR
     auto-register: true
