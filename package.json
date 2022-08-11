@@ -16,7 +16,7 @@
     "@choerodon/agile": "2.2.0-inner",
     "@choerodon/boot": "2.0.0",
     "@choerodon/compiler": "^0.0.1",
-    "@choerodon/master": "2.2.0",
+    "@choerodon/master": "2.2.0-alpha.1",
     "@types/classnames": "^2.2.10",
     "@types/lodash": "^4.14.165",
     "@types/react": "^16.9.35",
