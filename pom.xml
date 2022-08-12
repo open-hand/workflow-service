@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.hzero</groupId>
             <artifactId>hzero-workflow</artifactId>
-            <version>1.11.2-BETA.6</version>
+            <version>1.11.2-BETA.8</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.hzero.starter</groupId>

@@ -27,7 +27,7 @@ const Comment: React.FC<CommentProps> = ({ taskHistoryId, onSubmit }) => {
     }
   }, [dataSet, onSubmit, taskHistoryId]);
   return (
-    <div style={{ padding: '0 20px' }}>
+    <div>
       <Part
         title="评论意见"
       >
