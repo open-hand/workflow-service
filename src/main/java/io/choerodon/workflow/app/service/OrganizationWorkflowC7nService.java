@@ -20,9 +20,17 @@ public interface OrganizationWorkflowC7nService {
     Boolean checkInit(Long tenantId);
 
     /**
-     * 兼容已初始化的工作流，重新导入新的审批人规则流程变量等
+     * 已初始化的工作流，重新导入新的审批人规则和流程变量
      *
-     * @param tenantId
+     * @param tenantId 租户ID
      */
     void reimportWorkflow(Long tenantId);
+
+    /**
+     * 检查租户下是否存在某个流程分类
+     * @param tenantId 租户ID
+     * @param typeCode 流程分类Code
+     * @return 是否存在
+     */
+    boolean validInitDefType(Long tenantId, String typeCode);
 }

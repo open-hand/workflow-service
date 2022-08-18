@@ -65,7 +65,7 @@ public class JsonUtils {
         EncryptContext.ignoreException();
         // ↓↓↓↓ 二开部分 gaokuo.dai@zknow.com 2022-08-05 ↓↓↓↓
         final EncryptType originEncryptType = EncryptContext.encryptType();
-        final CustomUserDetails userDetails = DetailsHelper.getUserDetails();
+        CustomUserDetails userDetails = DetailsHelper.getUserDetails();
         final Integer originApiEncryptFlag = Optional.ofNullable(userDetails).map(CustomUserDetails::getApiEncryptFlag).orElse(null);
         // ↑↑↑↑ 二开部分 gaokuo.dai@zknow.com 2022-08-05 ↑↑↑↑
         T t = null;
@@ -84,9 +84,12 @@ public class JsonUtils {
                 }
             } else {
                 // 如果当前没开主键加密, 说明数据是加密数, 开启主键加密再尝试一下
-                if(userDetails != null) {
-                    userDetails.setApiEncryptFlag(BaseConstants.Flag.YES);
+                if(userDetails == null) {
+                    userDetails = DetailsHelper.getAnonymousDetails();
                 }
+                userDetails.setApiEncryptFlag(BaseConstants.Flag.YES);
+                DetailsHelper.setCustomUserDetails(userDetails);
+
                 EncryptContext.setEncryptType(EncryptType.ENCRYPT.name());
                 try {
                     t = objectMapper.readValue(json, clazz);
