@@ -30,7 +30,7 @@ public class ProjectWorkflowRelC7nController {
     public ResponseEntity<ProjectWorkflowRel> createOrUpdate(@ApiParam(value = "项目id", required = true)
                                                                 @PathVariable(name = "project_id") Long projectId,
                                                              @RequestBody ProjectWorkflowRel projectWorkflowRel) {
-        return Results.created(projectWorkflowRelService.createOrUpdate(projectId, projectWorkflowRel));
+        return Results.created(projectWorkflowRelService.createOrUpdateOrRemove(projectId, projectWorkflowRel));
     }
 
     /**
