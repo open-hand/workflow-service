@@ -1,5 +1,6 @@
 package io.choerodon.workflow.app.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,19 +31,22 @@ public class ProjectWorkflowRelServiceImpl implements ProjectWorkflowRelService 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ProjectWorkflowRel createOrUpdate(Long projectId, ProjectWorkflowRel projectWorkflowRel) {
+    public ProjectWorkflowRel createOrUpdateOrRemove(Long projectId, ProjectWorkflowRel projectWorkflowRel) {
         Assert.notNull(projectId, BaseConstants.ErrorCode.NOT_NULL);
         Assert.notNull(projectWorkflowRel, BaseConstants.ErrorCode.NOT_NULL);
         Assert.notNull(projectWorkflowRel.getOrganizationId(), BaseConstants.ErrorCode.NOT_NULL);
         final String flowCode = projectWorkflowRel.getFlowCode();
-        Assert.hasText(flowCode, BaseConstants.ErrorCode.NOT_NULL);
         ProjectWorkflowRel projectWorkflowRelInDb = queryByProjectId(projectId);
         if (projectWorkflowRelInDb != null) {
-            projectWorkflowRelInDb.setFlowCode(flowCode);
-            projectWorkflowRelRepository.updateOptional(projectWorkflowRelInDb, ProjectWorkflowRel.FIELD_FLOW_CODE);
+            if(StringUtils.isNotBlank(flowCode)) {
+                projectWorkflowRelInDb.setFlowCode(flowCode);
+                this.projectWorkflowRelRepository.updateOptional(projectWorkflowRelInDb, ProjectWorkflowRel.FIELD_FLOW_CODE);
+            } else {
+                this.projectWorkflowRelRepository.deleteByPrimaryKey(projectWorkflowRelInDb);
+            }
         } else {
             projectWorkflowRel.setProjectId(projectId);
-            projectWorkflowRelRepository.insertSelective(projectWorkflowRel);
+            this.projectWorkflowRelRepository.insertSelective(projectWorkflowRel);
         }
         return projectWorkflowRel;
     }

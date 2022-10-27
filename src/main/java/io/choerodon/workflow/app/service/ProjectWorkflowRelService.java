@@ -10,12 +10,12 @@ import io.choerodon.workflow.domain.entity.ProjectWorkflowRel;
 public interface ProjectWorkflowRelService {
 
     /**
-     * 创建或更新项目关联的需求审批工作流
+     * 创建或更新或移除项目关联的需求审批工作流
      * @param projectId 项目ID
      * @param projectWorkflowRel 关系实体
      * @return 处理后的结果
      */
-    ProjectWorkflowRel createOrUpdate(Long projectId, ProjectWorkflowRel projectWorkflowRel);
+    ProjectWorkflowRel createOrUpdateOrRemove(Long projectId, ProjectWorkflowRel projectWorkflowRel);
 
     /**
      * 根据项目ID查询项目和需求审批工作流的关系对象
