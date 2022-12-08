@@ -17,7 +17,7 @@ import org.hzero.workflow.def.infra.feign.dto.UserDTO;
  * @author huaxin.deng@hand-china.com 2021-03-12 14:37:45
  */
 @Component
-@FeignClient(value = "choerodon-iam", fallback = IamFeignClientFallbackFactory.class)
+@FeignClient(value = "zknow-iam", fallback = IamFeignClientFallbackFactory.class)
 public interface IamFeignClient {
 
     /**
