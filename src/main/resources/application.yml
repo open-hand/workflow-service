@@ -97,7 +97,6 @@ choerodon:
 
 hzero:
   service:
-    bucket-name: iam-service
     platform:
       name: zknow-platform
     oauth:
