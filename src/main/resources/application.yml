@@ -27,34 +27,28 @@ spring:
         # 当资源池连接用尽后，调用者的最大等待时间(单位为毫秒)
         # 默认 -1 表示永不超时，设置5秒
         max-wait: ${SPRING_REDIS_POOL_MAX_WAIT:5000}
-  resources:
-    # 资源缓存时间，单位秒
-    cache.period: 3600
-    # 开启gzip压缩
-    chain.compressed: true
-    # 启用缓存
-    chain.cache: true
+  web:
+    resources:
+      # 资源缓存时间，单位秒
+      cache.period: 3600
+      # 开启gzip压缩
+      chain.compressed: true
+      # 启用缓存
+      chain.cache: true
   cache:
     type: caffeine
     caffeine:
       spec: initialCapacity=10,maximumSize=200,expireAfterWrite=7d
     cache-names:
       - m_cache
-  http:
-    encoding:
-      charset: UTF-8
-      force: true
-      enabled: true
   main:
     allow-bean-definition-overriding: true
-  activiti:
-    database-schema: ACTIVITI
-    database-schema-update: true
-    history-level: full
-    db-history-used: true
-    check-process-definitions: false
-    async-executor-activate: true
 server:
+  servlet:
+      encoding:
+        charset: UTF-8
+        enabled: true
+        force: true
   undertow:
     # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接
     # 默认值为8，建议设置每个CPU核心一个线程
@@ -242,4 +236,3 @@ logging:
     io.choerodon: ${LOG_LEVEL:info}
     org.hzero.boot.platform.lov: info
     org.hzero: ${LOG_LEVEL:info}
-    org.activiti: ${LOG_LEVEL:info}

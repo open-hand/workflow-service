@@ -2,7 +2,7 @@ English | [简体中文](./README.md)
 
 # Workflow Service   
 
-`Workflow Service` is a Workflow Service based on Activiti7, which supports dynamically and flexibly creating processes, starting processes, monitoring processes and management processes.
+`Workflow Service` is a Workflow Service based on HZERO-WORKFLOW, which supports dynamically and flexibly creating processes, starting processes, monitoring processes and management processes.
 
 ## Feature
 
@@ -16,13 +16,13 @@ English | [简体中文](./README.md)
   
 - User Management
 
-  This function is used to log Choerodon users into Activiti7.
+  This function is used to log Choerodon users into HZERO-WORKFLOW.
 
 ## 环境依赖
 - JDK-8
 - [Maven](http://www.maven-sf.com/)
 - [MySQL](https://www.mysql.com)
-- [Activiti](https://www.activiti.org/)
+- [HZERO-WORKFLOW](https://open-hand-china.com/)
 
 ## Installation and Getting Started
 

@@ -8,5 +8,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableFeignClients("io.choerodon")
-public class EnableFeignClientsConfiguration {
+public class WorkFlowServiceApplicationConfiguration {
 }
