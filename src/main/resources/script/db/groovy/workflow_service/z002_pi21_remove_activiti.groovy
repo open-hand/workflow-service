@@ -7,30 +7,88 @@ package script.db.groovy.workflow_service
 databaseChangeLog(logicalFilePath: 'script/db/z002_pi21_remove_activiti.groovy') {
 
     changeSet(id: '2022-12-30-cz002_pi21_remove_activiti', author: 'gaokuo.dai@zknow.com') {
-        dropTable(tableName:"act_evt_log")
-        dropTable(tableName:"act_ge_bytearray")
-        dropTable(tableName:"act_ge_property")
-        dropTable(tableName:"act_hi_actinst")
-        dropTable(tableName:"act_hi_attachment")
-        dropTable(tableName:"act_hi_comment")
-        dropTable(tableName:"act_hi_detail")
-        dropTable(tableName:"act_hi_identitylink")
-        dropTable(tableName:"act_hi_procinst")
-        dropTable(tableName:"act_hi_taskinst")
-        dropTable(tableName:"act_hi_varinst")
-        dropTable(tableName:"act_procdef_info")
-        dropTable(tableName:"act_re_deployment")
-        dropTable(tableName:"act_re_model")
-        dropTable(tableName:"act_re_procdef")
-        dropTable(tableName:"act_ru_deadletter_job")
-        dropTable(tableName:"act_ru_event_subscr")
-        dropTable(tableName:"act_ru_execution")
-        dropTable(tableName:"act_ru_identitylink")
-        dropTable(tableName:"act_ru_integration")
-        dropTable(tableName:"act_ru_job")
-        dropTable(tableName:"act_ru_suspended_job")
-        dropTable(tableName:"act_ru_task")
-        dropTable(tableName:"act_ru_timer_job")
-        dropTable(tableName:"act_ru_variable")
+        // 解锁外键约束
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "SET FOREIGN_KEY_CHECKS=0"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_evt_log"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ge_bytearray"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ge_property"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_hi_actinst"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_hi_attachment"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_hi_comment"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_hi_detail"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_hi_identitylink"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_hi_procinst"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_hi_taskinst"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_hi_varinst"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_procdef_info"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_re_deployment"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_re_model"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_re_procdef"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ru_deadletter_job"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ru_event_subscr"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ru_execution"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ru_identitylink"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ru_integration"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ru_job"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ru_suspended_job"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ru_task"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ru_timer_job"
+        }
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "drop table act_ru_variable"
+        }
+        // 恢复外键约束
+        sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
+            "SET FOREIGN_KEY_CHECKS=1"
+        }
     }
 }
