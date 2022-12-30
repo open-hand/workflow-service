@@ -35,7 +35,7 @@ public class PlatformPredefineWorkflowImportJob implements CommandLineRunner {
             final String fileName = "script/db/2022-12-30-cwkf-update-predefine-workflow";
             // 检查是否需要初始化
             if(!this.changeLogHelper.checkShouldRun(changeSetId, author, fileName)) {
-                logger.debug("predefine workflow type {} has been imported", HzeroWorkFlowConstants.DEFAULT_TYPE_CODE);
+                logger.debug("predefine workflow type {} has been imported, skip init...", HzeroWorkFlowConstants.DEFAULT_TYPE_CODE);
                 return;
             }
             // 执行初始化
@@ -47,7 +47,7 @@ public class PlatformPredefineWorkflowImportJob implements CommandLineRunner {
                     changeSetId,
                     author,
                     fileName,
-                    "execute org.hzero.workflow.def.app.service.DataFixService.dimensionDataFix(\"USER\")"
+                    "execute io.choerodon.workflow.app.service.OrganizationWorkflowC7nService.initDefWorkFlows(0)"
             );
         }catch (Exception ex) {
             // log and ignore
