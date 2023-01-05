@@ -177,6 +177,8 @@ hzero:
       interface-retry-period: ${INTERFACE_RETRY_PERIOD:3000}
       #接口调用重试次数
       interface-retry-policy: ${INTERFACE_RETRY_POLICY:3}
+    # 是否刷新缓存
+    init-cache: true
   modeler:
     # 是否启用元数据收集
     tableScanEnabled: ${hzero.workflow.model.enabled}
