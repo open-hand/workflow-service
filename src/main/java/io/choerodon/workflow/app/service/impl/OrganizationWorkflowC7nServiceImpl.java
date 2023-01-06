@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +24,7 @@ import io.choerodon.workflow.infra.util.PredefineWorkflowDataUtil;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.hzero.workflow.def.app.service.DefModelService;
 import org.hzero.workflow.def.app.service.DefTypeImportExportService;
-import org.hzero.workflow.def.app.service.DefTypeService;
 import org.hzero.workflow.def.domain.entity.*;
 import org.hzero.workflow.def.domain.repository.*;
 
@@ -39,23 +36,10 @@ import org.hzero.workflow.def.domain.repository.*;
 @Transactional(rollbackFor = Exception.class)
 public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC7nService {
 
-//    private static final String FILE_PATH = "/templates/default_flow.json";
-//    private static final String ORG_TYPE_NAME = "需求审核-预定义";
-//    private static final String ERROR_WORK_FLOW_INIT_TYPE_EXIST = "error.work.flow.init.type.exist";
-//    private static final String ERROR_WORK_FLOW_INIT_FILE_INVALID = "error.init_file_invalid";
-//    private static final String ERROR_WORK_FLOW_DEFAULT_TYPE_NOT_EXIST = "error.work.flow.default.type.not.exist";
     private static final String ERROR_ORG_NOT_EXIST = "error.org.not.exist";
 
     @Autowired
-    private DefWorkflowRepository defWorkflowRepository;
-    @Autowired
     private DefTypeRepository defTypeRepository;
-    @Autowired
-    private DefTypeService defTypeService;
-    @Autowired
-    private DefModelService defModelService;
-    @Autowired
-    private ObjectMapper objectMapper;
     @Autowired
     private IamFeignClient iamFeignClient;
     @Autowired
@@ -73,20 +57,6 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
 
     @Override
     public void initDefWorkFlows(Long tenantId) {
-//        DefType defaultDefType = getDefTypeByCode(BaseConstants.DEFAULT_TENANT_ID, HzeroWorkFlowConstants.DEFAULT_TYPE_CODE);
-//        if (ObjectUtils.isEmpty(defaultDefType)) {
-//            throw new CommonException(ERROR_WORK_FLOW_DEFAULT_TYPE_NOT_EXIST);
-//        }
-//        DefType newDefType = copyDefaultType(defaultDefType, tenantId);
-//        List<DefWorkflow> defWorkFlows = getDefaultWorkFlowFromJson();
-//        for (DefWorkflow defWorkflow : defWorkFlows) {
-//            defWorkflow.setDiagramJson(importWorkFlowJsonConvert(defWorkflow.getDiagramJson()));
-//            defWorkflow.setTenantId(tenantId);
-//            defWorkflow.setTypeCode(newDefType.getTypeCode());
-//            defWorkflow.setTypeId(newDefType.getTypeId());
-//            defWorkflowRepository.insertSelective(defWorkflow);
-//            defModelService.saveAndReturnConfig(tenantId, defWorkflow.getFlowId(), defWorkflow.getModelConfigVO(), defWorkflow.getDiagramJson());
-//        }
         final MultipartFile initData = PredefineWorkflowDataUtil.generateMultipartFile();
         Assert.notNull(initData, "can not find predefine workflow data!");
         this.importExportService.importDefTypeInfo(tenantId, initData);
@@ -286,70 +256,11 @@ public class OrganizationWorkflowC7nServiceImpl implements OrganizationWorkflowC
                 .forEach(defVariableRepository::insertSelective);
     }
 
-//    private List<DefWorkflow> getDefaultWorkFlowFromJson() {
-//        List<DefWorkflow> defWorkFlows;
-//        try {
-//            InputStream inputStream = this.getClass().getResourceAsStream(FILE_PATH);
-//            String json = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-//            defWorkFlows = JsonUtils.toObject(this.objectMapper, json, new TypeReference<List<DefWorkflow>>() {
-//            });
-//        } catch (Exception e) {
-//            throw new CommonException(ERROR_WORK_FLOW_INIT_FILE_INVALID);
-//        }
-//        return defWorkFlows;
-//    }
-
-//    private DefType copyDefaultType(DefType defType, Long tenantId) {
-//        OrganizationInfoVO organizationInfoVO = iamFeignClient.queryOrganizationInfo(tenantId).getBody();
-//        if (ObjectUtils.isEmpty(organizationInfoVO)) {
-//            throw new CommonException(ERROR_ORG_NOT_EXIST);
-//        }
-//        String typeCode = HzeroWorkFlowConstants.DEFAULT_TYPE_CODE;
-//        if (validInitDefType(tenantId, typeCode)) {
-//            throw new CommonException(ERROR_WORK_FLOW_INIT_TYPE_EXIST);
-//        }
-//        DefTypeDTO.DefTypeCreateDTO defTypeCreate = new DefTypeDTO.DefTypeCreateDTO();
-//        BeanUtils.copyProperties(defType, defTypeCreate);
-//        defTypeCreate.setTypeCode(typeCode);
-//        defTypeCreate.setTypeName(ORG_TYPE_NAME);
-//        defTypeCreate.setCopyTypeId(defType.getTypeId());
-//        defTypeCreate.setInitFlag(false);
-//        defTypeCreate.set_status(AuditDomain.RecordStatus.create);
-//
-//        defTypeService.copyDefType(tenantId, defTypeCreate);
-//        return getDefTypeByCode(tenantId, typeCode);
-//    }
-
     @Override
     public boolean validInitDefType(Long tenantId, String typeCode) {
         DefType validDefType = getDefTypeByCode(tenantId, typeCode);
         return !ObjectUtils.isEmpty(validDefType);
     }
-
-
-//    private String importWorkFlowJsonConvert(String diagramJson) {
-//        ObjectNode root = (ObjectNode) JsonUtils.jsonToJsonNode(this.objectMapper, diagramJson);
-//        ArrayNode nodes = (ArrayNode) root.get("nodes");
-//
-//        for (int i = 0; i < nodes.size(); ++i) {
-//            JsonNode node = nodes.get(i);
-//            String type = node.get("type").asText();
-//            JsonNode chainJsonNodes;
-//            if ("subProcessNode".equals(type)) {
-//                ((ObjectNode) node).replace("version", null);
-//                chainJsonNodes = node.get("subProcess");
-//                ((ObjectNode) chainJsonNodes).replace("version", null);
-//            } else if ("manualNode".equals(type)) {
-//                ((ObjectNode) node).replace("version", null);
-//                chainJsonNodes = node.get("approveChain");
-//                if (chainJsonNodes != null && !chainJsonNodes.isNull()) {
-//                    ((ObjectNode) chainJsonNodes).replace("version", null);
-//                }
-//            }
-//        }
-//
-//        return root.toString();
-//    }
 
     private DefType getDefTypeByCode(Long tenantId, String code) {
         DefType record = new DefType();

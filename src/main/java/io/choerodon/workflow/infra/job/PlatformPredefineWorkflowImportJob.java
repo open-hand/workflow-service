@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import io.choerodon.workflow.app.service.OrganizationWorkflowC7nService;
 import io.choerodon.workflow.infra.constant.HzeroWorkFlowConstants;
+import io.choerodon.workflow.infra.util.ChangeLogHelper;
 
 import org.hzero.core.base.BaseConstants;
 
@@ -22,18 +23,32 @@ public class PlatformPredefineWorkflowImportJob implements CommandLineRunner {
 
     @Autowired
     private OrganizationWorkflowC7nService workflowC7nService;
+    @Autowired
+    private ChangeLogHelper changeLogHelper;
 
     @Override
     public void run(String... args) throws Exception {
         try{
-            final boolean initialized = this.workflowC7nService.validInitDefType(BaseConstants.DEFAULT_TENANT_ID, HzeroWorkFlowConstants.DEFAULT_TYPE_CODE);
-            if(initialized) {
-                logger.debug("predefine workflow type {} has been imported", HzeroWorkFlowConstants.DEFAULT_TYPE_CODE);
+            // 定义change log
+            final String changeSetId = "2022-12-30-cwkf-update-predefine-workflow";
+            final String author = "gaokuo.dai@zknow.com";
+            final String fileName = "script/db/2022-12-30-cwkf-update-predefine-workflow";
+            // 检查是否需要初始化
+            if(!this.changeLogHelper.checkShouldRun(changeSetId, author, fileName)) {
+                logger.debug("predefine workflow type {} has been imported, skip init...", HzeroWorkFlowConstants.DEFAULT_TYPE_CODE);
                 return;
             }
+            // 执行初始化
             logger.info("predefine workflow type {} has not been imported, start import...", HzeroWorkFlowConstants.DEFAULT_TYPE_CODE);
             this.workflowC7nService.initDefWorkFlows(BaseConstants.DEFAULT_TENANT_ID);
             logger.info("predefine workflow type {} import success", HzeroWorkFlowConstants.DEFAULT_TYPE_CODE);
+            // 写 change log
+            this.changeLogHelper.writeChangeLog(
+                    changeSetId,
+                    author,
+                    fileName,
+                    "execute io.choerodon.workflow.app.service.OrganizationWorkflowC7nService.initDefWorkFlows(0)"
+            );
         }catch (Exception ex) {
             // log and ignore
             logger.error("init predefine workflow type {} failed, skip init, details↓", HzeroWorkFlowConstants.DEFAULT_TYPE_CODE);

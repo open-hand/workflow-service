@@ -1,5 +1,6 @@
 package io.choerodon.workflow.infra.config;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,5 +9,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableFeignClients("io.choerodon")
-public class EnableFeignClientsConfiguration {
+@EnableConfigurationProperties(WorkFlowServiceC7nApplicationConfigurationProperties.class)
+public class WorkFlowServiceC7nApplicationConfiguration {
 }

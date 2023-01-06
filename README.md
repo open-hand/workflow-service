@@ -2,7 +2,7 @@
 
 # Workflow Service   
 
-`Workflow Service`是基于Activiti7搭建的工作流服务，支持动态灵活地创建流程，启动流程、监控流程以及管理流程。
+`Workflow Service`是基于HZERO-WORKFLOW搭建的工作流服务，支持动态灵活地创建流程，启动流程、监控流程以及管理流程。
 
 ## 功能
 
@@ -16,13 +16,13 @@
   
 - 用户管理功能
 
-  此功能用于将Choerodon用户登录到Activiti7。
+  此功能用于将Choerodon用户登录到HZERO-WORKFLOW。
 
 ## 环境依赖
 - JDK-8
 - [Maven](http://www.maven-sf.com/)
 - [MySQL](https://www.mysql.com)
-- [Activiti](https://www.activiti.org/)
+- [HZERO-WORKFLOW](https://open.hand-china.com/)
 
 
 ## 安装与启动
@@ -55,3 +55,4 @@
 ## 贡献
 
 欢迎贡献代码！ [如何贡献](https://github.com/choerodon/choerodon/blob/master/CONTRIBUTING.md)
+

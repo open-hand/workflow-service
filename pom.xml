@@ -3,7 +3,6 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <groupId>io.choerodon</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>workflow-service</artifactId>
     <version>2.3.0-SNAPSHOT</version>
@@ -19,7 +18,6 @@
 
     <properties>
         <java.version>8</java.version>
-        <activiti-dependencies.version>7.0.0.SR1</activiti-dependencies.version>
         <choerodon.serviceBuild>true</choerodon.serviceBuild>
         <choerodon.mainClass>io.choerodon.workflow.WorkFlowServiceApplication</choerodon.mainClass>
     </properties>
@@ -66,9 +64,9 @@
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-starter-core</artifactId>
         </dependency>
-         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-asgard</artifactId>
+        <dependency>
+            <groupId>com.zknow.starter</groupId>
+            <artifactId>zknow-starter-asgard</artifactId>
         </dependency>
 
         <!-- spring boot -->
@@ -86,11 +84,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-bootstrap</artifactId>-->
-<!--            <version>3.0.3</version>-->
-<!--        </dependency>-->
 
         <!-- register and config -->
         <dependency>
@@ -115,23 +108,6 @@
             <version>3.29.0-GA</version>
         </dependency>
 
-        <!-- activiti -->
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring-boot-starter</artifactId>
-            <version>${activiti-dependencies.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mybatis</artifactId>
-                    <groupId>org.mybatis</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-bpmn-layout</artifactId>
-            <version>${activiti-dependencies.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
@@ -199,14 +175,6 @@
     </build>
 
     <repositories>
-<!--        <repository>-->
-<!--            <id>alfresco</id>-->
-<!--            <name>Activiti Releases</name>-->
-<!--            <url>https://artifacts.alfresco.com/nexus/content/repositories/activiti-releases/</url>-->
-<!--            <releases>-->
-<!--                <enabled>true</enabled>-->
-<!--            </releases>-->
-<!--        </repository>-->
         <repository>
             <id>HandPublic</id>
             <name>Hand-Public Repository</name>
