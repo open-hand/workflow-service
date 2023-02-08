@@ -23,6 +23,22 @@
     </properties>
 
     <dependencies>
+        <!-- starters存在覆盖源码, 必须放最前面 -->
+        <!-- choerodon starters -->
+        <dependency>
+            <groupId>io.choerodon</groupId>
+            <artifactId>choerodon-starter-core</artifactId>
+        </dependency>
+        <!-- zknow starters -->
+        <dependency>
+            <groupId>com.zknow.starter</groupId>
+            <artifactId>zknow-starter-mybatis-mapper</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zknow.starter</groupId>
+            <artifactId>zknow-starter-asgard</artifactId>
+        </dependency>
+
         <!-- hzero -->
         <dependency>
             <groupId>org.hzero</groupId>
@@ -57,21 +73,6 @@
             <artifactId>hzero-starter-developer-route</artifactId>
             <version>1.10.0.RELEASE</version>
             <optional>true</optional>
-        </dependency>
-
-        <!-- choerodon starters -->
-         <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-core</artifactId>
-        </dependency>
-        <!-- zknow starters -->
-        <dependency>
-            <groupId>com.zknow.starter</groupId>
-            <artifactId>zknow-starter-mybatis-mapper</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.zknow.starter</groupId>
-            <artifactId>zknow-starter-asgard</artifactId>
         </dependency>
 
         <!-- spring boot -->
