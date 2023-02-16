@@ -12,79 +12,79 @@ databaseChangeLog(logicalFilePath: 'script/db/z002_pi21_remove_activiti.groovy')
             "SET FOREIGN_KEY_CHECKS=0"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_evt_log"
+            "drop table if exists act_evt_log"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ge_bytearray"
+            "drop table if exists act_ge_bytearray"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ge_property"
+            "drop table if exists act_ge_property"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_hi_actinst"
+            "drop table if exists act_hi_actinst"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_hi_attachment"
+            "drop table if exists act_hi_attachment"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_hi_comment"
+            "drop table if exists act_hi_comment"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_hi_detail"
+            "drop table if exists act_hi_detail"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_hi_identitylink"
+            "drop table if exists act_hi_identitylink"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_hi_procinst"
+            "drop table if exists act_hi_procinst"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_hi_taskinst"
+            "drop table if exists act_hi_taskinst"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_hi_varinst"
+            "drop table if exists act_hi_varinst"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_procdef_info"
+            "drop table if exists act_procdef_info"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_re_deployment"
+            "drop table if exists act_re_deployment"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_re_model"
+            "drop table if exists act_re_model"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_re_procdef"
+            "drop table if exists act_re_procdef"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ru_deadletter_job"
+            "drop table if exists act_ru_deadletter_job"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ru_event_subscr"
+            "drop table if exists act_ru_event_subscr"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ru_execution"
+            "drop table if exists act_ru_execution"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ru_identitylink"
+            "drop table if exists act_ru_identitylink"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ru_integration"
+            "drop table if exists act_ru_integration"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ru_job"
+            "drop table if exists act_ru_job"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ru_suspended_job"
+            "drop table if exists act_ru_suspended_job"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ru_task"
+            "drop table if exists act_ru_task"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ru_timer_job"
+            "drop table if exists act_ru_timer_job"
         }
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
-            "drop table act_ru_variable"
+            "drop table if exists act_ru_variable"
         }
         // 恢复外键约束
         sql(stripComments: true, splitStatements: false, endDelimiter: ';') {
