@@ -28,6 +28,12 @@
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-starter-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.zknow.starter</groupId>
+                    <artifactId>zknow-boot-admin</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- zknow starters -->
         <dependency>
