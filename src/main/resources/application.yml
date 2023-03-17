@@ -191,7 +191,7 @@ eureka:
     leaseExpirationDurationInSeconds: 3
     # 服务的一些元数据信息
     metadata-map:
-      VERSION: 2.3.0-SNAPSHOT
+      VERSION: 2.4.0-SNAPSHOT
       developer: ${EUREKA_INSTANCE_METADATA_MAP_DEVELOPER:}
   client:
     serviceUrl:
