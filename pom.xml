@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.hzero</groupId>
             <artifactId>hzero-workflow</artifactId>
-            <version>1.11.2-BETA.8</version>
+            <version>1.11.4-BETA.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.hzero.starter</groupId>
