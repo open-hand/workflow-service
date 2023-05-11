@@ -119,8 +119,9 @@ hzero:
   lock:
     pattern: single
     single-server:
-      address: ${SPRING_REDIS_HOST:localhost}
-      port: ${SPRING_REDIS_PORT:6379}
+      address: ${spring.redis.host}
+      port: ${spring.redis.port}
+      password: ${spring.redis.password}
   scheduler:
     executor-code: HWKF_EXECUTOR
     auto-register: true
